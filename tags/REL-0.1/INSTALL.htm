@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Installation Instructions</title>
+    <style type="text/css">
+body { font-family: Arial; font-size: 100%; }
+    </style>
+</head>
+<body>
+    <h1>
+        Installing</h1>
+    <p>
+        The installation procedure is rudimentary yet still simple at this stage. All you
+        need to do is run the <code>install.cmd</code> command script from the base of the location where
+        you extracted Gurtle and you are done. If the script executed successfully, Gurtle
+        will be available to TortoiseSVN as an issue tracker plug-in provided that you are
+        running version TortoiseSVN 1.5 or later. 
+        See &ldquo;<a href="http://tortoisesvn.net/docs/release/TortoiseSVN_en/tsvn-dug-bugtracker.html#tsvn-dug-bugtracker-ref">Getting Information from the Issue Tracker</a>&rdquo;
+        in the <a href="http://tortoisesvn.net/docs/release/TortoiseSVN_en/">TortoiseSVN documentation</a> 
+        for more information</p>
+    <p>
+        <em>Note:</em> You cannot install more than one version of Gurtle at the same time.
+        Only the latest installed will be seen and used by TortoiseSVN.</p>
+    <h2>
+        Setting up Gurtle for Google Code Projects</h2>
+    <p>
+        The purpose of Gurtle is to allow you to easily access the list of issues in your
+        <a href="http://code.google.com/hosting/">projects hosted at Google Code</a> 
+        when performing a commit using TortoiseSVN. From
+        within the <a href="http://tortoisesvn.net/docs/release/TortoiseSVN_en/tsvn-dug-commit.html#tsvn-dug-commit-basics">Commit dialog box</a>, 
+        you will be able to select one or more issues listed
+        online. The number and summary of each selected issue will then be appended to your
+        commit log message, serving as a cross-reference for the future.</p>
+    <p>
+        In order to enable access to issues for a project during commits, you need to configure
+        TortoiseSVN and Gurtle together. The steps for this are already described in the
+        TortoiseSVN documentation, under 
+        &ldquo;<a href="http://tortoisesvn.net/docs/release/TortoiseSVN_en/tsvn-dug-settings.html#tsvn-dug-settings-hooks-issuetracker">Issue Tracker Integration</a>.&rdquo;</p>
+    <p>
+        When you see the <a href="http://tortoisesvn.net/docs/release/TortoiseSVN_en/tsvn-dug-settings.html#tsvn-dug-settings-hooks">Configure Hook Scripts dialog box</a>
+        appear in TortoiseSVN, you will need
+        to supply three pieces of information. In the <strong>Working Copy Path</strong> field, enter the
+        absolute path to the working copy of your project. From the <strong>Provider</strong> list, select
+        <strong>Gurtle (Google Code)</strong>. Finally, the <strong>Parameters</strong> field should contain the following
+        string, where <code>PROJECT</code> should be replaced with the name of your Google Code project:</p>
+    <pre>project=PROJECT</pre>
+    <p>
+        For example, for this project, <em>Gurtle</em>, which is located at 
+        <a href="http://code.google.com/p/gurtle/">http://code.google.com/p/gurtle/</a>,
+        the <strong>Parameters</strong> field would read <code>project=gurtle</code>.</p>
+    <p>
+        That is it. The next you are ready to commit a change pertaining to an issue, you
+        should see a button with the text <strong>Select Issue</strong> appear in the 
+        Commit dialog box from TortoiseSVN.</p>
+    <h1>
+        Uninstalling</h1>
+    <p>
+        To uninstall Gurtle, run the <code>uninstall.cmd</code> command script from the base of the location
+        where you extracted Gurtle. Once done, you can simply delete the directory tree
+        holding Gurtle.</p>
+</body>
+</html>
