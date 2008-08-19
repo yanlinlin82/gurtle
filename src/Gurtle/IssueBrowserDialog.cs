@@ -136,7 +136,7 @@ namespace Gurtle
                     updateButton.Visible = updateAction != null;
                 };
 
-                updateClient.DownloadStringAsync(new Uri("http://gurtle.googlecode.com/"));//svn/www/update.txt"));
+                updateClient.DownloadStringAsync(new Uri("http://gurtle.googlecode.com/svn/www/update.txt"));
                 _updateClient = updateClient;
             }
 
@@ -146,11 +146,13 @@ namespace Gurtle
         private static Action<IWin32Window> OnVersionDataDownloaded(string data)
         {
             Debug.Assert(data != null);
-            data = "version: 2.0";
+
+            var separators = new[] { ':', '=' };
+
             var headers = (
                     from line in new StringReader(data).ReadLines()
                     where line.Length > 0 && line[0] != '#'
-                    let parts = line.Split(new[] {':'}, 2)
+                    let parts = line.Split(separators, 2)
                     where parts.Length == 2
                     let key = parts[0].Trim()
                     let value = parts[1].Trim()
