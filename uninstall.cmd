@@ -1,6 +1,6 @@
 @echo off
 
-REM Gurtle
+REM Gurtle - IBugTraqProvider for Google Code
 REM Copyright (c) 2008 Atif Aziz. All rights reserved.
 REM
 REM  Author(s):

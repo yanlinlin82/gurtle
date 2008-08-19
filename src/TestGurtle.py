@@ -1,4 +1,4 @@
-# Gurtle
+# Gurtle - IBugTraqProvider for Google Code
 # Copyright (c) 2008 Atif Aziz. All rights reserved.
 #
 #  Author(s):
