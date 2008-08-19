@@ -37,10 +37,7 @@ def main(args):
     reg = re.compile('^"CodeBase"=".+?"', re.M).sub('"CodeBase"="%s"' % Uri(dll_path), reg, 2)    
     reg_path = Path.Combine(Path.GetTempPath(), 'gurtle.reg')
     File.WriteAllText(reg_path, reg)
-    try:
-        Process.Start(reg_path).Dispose()
-    finally:
-        File.Delete(reg_path)
+    Process.Start(reg_path).Dispose()
 
 if __name__ == '__main__':
     try:
