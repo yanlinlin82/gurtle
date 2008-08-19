@@ -24,5 +24,5 @@ REM (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 REM OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 for %%i in (Debug Release) do (
-    msbuild /p:Configuration=%%i %~dp0src\Gurtle.sln
+    msbuild /p:Configuration=%%i "%~dp0src\Gurtle.sln"
 )
