@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\build.cmd = ..\build.cmd
 		..\COPYING.txt = ..\COPYING.txt
 		..\install.cmd = ..\install.cmd
+		..\INSTALL.htm = ..\INSTALL.htm
 		..\install.py = ..\install.py
 		..\install.reg = ..\install.reg
 		TestGurtle.cmd = TestGurtle.cmd
