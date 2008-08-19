@@ -1,0 +1,3 @@
+#summary Project description as it appears on the project home page
+
+Gurtle is an [http://tortoisesvn.tigris.org/svn/tortoisesvn/trunk/contrib/issue-tracker-plugins/inc/IBugTraqProvider.idl IBugTraqProvider] implementation projects hosted at Google Code.
