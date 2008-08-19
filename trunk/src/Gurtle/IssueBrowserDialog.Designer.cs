@@ -35,6 +35,9 @@
             System.Windows.Forms.ToolTip toolTip;
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.workStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.detailButton = new System.Windows.Forms.Button();
+            this.refreshButton = new System.Windows.Forms.Button();
+            this.updateButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.issueListView = new System.Windows.Forms.ListView();
             this.idColumn = new System.Windows.Forms.ColumnHeader();
@@ -43,9 +46,6 @@
             this.priorityColumn = new System.Windows.Forms.ColumnHeader();
             this.ownerColumn = new System.Windows.Forms.ColumnHeader();
             this.summaryColumn = new System.Windows.Forms.ColumnHeader();
-            this.detailButton = new System.Windows.Forms.Button();
-            this.refreshButton = new System.Windows.Forms.Button();
-            this.updateButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
             statusStrip = new System.Windows.Forms.StatusStrip();
             toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -91,6 +91,44 @@
             this.workStatus.Name = "workStatus";
             this.workStatus.Size = new System.Drawing.Size(45, 20);
             this.workStatus.Visible = false;
+            // 
+            // detailButton
+            // 
+            this.detailButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.detailButton.Location = new System.Drawing.Point(12, 311);
+            this.detailButton.Name = "detailButton";
+            this.detailButton.Size = new System.Drawing.Size(75, 28);
+            this.detailButton.TabIndex = 1;
+            this.detailButton.Text = "&Details";
+            toolTip.SetToolTip(this.detailButton, "Open details of selected issue in the browser");
+            this.detailButton.UseVisualStyleBackColor = true;
+            this.detailButton.Click += new System.EventHandler(this.DetailButton_Click);
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.refreshButton.Enabled = false;
+            this.refreshButton.Location = new System.Drawing.Point(93, 311);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(75, 28);
+            this.refreshButton.TabIndex = 2;
+            this.refreshButton.Text = "&Refresh";
+            toolTip.SetToolTip(this.refreshButton, "Reload the issue list");
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
+            // 
+            // updateButton
+            // 
+            this.updateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.updateButton.Location = new System.Drawing.Point(174, 311);
+            this.updateButton.Name = "updateButton";
+            this.updateButton.Size = new System.Drawing.Size(110, 28);
+            this.updateButton.TabIndex = 3;
+            this.updateButton.Text = "&Update Client";
+            toolTip.SetToolTip(this.updateButton, "Update to a new version of this client");
+            this.updateButton.UseVisualStyleBackColor = true;
+            this.updateButton.Visible = false;
+            this.updateButton.Click += new System.EventHandler(this.UpdateButton_Click);
             // 
             // okButton
             // 
@@ -158,43 +196,6 @@
             // 
             this.summaryColumn.Text = "Summary";
             this.summaryColumn.Width = 1000;
-            // 
-            // detailButton
-            // 
-            this.detailButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.detailButton.Location = new System.Drawing.Point(12, 311);
-            this.detailButton.Name = "detailButton";
-            this.detailButton.Size = new System.Drawing.Size(75, 28);
-            this.detailButton.TabIndex = 1;
-            this.detailButton.Text = "&Details";
-            toolTip.SetToolTip(this.detailButton, "Open details of selected issue in the browser");
-            this.detailButton.UseVisualStyleBackColor = true;
-            this.detailButton.Click += new System.EventHandler(this.DetailButton_Click);
-            // 
-            // refreshButton
-            // 
-            this.refreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.refreshButton.Enabled = false;
-            this.refreshButton.Location = new System.Drawing.Point(93, 311);
-            this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(75, 28);
-            this.refreshButton.TabIndex = 2;
-            this.refreshButton.Text = "&Refresh";
-            toolTip.SetToolTip(this.refreshButton, "Reload the issue list");
-            this.refreshButton.UseVisualStyleBackColor = true;
-            this.refreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
-            // 
-            // updateButton
-            // 
-            this.updateButton.Location = new System.Drawing.Point(174, 311);
-            this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(110, 28);
-            this.updateButton.TabIndex = 3;
-            this.updateButton.Text = "&Update Client";
-            toolTip.SetToolTip(this.updateButton, "Update to a new version of this client");
-            this.updateButton.UseVisualStyleBackColor = true;
-            this.updateButton.Visible = false;
-            this.updateButton.Click += new System.EventHandler(this.UpdateButton_Click);
             // 
             // IssueBrowserDialog
             // 
