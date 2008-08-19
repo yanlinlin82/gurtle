@@ -1,3 +1,14 @@
 #summary Project description as it appears on the project home page
 
-Gurtle is an [http://tortoisesvn.tigris.org/svn/tortoisesvn/trunk/contrib/issue-tracker-plugins/inc/IBugTraqProvider.idl IBugTraqProvider] implementation projects hosted at Google Code.
+Gurtle is a [http://tortoisesvn.net/ TortoiseSVN] issue tracker plug-in (an [http://tortoisesvn.tigris.org/svn/tortoisesvn/trunk/contrib/issue-tracker-plugins/inc/IBugTraqProvider.idl IBugTraqProvider] implementation) for [http://code.google.com/hosting projects hosted at Google Code].
+
+With release 1.5, TortoiseSVN introduced the possibility for anyone to author a COM-based plug-in that enables a user to query a project's issue tracking system during a commit, as shown here:
+
+http://tortoisesvn.net/docs/release/TortoiseSVN_en/images/IssueTrackerQuery.png
+
+Gurtle is such a plug-in and enables the user to consult issues of a project hosted by Google Code from within the [http://tortoisesvn.net/docs/release/TortoiseSVN_en/tsvn-dug-commit.html#tsvn-dug-commit-basics TortoiseSVN Commit dialog box]. The screenshot below shows how the issue dialog box looks like in Gurtle for the [http://code.google.com/p/support/ project hosting support] project.
+
+http://gurtle.googlecode.com/svn/wiki/SupportIssues.png
+
+When you select one or more issues, Gurtle appends the number and summary of each issue to the commit log message.
+
