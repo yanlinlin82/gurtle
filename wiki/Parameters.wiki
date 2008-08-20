@@ -1,4 +1,4 @@
-# Gurtle plug-in parameters for TortoiseSVN
+#summary Gurtle plug-in parameters for TortoiseSVN
 
 = Parameters =
 
