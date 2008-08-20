@@ -9,7 +9,7 @@ http://tortoisesvn.net/docs/release/TortoiseSVN_en/images/SettingsIssueTracker.p
 The parameters for Gurtle is a semi-colon delimited list of name and value pairs where each name and value paire are separated by an equal (=) sign. The syntax can be summarized as follows:
 
 {{{
-PARAMETERS = ( ";" NAME "=" VALUE ) *
+PARAMETERS = PARAMETER ( ";" PARAMETER ) *
 PARAMETER  = NAME "=" VALUE
 }}}
 
