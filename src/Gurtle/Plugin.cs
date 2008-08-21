@@ -91,7 +91,7 @@ namespace Gurtle
 
                 foreach (var issue in dialog.SelectedIssueObjects)
                 {
-                    message.Append("Fixed #")
+                    message.Append("Fixed issue #")
                            .Append(issue.Id).Append(": ")
                            .AppendLine(issue.Summary);
                 }
