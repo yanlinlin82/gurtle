@@ -371,7 +371,7 @@ namespace Gurtle
                         UseItemStyleForSubItems = true
                     };
 
-                    if (issue.HasOwner)
+                    if (!issue.HasOwner)
                         item.ForeColor = SystemColors.GrayText;
 
                     var subItems = item.SubItems;

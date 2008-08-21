@@ -28,6 +28,7 @@
 namespace Gurtle
 {
     using System;
+    using System.Linq;
     using System.Text;
 
     [Serializable]
@@ -47,9 +48,7 @@ namespace Gurtle
             get
             {
                 var owner = this.Owner;
-                return owner.Length > 0
-                       && '-' == owner[0]
-                       && '-' == owner[owner.Length - 1];
+                return owner.Length > 0 && !owner.All(ch => ch == '-');
             }
         }
 
