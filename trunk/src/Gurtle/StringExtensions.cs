@@ -6,7 +6,7 @@
 
     #endregion
 
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         /// <summary>
         /// Masks an empty string with a given mask such that the result
