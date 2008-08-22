@@ -58,6 +58,7 @@ namespace Gurtle
         private bool _closed;
         private WebClient _updateClient;
         private Action<IWin32Window> _updateAction;
+        private IEnumerable<Issue> _issues;
 
         public IssueBrowserDialog()
         {
@@ -223,7 +224,6 @@ namespace Gurtle
             refreshButton.Enabled = false;
             workStatus.Visible = true;
             searchBox.Enabled = false;
-            nextButton.Enabled = false;
             statusLabel.Text = "Downloading\x2026";
 
             _aborter = DownloadIssues(Project, 0, 
@@ -241,7 +241,6 @@ namespace Gurtle
             refreshButton.Enabled = true;
             workStatus.Visible = false;
             searchBox.Enabled = true;
-            nextButton.Enabled = true;
 
             if (cancelled)
             {
@@ -359,6 +358,9 @@ namespace Gurtle
             if (_closed)
                 return false; // orphaned notification
 
+            if (issues.Count() != 0)
+                _issues = issues;
+            
             if (UserNamePattern.Length > 0)
                 issues = issues.Where(issue => Regex.IsMatch(issue.Owner, UserNamePattern));
 
@@ -392,11 +394,58 @@ namespace Gurtle
             if (items.Length == 0)
                 return false;
 
+            issueListView.Items.Clear();
             issueListView.Items.AddRange(items);
 
             foreach (ColumnHeader column in issueListView.Columns)
                 column.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             
+            return true;
+        }
+
+        private bool FillListControl(IEnumerable<Issue> issues)
+        {
+            Debug.Assert(issues != null);
+
+            if (UserNamePattern.Length > 0)
+                issues = issues.Where(issue => Regex.IsMatch(issue.Owner, UserNamePattern));
+
+            if (StatusPattern.Length > 0)
+                issues = issues.Where(issue => Regex.IsMatch(issue.Status, StatusPattern));
+
+            var items = issues.Select(issue =>
+            {
+                var id = issue.Id.ToString(CultureInfo.InvariantCulture);
+
+                var item = new ListViewItem(id)
+                {
+                    Tag = issue,
+                    UseItemStyleForSubItems = true
+                };
+
+                if (!issue.HasOwner)
+                    item.ForeColor = SystemColors.GrayText;
+
+                var subItems = item.SubItems;
+                subItems.Add(issue.Type);
+                subItems.Add(issue.Status);
+                subItems.Add(issue.Priority);
+                subItems.Add(issue.Owner);
+                subItems.Add(issue.Summary);
+
+                return item;
+            })
+                .ToArray();
+
+            issueListView.Items.Clear();
+            if (items.Length == 0)
+                return false;
+
+            issueListView.Items.AddRange(items);
+
+            foreach (ColumnHeader column in issueListView.Columns)
+                column.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+
             return true;
         }
 
@@ -448,21 +497,21 @@ namespace Gurtle
             return client.CancelAsync;
         }
 
-        void SearchListViewText(string text, int startIndex)
+        void FilterListViewText(string text, int startIndex)
         {
-            var result = issueListView.Items
-                .Cast<ListViewItem>()
-                .Where(item => item.Index >= startIndex)
-                .FirstOrDefault(item => ((Issue) item.Tag).ToString().IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
-                    
-            if (result != null)
-                issueListView.TopItem = result;
+            var result = _issues
+                .Where(item => (item).ToString().IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            if ((result != null) && (text.Length != 0))
+                FillListControl(result);
+            else
+                FillListControl(_issues);
             
         }
 
         private void searchBox_TextChanged(object sender, EventArgs e)
         {
-            SearchListViewText(searchBox.Text, 0);
+            FilterListViewText(searchBox.Text, 0);
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -471,7 +520,7 @@ namespace Gurtle
             if (issueListView.SelectedIndices.Count > 0 && issueListView.SelectedIndices[0] > startIndex)
                 startIndex = issueListView.SelectedIndices[0];
 
-            SearchListViewText(searchBox.Text, startIndex);
+            FilterListViewText(searchBox.Text, startIndex);
         }
     }
 }
