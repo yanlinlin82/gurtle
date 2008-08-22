@@ -222,6 +222,8 @@ namespace Gurtle
 
             refreshButton.Enabled = false;
             workStatus.Visible = true;
+            searchBox.Enabled = false;
+            nextButton.Enabled = false;
             statusLabel.Text = "Downloading\x2026";
 
             _aborter = DownloadIssues(Project, 0, 
@@ -238,6 +240,8 @@ namespace Gurtle
             _aborter = null;
             refreshButton.Enabled = true;
             workStatus.Visible = false;
+            searchBox.Enabled = true;
+            nextButton.Enabled = true;
 
             if (cancelled)
             {
@@ -442,6 +446,32 @@ namespace Gurtle
             pager(start);
 
             return client.CancelAsync;
+        }
+
+        void SearchListViewText(string text, int startIndex)
+        {
+            var result = issueListView.Items
+                .Cast<ListViewItem>()
+                .Where(item => item.Index >= startIndex)
+                .FirstOrDefault(item => ((Issue) item.Tag).ToString().IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
+                    
+            if (result != null)
+                issueListView.TopItem = result;
+            
+        }
+
+        private void searchBox_TextChanged(object sender, EventArgs e)
+        {
+            SearchListViewText(searchBox.Text, 0);
+        }
+
+        private void nextButton_Click(object sender, EventArgs e)
+        {
+            var startIndex = issueListView.TopItem.Index + 1;
+            if (issueListView.SelectedIndices.Count > 0 && issueListView.SelectedIndices[0] > startIndex)
+                startIndex = issueListView.SelectedIndices[0];
+
+            SearchListViewText(searchBox.Text, startIndex);
         }
     }
 }
