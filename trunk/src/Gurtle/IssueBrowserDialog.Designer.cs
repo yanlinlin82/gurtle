@@ -46,6 +46,8 @@
             this.priorityColumn = new System.Windows.Forms.ColumnHeader();
             this.ownerColumn = new System.Windows.Forms.ColumnHeader();
             this.summaryColumn = new System.Windows.Forms.ColumnHeader();
+            this.searchBox = new System.Windows.Forms.TextBox();
+            this.nextButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
             statusStrip = new System.Windows.Forms.StatusStrip();
             toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -56,9 +58,10 @@
             // 
             cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            cancelButton.Location = new System.Drawing.Point(595, 311);
+            cancelButton.Location = new System.Drawing.Point(571, 327);
+            cancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             cancelButton.Name = "cancelButton";
-            cancelButton.Size = new System.Drawing.Size(75, 28);
+            cancelButton.Size = new System.Drawing.Size(56, 23);
             cancelButton.TabIndex = 5;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
@@ -68,16 +71,17 @@
             statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel,
             this.workStatus});
-            statusStrip.Location = new System.Drawing.Point(0, 342);
+            statusStrip.Location = new System.Drawing.Point(0, 350);
             statusStrip.Name = "statusStrip";
-            statusStrip.Size = new System.Drawing.Size(682, 25);
+            statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            statusStrip.Size = new System.Drawing.Size(637, 22);
             statusStrip.TabIndex = 4;
             // 
             // statusLabel
             // 
             this.statusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(667, 20);
+            this.statusLabel.Size = new System.Drawing.Size(626, 17);
             this.statusLabel.Spring = true;
             this.statusLabel.Text = "Ready";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -95,9 +99,10 @@
             // detailButton
             // 
             this.detailButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.detailButton.Location = new System.Drawing.Point(12, 311);
+            this.detailButton.Location = new System.Drawing.Point(9, 327);
+            this.detailButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.detailButton.Name = "detailButton";
-            this.detailButton.Size = new System.Drawing.Size(75, 28);
+            this.detailButton.Size = new System.Drawing.Size(56, 23);
             this.detailButton.TabIndex = 1;
             this.detailButton.Text = "&Details";
             toolTip.SetToolTip(this.detailButton, "Open details of selected issue in the browser");
@@ -108,9 +113,10 @@
             // 
             this.refreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.refreshButton.Enabled = false;
-            this.refreshButton.Location = new System.Drawing.Point(93, 311);
+            this.refreshButton.Location = new System.Drawing.Point(70, 327);
+            this.refreshButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(75, 28);
+            this.refreshButton.Size = new System.Drawing.Size(56, 23);
             this.refreshButton.TabIndex = 2;
             this.refreshButton.Text = "&Refresh";
             toolTip.SetToolTip(this.refreshButton, "Reload the issue list");
@@ -120,9 +126,10 @@
             // updateButton
             // 
             this.updateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.updateButton.Location = new System.Drawing.Point(174, 311);
+            this.updateButton.Location = new System.Drawing.Point(130, 327);
+            this.updateButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(110, 28);
+            this.updateButton.Size = new System.Drawing.Size(82, 23);
             this.updateButton.TabIndex = 3;
             this.updateButton.Text = "&Update Client";
             toolTip.SetToolTip(this.updateButton, "Update to a new version of this client");
@@ -134,9 +141,10 @@
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(514, 311);
+            this.okButton.Location = new System.Drawing.Point(511, 327);
+            this.okButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 28);
+            this.okButton.Size = new System.Drawing.Size(56, 23);
             this.okButton.TabIndex = 4;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -156,11 +164,11 @@
             this.summaryColumn});
             this.issueListView.FullRowSelect = true;
             this.issueListView.GridLines = true;
-            this.issueListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.issueListView.HideSelection = false;
-            this.issueListView.Location = new System.Drawing.Point(0, 0);
+            this.issueListView.Location = new System.Drawing.Point(0, 28);
+            this.issueListView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.issueListView.Name = "issueListView";
-            this.issueListView.Size = new System.Drawing.Size(682, 305);
+            this.issueListView.Size = new System.Drawing.Size(637, 295);
             this.issueListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.issueListView.TabIndex = 0;
             this.issueListView.UseCompatibleStateImageBehavior = false;
@@ -197,13 +205,35 @@
             this.summaryColumn.Text = "Summary";
             this.summaryColumn.Width = 1000;
             // 
+            // searchBox
+            // 
+            this.searchBox.Location = new System.Drawing.Point(12, 3);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(176, 20);
+            this.searchBox.TabIndex = 6;
+            this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
+            // 
+            // nextButton
+            // 
+            this.nextButton.Location = new System.Drawing.Point(193, 1);
+            this.nextButton.Margin = new System.Windows.Forms.Padding(2);
+            this.nextButton.Name = "nextButton";
+            this.nextButton.Size = new System.Drawing.Size(56, 23);
+            this.nextButton.TabIndex = 7;
+            this.nextButton.Text = "&Next";
+            toolTip.SetToolTip(this.nextButton, "Open details of selected issue in the browser");
+            this.nextButton.UseVisualStyleBackColor = true;
+            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
+            // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
-            this.ClientSize = new System.Drawing.Size(682, 367);
+            this.ClientSize = new System.Drawing.Size(637, 372);
+            this.Controls.Add(this.nextButton);
+            this.Controls.Add(this.searchBox);
             this.Controls.Add(this.updateButton);
             this.Controls.Add(this.refreshButton);
             this.Controls.Add(statusStrip);
@@ -211,6 +241,7 @@
             this.Controls.Add(cancelButton);
             this.Controls.Add(this.detailButton);
             this.Controls.Add(this.issueListView);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MinimizeBox = false;
             this.Name = "IssueBrowserDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -237,6 +268,8 @@
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.ToolStripStatusLabel workStatus;
         private System.Windows.Forms.Button updateButton;
+        private System.Windows.Forms.TextBox searchBox;
+        private System.Windows.Forms.Button nextButton;
     }
 }
 
