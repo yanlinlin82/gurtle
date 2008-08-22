@@ -497,7 +497,7 @@ namespace Gurtle
             return client.CancelAsync;
         }
 
-        void FilterListViewText(string text, int startIndex)
+        private void FilterListViewText(string text)
         {
             var result = _issues
                 .Where(item => (item).ToString().IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
@@ -511,7 +511,7 @@ namespace Gurtle
 
         private void searchBox_TextChanged(object sender, EventArgs e)
         {
-            FilterListViewText(searchBox.Text, 0);
+            FilterListViewText(searchBox.Text);
         }
 
         private void nextButton_Click(object sender, EventArgs e)
@@ -520,7 +520,7 @@ namespace Gurtle
             if (issueListView.SelectedIndices.Count > 0 && issueListView.SelectedIndices[0] > startIndex)
                 startIndex = issueListView.SelectedIndices[0];
 
-            FilterListViewText(searchBox.Text, startIndex);
+            FilterListViewText(searchBox.Text);
         }
     }
 }
