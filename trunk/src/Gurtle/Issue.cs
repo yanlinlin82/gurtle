@@ -34,21 +34,29 @@ namespace Gurtle
     [Serializable]
     internal sealed class Issue
     {
+        private string _type;
+        private string _status;
+        private string _milestone;
+        private string _priority;
+        private string _stars;
+        private string _owner;
+        private string _summary;
+
         public int Id { get; set; }
-        public string Type { get; set; }
-        public string Status { get; set; }
-        public string Milestone { get; set; }
-        public string Priority { get; set; }
-        public string Stars { get; set; }
-        public string Owner { get; set; }
-        public string Summary { get; set; }
+        public string Type { get { return _type ?? string.Empty; } set { _type = value; } }
+        public string Status { get { return _status ?? string.Empty; } set { _status = value; } }
+        public string Milestone { get { return _milestone ?? string.Empty; } set { _milestone = value; } }
+        public string Priority { get { return _priority ?? string.Empty; } set { _priority = value; } }
+        public string Stars { get { return _stars ?? string.Empty; } set { _stars = value; } }
+        public string Owner { get { return _owner ?? string.Empty; } set { _owner = value; } }
+        public string Summary { get { return _summary ?? string.Empty; } set { _summary = value; } }
 
         public bool HasOwner
         {
             get
             {
                 var owner = this.Owner;
-                return string.IsNullOrEmpty(owner) || !owner.All(ch => ch == '-');
+                return owner.Length > 0 && !owner.All(ch => ch == '-');
             }
         }
 
