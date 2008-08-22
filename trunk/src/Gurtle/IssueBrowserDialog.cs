@@ -513,14 +513,5 @@ namespace Gurtle
         {
             FilterListViewText(searchBox.Text);
         }
-
-        private void nextButton_Click(object sender, EventArgs e)
-        {
-            var startIndex = issueListView.TopItem.Index + 1;
-            if (issueListView.SelectedIndices.Count > 0 && issueListView.SelectedIndices[0] > startIndex)
-                startIndex = issueListView.SelectedIndices[0];
-
-            FilterListViewText(searchBox.Text);
-        }
     }
 }
