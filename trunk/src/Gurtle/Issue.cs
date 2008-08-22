@@ -48,7 +48,7 @@ namespace Gurtle
             get
             {
                 var owner = this.Owner;
-                return owner.Length > 0 && !owner.All(ch => ch == '-');
+                return string.IsNullOrEmpty(owner) || !owner.All(ch => ch == '-');
             }
         }
 
