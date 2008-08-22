@@ -48,6 +48,7 @@ namespace Gurtle
     {
         private string _project;
         private readonly string _titleFormat;
+        private readonly string _foundFormat;
         private Action _aborter;
         private long _totalBytesDownloaded;
         private ReadOnlyCollection<int> _selectedIssues;
@@ -58,14 +59,19 @@ namespace Gurtle
         private bool _closed;
         private WebClient _updateClient;
         private Action<IWin32Window> _updateAction;
-        private IEnumerable<Issue> _issues;
+        private readonly List<ListViewItem> _issues;
 
         public IssueBrowserDialog()
         {
             InitializeComponent();
 
             _titleFormat = Text;
+            _foundFormat = foundLabel.Text;
+
+            _issues = new List<ListViewItem>();
             _selectedIssueObjects = new List<Issue>();
+
+            searchFieldBox.SelectedIndex = 0;
 
             issueListView.ListViewItemSorter = new DelegatingComparer<ListViewItem>(
                 (x, y) => ((Issue) x.Tag).Id.CompareTo(((Issue) y.Tag).Id));
@@ -223,7 +229,6 @@ namespace Gurtle
 
             refreshButton.Enabled = false;
             workStatus.Visible = true;
-            searchBox.Enabled = false;
             statusLabel.Text = "Downloading\x2026";
 
             _aborter = DownloadIssues(Project, 0, 
@@ -240,7 +245,6 @@ namespace Gurtle
             _aborter = null;
             refreshButton.Enabled = true;
             workStatus.Visible = false;
-            searchBox.Enabled = true;
 
             if (cancelled)
             {
@@ -255,7 +259,7 @@ namespace Gurtle
                 return;
             }
 
-            statusLabel.Text = string.Format("{0} issue(s) downloaded", issueListView.Items.Count.ToString("N0"));
+            statusLabel.Text = string.Format("{0} issue(s) downloaded", _issues.Count.ToString("N0"));
             UpdateTitle();
         }
 
@@ -274,14 +278,14 @@ namespace Gurtle
 
         private void UpdateTitle()
         {
-            Text = string.Format(_titleFormat, Project, issueListView.Items.Count.ToString("N0"));
+            Text = string.Format(_titleFormat, Project, _issues.Count.ToString("N0"));
         }
 
         private IEnumerable<Issue> GetSelectedIssuesFromListView()
         {
-            return issueListView.SelectedItems
+            return issueListView.CheckedItems
                    .Cast<ListViewItem>()
-                   .Select(item => (Issue)item.Tag);
+                   .Select(item => (Issue) item.Tag);
         }
 
         private void IssueListView_DoubleClick(object sender, EventArgs e)
@@ -305,16 +309,26 @@ namespace Gurtle
                 Project, issue.Id.ToString(CultureInfo.InvariantCulture)));
         }
 
+        private void IssueListView_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            UpdateControlStates();
+        }
+
         private void IssueListView_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateControlStates();
         }
 
+        private void SearchBox_TextChanged(object sender, EventArgs e)
+        {
+            issueListView.Items.Clear();
+            ListIssues(_issues);
+        }
+
         private void UpdateControlStates()
         {
-            var selectedCount = issueListView.SelectedItems.Count;
-            detailButton.Enabled = selectedCount == 1;
-            okButton.Enabled = selectedCount > 0;
+            detailButton.Enabled = issueListView.SelectedItems.Count == 1;
+            okButton.Enabled = issueListView.CheckedItems.Count > 0;
         }
 
         protected override void OnClosed(EventArgs e)
@@ -347,6 +361,7 @@ namespace Gurtle
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
+            _issues.Clear();
             issueListView.Items.Clear();
             DownloadIssues();
         }
@@ -358,9 +373,6 @@ namespace Gurtle
             if (_closed)
                 return false; // orphaned notification
 
-            if (issues.Count() != 0)
-                _issues = issues;
-            
             if (UserNamePattern.Length > 0)
                 issues = issues.Where(issue => Regex.IsMatch(issue.Owner, UserNamePattern));
 
@@ -394,59 +406,46 @@ namespace Gurtle
             if (items.Length == 0)
                 return false;
 
-            issueListView.Items.Clear();
-            issueListView.Items.AddRange(items);
+            _issues.AddRange(items);
+            ListIssues(items);
 
-            foreach (ColumnHeader column in issueListView.Columns)
-                column.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-            
             return true;
         }
 
-        private bool FillListControl(IEnumerable<Issue> issues)
+        private void ListIssues(IEnumerable<ListViewItem> items)
         {
-            Debug.Assert(issues != null);
+            Debug.Assert(items != null);
 
-            if (UserNamePattern.Length > 0)
-                issues = issues.Where(issue => Regex.IsMatch(issue.Owner, UserNamePattern));
-
-            if (StatusPattern.Length > 0)
-                issues = issues.Where(issue => Regex.IsMatch(issue.Status, StatusPattern));
-
-            var items = issues.Select(issue =>
+            var searchWords = searchBox.Text.Split().Where(s => s.Length > 0);
+            if (searchWords.Any())
             {
-                var id = issue.Id.ToString(CultureInfo.InvariantCulture);
+                items = from item in items
+                        let issue = (Issue)item.Tag
+                        where searchWords.All(word => issue.Summary.IndexOf(word, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                        select item;
+            }
 
-                var item = new ListViewItem(id)
-                {
-                    Tag = issue,
-                    UseItemStyleForSubItems = true
-                };
+            //
+            // We need to stop listening to the ItemChecked event because it 
+            // is raised for each item added and this has visually noticable 
+            // performance implications for the user on large lists.
+            //
 
-                if (!issue.HasOwner)
-                    item.ForeColor = SystemColors.GrayText;
+            ItemCheckedEventHandler onItemChecked = IssueListView_ItemChecked;
+            issueListView.ItemChecked -= onItemChecked;
 
-                var subItems = item.SubItems;
-                subItems.Add(issue.Type);
-                subItems.Add(issue.Status);
-                subItems.Add(issue.Priority);
-                subItems.Add(issue.Owner);
-                subItems.Add(issue.Summary);
+            issueListView.Items.AddRange(items.ToArray());
 
-                return item;
-            })
-                .ToArray();
+            //
+            // Update control states once and start listening to the 
+            // ItemChecked event once more.
+            //
+            
+            UpdateControlStates();
+            issueListView.ItemChecked += onItemChecked;
 
-            issueListView.Items.Clear();
-            if (items.Length == 0)
-                return false;
-
-            issueListView.Items.AddRange(items);
-
-            foreach (ColumnHeader column in issueListView.Columns)
-                column.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-
-            return true;
+            foundLabel.Text = string.Format(_foundFormat, issueListView.Items.Count.ToString("N0"));
+            foundLabel.Visible = searchWords.Any();
         }
 
         private static Action DownloadIssues(string project, int start, 
@@ -495,23 +494,6 @@ namespace Gurtle
             pager(start);
 
             return client.CancelAsync;
-        }
-
-        private void FilterListViewText(string text)
-        {
-            var result = _issues
-                .Where(item => (item).ToString().IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0);
-
-            if ((result != null) && (text.Length != 0))
-                FillListControl(result);
-            else
-                FillListControl(_issues);
-            
-        }
-
-        private void searchBox_TextChanged(object sender, EventArgs e)
-        {
-            FilterListViewText(searchBox.Text);
         }
     }
 }
