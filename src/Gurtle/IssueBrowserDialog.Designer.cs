@@ -47,7 +47,6 @@
             this.ownerColumn = new System.Windows.Forms.ColumnHeader();
             this.summaryColumn = new System.Windows.Forms.ColumnHeader();
             this.searchBox = new System.Windows.Forms.TextBox();
-            this.nextButton = new System.Windows.Forms.Button();
             cancelButton = new System.Windows.Forms.Button();
             statusStrip = new System.Windows.Forms.StatusStrip();
             toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -59,7 +58,7 @@
             cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             cancelButton.Location = new System.Drawing.Point(571, 327);
-            cancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            cancelButton.Margin = new System.Windows.Forms.Padding(2);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new System.Drawing.Size(56, 23);
             cancelButton.TabIndex = 5;
@@ -100,7 +99,7 @@
             // 
             this.detailButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.detailButton.Location = new System.Drawing.Point(9, 327);
-            this.detailButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.detailButton.Margin = new System.Windows.Forms.Padding(2);
             this.detailButton.Name = "detailButton";
             this.detailButton.Size = new System.Drawing.Size(56, 23);
             this.detailButton.TabIndex = 1;
@@ -114,7 +113,7 @@
             this.refreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.refreshButton.Enabled = false;
             this.refreshButton.Location = new System.Drawing.Point(70, 327);
-            this.refreshButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.refreshButton.Margin = new System.Windows.Forms.Padding(2);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(56, 23);
             this.refreshButton.TabIndex = 2;
@@ -127,7 +126,7 @@
             // 
             this.updateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.updateButton.Location = new System.Drawing.Point(130, 327);
-            this.updateButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.updateButton.Margin = new System.Windows.Forms.Padding(2);
             this.updateButton.Name = "updateButton";
             this.updateButton.Size = new System.Drawing.Size(82, 23);
             this.updateButton.TabIndex = 3;
@@ -142,7 +141,7 @@
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.okButton.Location = new System.Drawing.Point(511, 327);
-            this.okButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.okButton.Margin = new System.Windows.Forms.Padding(2);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(56, 23);
             this.okButton.TabIndex = 4;
@@ -166,7 +165,7 @@
             this.issueListView.GridLines = true;
             this.issueListView.HideSelection = false;
             this.issueListView.Location = new System.Drawing.Point(0, 28);
-            this.issueListView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.issueListView.Margin = new System.Windows.Forms.Padding(2);
             this.issueListView.Name = "issueListView";
             this.issueListView.Size = new System.Drawing.Size(637, 295);
             this.issueListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
@@ -213,18 +212,6 @@
             this.searchBox.TabIndex = 6;
             this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
             // 
-            // nextButton
-            // 
-            this.nextButton.Location = new System.Drawing.Point(193, 1);
-            this.nextButton.Margin = new System.Windows.Forms.Padding(2);
-            this.nextButton.Name = "nextButton";
-            this.nextButton.Size = new System.Drawing.Size(56, 23);
-            this.nextButton.TabIndex = 7;
-            this.nextButton.Text = "&Next";
-            toolTip.SetToolTip(this.nextButton, "Open details of selected issue in the browser");
-            this.nextButton.UseVisualStyleBackColor = true;
-            this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
-            // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.okButton;
@@ -232,7 +219,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
             this.ClientSize = new System.Drawing.Size(637, 372);
-            this.Controls.Add(this.nextButton);
             this.Controls.Add(this.searchBox);
             this.Controls.Add(this.updateButton);
             this.Controls.Add(this.refreshButton);
@@ -241,7 +227,7 @@
             this.Controls.Add(cancelButton);
             this.Controls.Add(this.detailButton);
             this.Controls.Add(this.issueListView);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimizeBox = false;
             this.Name = "IssueBrowserDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -269,7 +255,6 @@
         private System.Windows.Forms.ToolStripStatusLabel workStatus;
         private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.TextBox searchBox;
-        private System.Windows.Forms.Button nextButton;
     }
 }
 
