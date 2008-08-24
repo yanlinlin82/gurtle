@@ -70,18 +70,21 @@ namespace Gurtle
                 settings.TryGetValue("user", out userName);
                 settings.TryGetValue("status", out status);
 
-                var dialog = new IssueBrowserDialog
+                IList<Issue> issues;
+
+                using (var dialog = new IssueBrowserDialog
                 {
-                    Project = project, 
-                    UserNamePattern = userName, 
+                    Project = project,
+                    UserNamePattern = userName,
                     StatusPattern = status,
                     UpdateCheckEnabled = true,
-                };
-
-                if (dialog.ShowDialog(parentWindow) != DialogResult.OK
-                    || dialog.SelectedIssueObjects.Count == 0)
+                })
                 {
-                    return originalMessage;
+                    var reply = dialog.ShowDialog(parentWindow);
+                    issues = dialog.SelectedIssueObjects;
+
+                    if (reply != DialogResult.OK || issues.Count == 0)
+                        return originalMessage;
                 }
 
                 var message = new StringBuilder(originalMessage);
@@ -89,13 +92,13 @@ namespace Gurtle
                 if (originalMessage.Length > 0 && !originalMessage.EndsWith("\n"))
                     message.AppendLine();
 
-                foreach (var issue in dialog.SelectedIssueObjects)
+                foreach (var issue in issues)
                 {
                     message.Append("Fixed issue #")
-                           .Append(issue.Id).Append(": ")
-                           .AppendLine(issue.Summary);
+                        .Append(issue.Id).Append(": ")
+                        .AppendLine(issue.Summary);
                 }
-                
+
                 return message.ToString();
             }
             catch (Exception e)
