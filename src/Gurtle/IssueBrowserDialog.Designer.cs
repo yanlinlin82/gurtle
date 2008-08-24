@@ -39,7 +39,6 @@
             this.workStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.detailButton = new System.Windows.Forms.Button();
             this.refreshButton = new System.Windows.Forms.Button();
-            this.updateButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.issueListView = new System.Windows.Forms.ListView();
             this.idColumn = new System.Windows.Forms.ColumnHeader();
@@ -51,6 +50,7 @@
             this.searchBox = new System.Windows.Forms.TextBox();
             this.foundLabel = new System.Windows.Forms.Label();
             this.searchFieldBox = new System.Windows.Forms.ComboBox();
+            this.updateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             cancelButton = new System.Windows.Forms.Button();
             statusStrip = new System.Windows.Forms.StatusStrip();
             toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -128,19 +128,23 @@
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.RefreshButton_Click);
             // 
-            // updateButton
+            // label1
             // 
-            this.updateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.updateButton.Location = new System.Drawing.Point(173, 402);
-            this.updateButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.updateButton.Name = "updateButton";
-            this.updateButton.Size = new System.Drawing.Size(109, 28);
-            this.updateButton.TabIndex = 8;
-            this.updateButton.Text = "&Update Client";
-            toolTip.SetToolTip(this.updateButton, "Update to a new version of this client");
-            this.updateButton.UseVisualStyleBackColor = true;
-            this.updateButton.Visible = false;
-            this.updateButton.Click += new System.EventHandler(this.UpdateButton_Click);
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 7);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(57, 17);
+            label1.TabIndex = 0;
+            label1.Text = "&Search:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(316, 10);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(19, 17);
+            label2.TabIndex = 2;
+            label2.Text = "in";
             // 
             // okButton
             // 
@@ -222,15 +226,6 @@
             this.searchBox.TabIndex = 1;
             this.searchBox.TextChanged += new System.EventHandler(this.SearchBox_TextChanged);
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(12, 7);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(57, 17);
-            label1.TabIndex = 0;
-            label1.Text = "&Search:";
-            // 
             // foundLabel
             // 
             this.foundLabel.AutoSize = true;
@@ -240,15 +235,6 @@
             this.foundLabel.TabIndex = 4;
             this.foundLabel.Text = "{0} found";
             this.foundLabel.Visible = false;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(316, 10);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(19, 17);
-            label2.TabIndex = 2;
-            label2.Text = "in";
             // 
             // searchFieldBox
             // 
@@ -260,6 +246,16 @@
             this.searchFieldBox.Name = "searchFieldBox";
             this.searchFieldBox.Size = new System.Drawing.Size(121, 24);
             this.searchFieldBox.TabIndex = 3;
+            // 
+            // updateNotifyIcon
+            // 
+            this.updateNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.updateNotifyIcon.BalloonTipText = "There is a new version of Gurtle available. Click here to find out more.";
+            this.updateNotifyIcon.BalloonTipTitle = "Gurtle Update Available";
+            this.updateNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("updateNotifyIcon.Icon")));
+            this.updateNotifyIcon.Text = "Gurtle Update Available";
+            this.updateNotifyIcon.BalloonTipClicked += new System.EventHandler(this.UpdateNotifyIcon_Click);
+            this.updateNotifyIcon.Click += new System.EventHandler(this.UpdateNotifyIcon_Click);
             // 
             // IssueBrowserDialog
             // 
@@ -273,7 +269,6 @@
             this.Controls.Add(label2);
             this.Controls.Add(label1);
             this.Controls.Add(this.searchBox);
-            this.Controls.Add(this.updateButton);
             this.Controls.Add(this.refreshButton);
             this.Controls.Add(statusStrip);
             this.Controls.Add(this.okButton);
@@ -306,10 +301,10 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.ToolStripStatusLabel workStatus;
-        private System.Windows.Forms.Button updateButton;
         private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.Label foundLabel;
         private System.Windows.Forms.ComboBox searchFieldBox;
+        private System.Windows.Forms.NotifyIcon updateNotifyIcon;
     }
 }
 

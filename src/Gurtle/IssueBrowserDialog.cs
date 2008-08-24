@@ -58,7 +58,7 @@ namespace Gurtle
         private string _statusPattern;
         private bool _closed;
         private WebClient _updateClient;
-        private Action<IWin32Window> _updateAction;
+        private Func<IWin32Window, DialogResult> _upgrade;
         private readonly List<ListViewItem> _issues;
 
         public IssueBrowserDialog()
@@ -139,8 +139,13 @@ namespace Gurtle
                     if (_closed || args.Cancelled || args.Error != null)
                         return;
 
-                    var updateAction = _updateAction = OnVersionDataDownloaded(args.Result);
-                    updateButton.Visible = updateAction != null;
+                    var updateAction = _upgrade = OnVersionDataDownloaded(args.Result);
+
+                    if (updateAction == null) 
+                        return;
+                    
+                    updateNotifyIcon.Visible = true;
+                    updateNotifyIcon.ShowBalloonTip(15 * 1000);
                 };
 
                 updateClient.DownloadStringAsync(new Uri("http://gurtle.googlecode.com/svn/www/update.txt"));
@@ -150,7 +155,7 @@ namespace Gurtle
             base.OnShown(e);
         }
 
-        private static Action<IWin32Window> OnVersionDataDownloaded(string data)
+        private static Func<IWin32Window, DialogResult> OnVersionDataDownloaded(string data)
         {
             Debug.Assert(data != null);
 
@@ -200,27 +205,36 @@ namespace Gurtle
             return owner =>
             {
                 var message = new StringBuilder()
-                    .AppendLine("There is a new version available. Would you like to update now?")
+                    .AppendLine("There is a new version of Gurtle available. Would you like to update now?")
                     .AppendLine()
                     .Append("Your version: ").Append(thisVersion).AppendLine()
                     .Append("New version: ").Append(version).AppendLine()
                     .ToString();
 
                 var reply = MessageBox.Show(owner, message,
-                    "Update Notice", MessageBoxButtons.YesNo,
+                    "Update Notice", MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
-                if (reply != DialogResult.Yes)
-                    return;
+                if (reply == DialogResult.Yes)
+                    Process.Start(href);
 
-                Process.Start(href);
+                return reply;
             };
         }
 
-        private void UpdateButton_Click(object sender, EventArgs e)
+        private void UpdateNotifyIcon_Click(object sender, EventArgs e)
         {
-            if (_updateAction != null)
-                _updateAction(this);
+            Debug.Assert(_upgrade != null);
+
+            var reply = _upgrade(this);
+
+            if (reply == DialogResult.Cancel)
+                return;
+
+            updateNotifyIcon.Visible = false;
+
+            if (reply == DialogResult.Yes)
+                Close();
         }
 
         private void DownloadIssues()
