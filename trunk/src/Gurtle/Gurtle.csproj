@@ -67,6 +67,8 @@
       <Link>BackLinq\OrderedEnumerable.cs</Link>
     </Compile>
     <Compile Include="Actions.cs" />
+    <Compile Include="ByteSizeFormatter.cs" />
+    <Compile Include="CustomFormatter.cs" />
     <Compile Include="DelegatingComparer.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="IBugTraqProvider.cs" />
