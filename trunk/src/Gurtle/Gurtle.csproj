@@ -88,6 +88,9 @@
     <Compile Include="Property.cs" />
     <Compile Include="StreamReaderExtensions.cs" />
     <Compile Include="StringExtensions.cs" />
+    <Compile Include="WebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="WindowHandleWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
