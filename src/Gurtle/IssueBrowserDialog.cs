@@ -84,6 +84,8 @@ namespace Gurtle
 
             _updateClient = new WebClient();
 
+            includeClosedCheckBox.DataBindings.Add("Enabled", refreshButton, "Enabled");
+
             UpdateControlStates();
         }
 
@@ -251,7 +253,7 @@ namespace Gurtle
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
 
-            _aborter = DownloadIssues(Project, 0, 
+            _aborter = DownloadIssues(Project, 0, includeClosedCheckBox.Checked,
                                       OnIssuesDownloaded, 
                                       OnUpdateProgress, 
                                       OnDownloadComplete);
@@ -383,6 +385,8 @@ namespace Gurtle
         {
             _issues.Clear();
             issueListView.Items.Clear();
+            OnIssuesDownloaded(Enumerable.Empty<Issue>());
+            UpdateTitle();
             DownloadIssues();
         }
 
@@ -423,13 +427,10 @@ namespace Gurtle
                 })
                 .ToArray();
 
-            if (items.Length == 0)
-                return false;
-
             _issues.AddRange(items);
             ListIssues(items);
 
-            return true;
+            return items.Length > 0;
         }
 
         private void ListIssues(IEnumerable<ListViewItem> items)
@@ -461,7 +462,7 @@ namespace Gurtle
             // Update control states once and start listening to the 
             // ItemChecked event once more.
             //
-            
+
             UpdateControlStates();
             issueListView.ItemChecked += onItemChecked;
 
@@ -469,7 +470,7 @@ namespace Gurtle
             foundLabel.Visible = searchWords.Any();
         }
 
-        private static Action DownloadIssues(string project, int start, 
+        private static Action DownloadIssues(string project, int start, bool includeClosedIssues,
             Func<IEnumerable<Issue>, bool> onData, 
             Action<DownloadProgressChangedEventArgs> onProgress,
             Action<bool, Exception> onCompleted)
@@ -480,9 +481,10 @@ namespace Gurtle
             var client = new WebClient();
 
             Action<int> pager = next => client.DownloadStringAsync(
-                new Uri(string.Format("http://code.google.com/p/{0}/issues/csv?start={1}&colspec={2}",
+                new Uri(string.Format("http://code.google.com/p/{0}/issues/csv?start={1}&colspec={2}{3}",
                     project, next.ToString(CultureInfo.InvariantCulture),
-                    string.Join("%20", Enum.GetNames(typeof(IssueField))))));
+                    string.Join("%20", Enum.GetNames(typeof(IssueField))),
+                    includeClosedIssues ? "&can=1" : string.Empty)));
 
             client.DownloadStringCompleted += (sender, args) =>
             {
