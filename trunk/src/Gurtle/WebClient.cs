@@ -27,12 +27,19 @@
 
 namespace Gurtle
 {
+    #region Imports
+
+    using System;
     using System.Net;
+
+    #endregion
 
     internal sealed class WebClient : System.Net.WebClient
     {
-        protected override WebRequest GetWebRequest(System.Uri address)
+        protected override WebRequest GetWebRequest(Uri address)
         {
+            if (address == null) throw new ArgumentNullException("address");
+
             var request = base.GetWebRequest(address);
 
             var httpRequest = request as HttpWebRequest;
