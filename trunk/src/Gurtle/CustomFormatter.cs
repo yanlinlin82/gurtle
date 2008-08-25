@@ -52,7 +52,7 @@ namespace Gurtle
             if (arg == null) throw new ArgumentNullException("arg");
 
             var formattable = arg as IFormattable;
-            return arg != null ? formattable.ToString(format, formatProvider) : arg.ToString();
+            return formattable != null ? formattable.ToString(format, formatProvider) : arg.ToString();
         }
     }
 }
