@@ -51,6 +51,7 @@
             this.foundLabel = new System.Windows.Forms.Label();
             this.searchFieldBox = new System.Windows.Forms.ComboBox();
             this.updateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.includeClosedCheckBox = new System.Windows.Forms.CheckBox();
             cancelButton = new System.Windows.Forms.Button();
             statusStrip = new System.Windows.Forms.StatusStrip();
             toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -256,6 +257,17 @@
             this.updateNotifyIcon.BalloonTipClicked += new System.EventHandler(this.UpdateNotifyIcon_Click);
             this.updateNotifyIcon.Click += new System.EventHandler(this.UpdateNotifyIcon_Click);
             // 
+            // includeClosedCheckBox
+            // 
+            this.includeClosedCheckBox.AutoSize = true;
+            this.includeClosedCheckBox.Location = new System.Drawing.Point(175, 406);
+            this.includeClosedCheckBox.Name = "includeClosedCheckBox";
+            this.includeClosedCheckBox.Size = new System.Drawing.Size(164, 21);
+            this.includeClosedCheckBox.TabIndex = 11;
+            this.includeClosedCheckBox.Text = "I&nclude closed issues";
+            this.includeClosedCheckBox.UseVisualStyleBackColor = true;
+            this.includeClosedCheckBox.CheckedChanged += new System.EventHandler(this.RefreshButton_Click);
+            // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.okButton;
@@ -263,6 +275,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
             this.ClientSize = new System.Drawing.Size(849, 458);
+            this.Controls.Add(this.includeClosedCheckBox);
             this.Controls.Add(this.searchFieldBox);
             this.Controls.Add(this.foundLabel);
             this.Controls.Add(label2);
@@ -304,6 +317,7 @@
         private System.Windows.Forms.Label foundLabel;
         private System.Windows.Forms.ComboBox searchFieldBox;
         private System.Windows.Forms.NotifyIcon updateNotifyIcon;
+        private System.Windows.Forms.CheckBox includeClosedCheckBox;
     }
 }
 
