@@ -81,7 +81,7 @@
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
             statusStrip.Size = new System.Drawing.Size(849, 25);
-            statusStrip.TabIndex = 4;
+            statusStrip.TabIndex = 11;
             // 
             // statusLabel
             // 
@@ -259,11 +259,12 @@
             // 
             // includeClosedCheckBox
             // 
+            this.includeClosedCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.includeClosedCheckBox.AutoSize = true;
             this.includeClosedCheckBox.Location = new System.Drawing.Point(175, 406);
             this.includeClosedCheckBox.Name = "includeClosedCheckBox";
             this.includeClosedCheckBox.Size = new System.Drawing.Size(164, 21);
-            this.includeClosedCheckBox.TabIndex = 11;
+            this.includeClosedCheckBox.TabIndex = 8;
             this.includeClosedCheckBox.Text = "I&nclude closed issues";
             this.includeClosedCheckBox.UseVisualStyleBackColor = true;
             this.includeClosedCheckBox.CheckedChanged += new System.EventHandler(this.RefreshButton_Click);
