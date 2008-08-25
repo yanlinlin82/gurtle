@@ -71,10 +71,16 @@ namespace Gurtle
             _issues = new List<ListViewItem>();
             _selectedIssueObjects = new List<Issue>();
 
-            searchFieldBox.SelectedIndex = 0;
-
             issueListView.ListViewItemSorter = new DelegatingComparer<ListViewItem>(
                 (x, y) => ((Issue) x.Tag).Id.CompareTo(((Issue) y.Tag).Id));
+
+            var searchSourceItems = searchFieldBox.Items;
+            searchSourceItems.Add(new MultiFieldIssueSearchSource("All fields", MetaIssue.Properties));
+
+            foreach (IssueField field in Enum.GetValues(typeof(IssueField)))
+                searchSourceItems.Add(new SingleFieldIssueSearchSource(field.ToString(), MetaIssue.GetPropertyByField(field)));
+
+            searchFieldBox.SelectedIndex = 0;
 
             _updateClient = new WebClient();
 
@@ -433,9 +439,10 @@ namespace Gurtle
             var searchWords = searchBox.Text.Split().Where(s => s.Length > 0);
             if (searchWords.Any())
             {
+                var provider = (ISearchSourceStringProvider<Issue>) searchFieldBox.SelectedItem;
                 items = from item in items
-                        let issue = (Issue)item.Tag
-                        where searchWords.All(word => issue.Summary.IndexOf(word, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                        let issue = (Issue) item.Tag
+                        where searchWords.All(word => provider.ToSearchableString(issue).IndexOf(word, StringComparison.CurrentCultureIgnoreCase) >= 0)
                         select item;
             }
 
@@ -508,6 +515,80 @@ namespace Gurtle
             pager(start);
 
             return client.CancelAsync;
+        }
+
+        /// <summary>
+        /// Represents a provider that yields the string for an object that 
+        /// can be used in text-based searches and indexing.
+        /// </summary>
+
+        private interface ISearchSourceStringProvider<T>
+        {
+            string ToSearchableString(T item);
+        }
+
+        //
+        // Implementations of ISearchSourceStringProvider<Issues> for:
+        //
+        // - Single field of issue
+        //
+
+        private abstract class IssueSearchSource : ISearchSourceStringProvider<Issue>
+        {
+            private readonly string _label;
+
+            protected IssueSearchSource(string label)
+            {
+                Debug.Assert(label != null);
+                Debug.Assert(label.Length > 0);
+
+                _label = label;
+            }
+
+            public abstract string ToSearchableString(Issue issue);
+
+            public override string ToString()
+            {
+                return _label;
+            }
+        }
+
+        private sealed class SingleFieldIssueSearchSource : IssueSearchSource
+        {
+            private readonly IProperty<Issue> _property;
+
+            public SingleFieldIssueSearchSource(string label, IProperty<Issue> property) :
+                base(label)
+            {
+                Debug.Assert(property != null);
+                _property = property;
+            }
+
+            public override string ToSearchableString(Issue issue)
+            {
+                Debug.Assert(issue != null);
+                return _property.GetValue(issue).ToString();
+            }
+        }
+
+        private sealed class MultiFieldIssueSearchSource : IssueSearchSource
+        {
+            private readonly IProperty<Issue>[] _properties;
+
+            public MultiFieldIssueSearchSource(string label, IEnumerable<IProperty<Issue>> properties) :
+                base(label)
+            {
+                Debug.Assert(properties != null);
+                _properties = properties.Where(p => p != null).ToArray();
+            }
+
+            public override string ToSearchableString(Issue issue)
+            {
+                Debug.Assert(issue != null);
+
+                return _properties.Aggregate(new StringBuilder(),
+                    (sb, p) => sb.Append(p.GetValue(issue)).Append(' ')).ToString();
+            }
         }
     }
 }

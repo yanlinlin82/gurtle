@@ -240,12 +240,11 @@
             // 
             this.searchFieldBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.searchFieldBox.FormattingEnabled = true;
-            this.searchFieldBox.Items.AddRange(new object[] {
-            "Summary"});
             this.searchFieldBox.Location = new System.Drawing.Point(341, 7);
             this.searchFieldBox.Name = "searchFieldBox";
             this.searchFieldBox.Size = new System.Drawing.Size(121, 24);
             this.searchFieldBox.TabIndex = 3;
+            this.searchFieldBox.SelectedIndexChanged += new System.EventHandler(this.SearchBox_TextChanged);
             // 
             // updateNotifyIcon
             // 
