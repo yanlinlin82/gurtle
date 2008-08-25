@@ -78,12 +78,14 @@
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="IssueField.cs" />
+    <Compile Include="MetaIssue.cs" />
     <Compile Include="IssueTableParser.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="IssueBrowserDialog.resx">
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="Property.cs" />
     <Compile Include="StreamReaderExtensions.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="WindowHandleWrapper.cs" />
