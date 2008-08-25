@@ -82,6 +82,8 @@ namespace Gurtle
 
             searchFieldBox.SelectedIndex = 0;
 
+            searchBox.EnableShortcutToSelectAllText();
+
             _updateClient = new WebClient();
 
             includeClosedCheckBox.DataBindings.Add("Enabled", refreshButton, "Enabled");
