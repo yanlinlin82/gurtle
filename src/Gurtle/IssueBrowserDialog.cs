@@ -294,8 +294,8 @@ namespace Gurtle
 
             _totalBytesDownloaded += args.BytesReceived;
 
-            statusLabel.Text = string.Format("Downloading\x2026{0} bytes transferred", 
-                _totalBytesDownloaded.ToString("N0"));
+            statusLabel.Text = string.Format("Downloading\x2026{0} transferred",
+                ByteSizeFormatter.StrFormatByteSize(_totalBytesDownloaded));
             
             UpdateTitle();
         }
