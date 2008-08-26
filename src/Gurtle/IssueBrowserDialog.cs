@@ -30,6 +30,7 @@ namespace Gurtle
     #region Imports
 
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -320,9 +321,14 @@ namespace Gurtle
 
         private IEnumerable<Issue> GetSelectedIssuesFromListView()
         {
-            return issueListView.CheckedItems
-                   .Cast<ListViewItem>()
-                   .Select(item => (Issue) item.Tag);
+            return GetSelectedIssuesFromListView(null);
+        }
+
+        private IEnumerable<Issue> GetSelectedIssuesFromListView(Func<ListView, IEnumerable> itemsSelector)
+        {
+            return from ListViewItem item 
+                   in (itemsSelector != null ? itemsSelector(issueListView) : issueListView.CheckedItems)
+                   select (Issue) item.Tag;
         }
 
         private void IssueListView_DoubleClick(object sender, EventArgs e)
@@ -332,7 +338,7 @@ namespace Gurtle
 
         private void DetailButton_Click(object sender, EventArgs e)
         {
-            var issue = GetSelectedIssuesFromListView().FirstOrDefault();
+            var issue = GetSelectedIssuesFromListView(lv => lv.SelectedItems).FirstOrDefault();
             if (issue != null)
                 ShowIssueDetails(issue);
         }
