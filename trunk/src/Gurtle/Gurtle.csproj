@@ -80,6 +80,7 @@
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="IssueField.cs" />
+    <Compile Include="ListViewSorter.cs" />
     <Compile Include="MetaIssue.cs" />
     <Compile Include="IssueTableParser.cs" />
     <Compile Include="Plugin.cs" />

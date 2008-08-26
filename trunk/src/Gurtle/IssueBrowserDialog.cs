@@ -60,6 +60,7 @@ namespace Gurtle
         private WebClient _updateClient;
         private Func<IWin32Window, DialogResult> _upgrade;
         private readonly List<ListViewItem> _issues;
+        private readonly ListViewSorter<ListViewItem, Issue> _sorter;
 
         public IssueBrowserDialog()
         {
@@ -71,8 +72,20 @@ namespace Gurtle
             _issues = new List<ListViewItem>();
             _selectedIssueObjects = new List<Issue>();
 
-            issueListView.ListViewItemSorter = new DelegatingComparer<ListViewItem>(
-                (x, y) => ((Issue) x.Tag).Id.CompareTo(((Issue) y.Tag).Id));
+            _sorter = new ListViewSorter<ListViewItem, Issue>(issueListView, 
+                          item => (Issue) item.Tag, 
+                          new Func<Issue, IComparable>[] {
+                              issue => (IComparable) issue.Id,
+                              issue => (IComparable) issue.Type,
+                              issue => (IComparable) issue.Status,
+                              issue => (IComparable) issue.Priority,
+                              issue => (IComparable) issue.Owner,
+                              issue => (IComparable) issue.Summary
+                          }
+                      );
+
+            _sorter.AutoHandle();
+            _sorter.SortByColumn(0);
 
             var searchSourceItems = searchFieldBox.Items;
             searchSourceItems.Add(new MultiFieldIssueSearchSource("All fields", MetaIssue.Properties));
