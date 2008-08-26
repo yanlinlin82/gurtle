@@ -181,7 +181,6 @@
             this.issueListView.MultiSelect = false;
             this.issueListView.Name = "issueListView";
             this.issueListView.Size = new System.Drawing.Size(848, 360);
-            this.issueListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.issueListView.TabIndex = 5;
             this.issueListView.UseCompatibleStateImageBehavior = false;
             this.issueListView.View = System.Windows.Forms.View.Details;
