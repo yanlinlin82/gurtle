@@ -441,7 +441,7 @@ namespace System.Linq
         /// if there is not exactly one element in the sequence.
         /// </summary>
 
-        private static TSource Single<TSource>(
+        public static TSource Single<TSource>(
             this IEnumerable<TSource> source)
         {
             return source.SingleImpl(Futures<TSource>.Undefined);
