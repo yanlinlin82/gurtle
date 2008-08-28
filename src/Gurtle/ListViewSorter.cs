@@ -39,11 +39,14 @@ namespace Gurtle
 
     internal sealed class ListViewSorter<LVI, T> where LVI : ListViewItem
     {
+        private static readonly string[] _orderIndicators = new[] { "+", "-" };
+
         private readonly Func<LVI, T> _itemSelector;
         private readonly Func<T, IComparable>[] _subSelectors;
         private SortOrder _order;
         private int _index;
-
+        private string _baseText;
+        
         public ListViewSorter(ListView listView,
             Func<LVI, T> itemSelector,
             IEnumerable<Func<T, IComparable>> subSelectors)
@@ -55,6 +58,7 @@ namespace Gurtle
             ListView = listView;
             _itemSelector = itemSelector;
             _subSelectors = subSelectors.ToArray();
+            _index = -1;
 
             Debug.Assert(_subSelectors.Length == listView.Columns.Count);
         }
@@ -68,13 +72,26 @@ namespace Gurtle
 
         public void SortByColumn(int index)
         {
-            _order = _index != index 
+            var changed = _index != index;
+            var columns = ListView.Columns;
+            var newColumn = columns[index];
+
+            _order = changed
                    ? SortOrder.Ascending 
                    : _order == SortOrder.Ascending 
                      ? SortOrder.Descending 
                      : SortOrder.Ascending;
 
+            if (changed)
+            {
+                if (_index >= 0)
+                    columns[_index].Text = _baseText;
+
+                _baseText = newColumn.Text;
+            }
+
             _index = index;
+            newColumn.Text = _baseText + _orderIndicators[_order - SortOrder.Ascending];
 
             var subSelector = _subSelectors[index];
             Comparison<LVI> comparison = (x, y) => subSelector(_itemSelector(x)).CompareTo(subSelector(_itemSelector(y)));
