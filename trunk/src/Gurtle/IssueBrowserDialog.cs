@@ -550,11 +550,10 @@ namespace Gurtle
             string ToSearchableString(T item);
         }
 
-        //
-        // Implementations of ISearchSourceStringProvider<Issues> for:
-        //
-        // - Single field of issue
-        //
+        /// <summary>
+        /// Base class for transforming an <see cref="Issue"/> into a 
+        /// searchable string.
+        /// </summary>
 
         private abstract class IssueSearchSource : ISearchSourceStringProvider<Issue>
         {
@@ -576,6 +575,11 @@ namespace Gurtle
             }
         }
 
+        /// <summary>
+        /// An <see cref="IssueSearchSource"/> implementation that uses a 
+        /// property of an <see cref="Issue"/> as the searchable string.
+        /// </summary>
+
         private sealed class SingleFieldIssueSearchSource : IssueSearchSource
         {
             private readonly IProperty<Issue> _property;
@@ -593,6 +597,12 @@ namespace Gurtle
                 return _property.GetValue(issue).ToString();
             }
         }
+
+        /// <summary>
+        /// An <see cref="IssueSearchSource"/> implementation that uses 
+        /// concatenates multiple properties of an <see cref="Issue"/> as 
+        /// the searchable string.
+        /// </summary>
 
         private sealed class MultiFieldIssueSearchSource : IssueSearchSource
         {
