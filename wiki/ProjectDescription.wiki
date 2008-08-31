@@ -17,4 +17,5 @@ Gurtle's issue browsing dialog box sports the following notable features:
   * See closed in addition to open issues
   * Unowned/Unassigned issues appear visually distinct (dimmed)
   * Closed issues appear visually distinct (struck-out)
+  * Open detail page of an issue in the default Web browser
   * Notification of version updates
