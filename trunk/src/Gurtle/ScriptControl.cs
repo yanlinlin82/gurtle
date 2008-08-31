@@ -1,4 +1,4 @@
-﻿#region License, Terms and Author(s)
+#region License, Terms and Author(s)
 //
 // Gurtle - IBugTraqProvider for Google Code
 // Copyright (c) 2008 Atif Aziz. All rights reserved.
@@ -25,29 +25,40 @@
 //
 #endregion
 
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
+namespace Gurtle
+{
+    using System;
 
-[assembly: AssemblyTitle("Gurtle")]
-[assembly: AssemblyDescription("Issue tracker plug-in for projects hosted by Google Code")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Gurtle")]
-[assembly: AssemblyCopyright("Copyright (c) Atif Aziz. All rights reserved.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+    internal sealed class ScriptControl : IDisposable
+    {
+        public ScriptControl()
+        {
+            Driver = new OleDispatchDriver("ScriptControl");
+        }
 
-[assembly: ComVisible(false)]
-[assembly: CLSCompliant(true)]
+        public void Dispose()
+        {
+            if (Driver == null) return;
+            Driver.Dispose();
+            Driver = null;
+        }
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("944193f5-15b9-4468-9a54-572f68b9ce5a")]
+        private OleDispatchDriver Driver { get; set; }
 
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.10330.1824")]
+        public string Language
+        {
+            get { return (string) Driver.Get("Language"); }
+            set { Driver.Put("Language", value); }
+        }
 
-#if DEBUG
-[assembly: AssemblyConfiguration("DEBUG")]
-#else
-[assembly: AssemblyConfiguration("RELEASE")]
-#endif
+        public void AddCode(string code)
+        {
+            Driver.Invoke("AddCode", code);
+        }
+
+        public object Eval(string expression)
+        {
+            return Driver.Invoke("Eval", expression);
+        }
+    }
+}

@@ -62,6 +62,9 @@ namespace Gurtle
         private Func<IWin32Window, DialogResult> _upgrade;
         private readonly List<ListViewItem> _issues;
         private readonly ListViewSorter<ListViewItem, Issue> _sorter;
+        private WebClient _issueOptionsClient;
+        private readonly Font _deadFont;
+        private ICollection<string> _closedStatuses;
 
         public IssueBrowserDialog()
         {
@@ -72,6 +75,9 @@ namespace Gurtle
 
             _issues = new List<ListViewItem>();
             _selectedIssueObjects = new List<Issue>();
+
+            _deadFont = new Font(issueListView.Font, FontStyle.Strikeout);
+            _closedStatuses = new string[0];
 
             _sorter = new ListViewSorter<ListViewItem, Issue>(issueListView, 
                           item => (Issue) item.Tag, 
@@ -84,7 +90,6 @@ namespace Gurtle
                               issue => (IComparable) issue.Summary
                           }
                       );
-
             _sorter.AutoHandle();
             _sorter.SortByColumn(0);
 
@@ -150,7 +155,10 @@ namespace Gurtle
         protected override void OnShown(EventArgs e)
         {
             if (Project.Length > 0)
+            {
                 DownloadIssues();
+                DownloadIssueOptions();
+            }
 
             if (UpdateCheckEnabled)
             {
@@ -259,6 +267,45 @@ namespace Gurtle
 
             if (reply == DialogResult.Yes)
                 Close();
+        }
+
+        private void DownloadIssueOptions()
+        {
+            var client = new WebClient();
+
+            client.DownloadStringCompleted += (sender, args) =>
+            {
+                _issueOptionsClient = null;
+
+                if (_closed || args.Cancelled || args.Error != null)
+                    return;
+
+                var contentType = client.ResponseHeaders[HttpResponseHeader.ContentType]
+                                        .MaskNull().Split(new[] { ';' }, 2)[0];
+
+                var jsonContentTypes = new[] {
+                    "application/json", 
+                    "application/x-javascript", 
+                    "text/javascript",
+                };
+
+                if (!jsonContentTypes.Any(s => s.Equals(contentType, StringComparison.OrdinalIgnoreCase)))
+                    return;
+
+                using (var sc = new ScriptControl { Language = "JavaScript" })
+                {
+                    var data = sc.Eval("(" + args.Result + ")"); // TODO: JSON sanitization
+
+                    _closedStatuses = new OleDispatchDriver(data)
+                       .Get<IEnumerable>("closed")
+                       .Cast<object>()
+                       .Select(o => new OleDispatchDriver(o).Get<string>("name"))
+                       .ToArray();
+                }
+            };
+
+            client.DownloadStringAsync(new Uri(string.Format("http://code.google.com/p/{0}/feeds/issueOptions", Project)));
+            _issueOptionsClient = client;
         }
 
         private void DownloadIssues()
@@ -379,7 +426,8 @@ namespace Gurtle
             Debug.Assert(!_closed);
 
             Release(ref _aborter, a => a());
-            Release(ref _updateClient, uc => uc.CancelAsync());
+            Release(ref _updateClient, wc => wc.CancelAsync());
+            Release(ref _issueOptionsClient, wc => wc.CancelAsync());
 
             _closed = true;
 
@@ -434,8 +482,16 @@ namespace Gurtle
                         UseItemStyleForSubItems = true
                     };
 
-                    if (!issue.HasOwner)
+                    Debug.Assert(_closedStatuses != null);
+                    if (_closedStatuses.Any(s => issue.Status.Equals(s, StringComparison.InvariantCultureIgnoreCase)))
+                    {
                         item.ForeColor = SystemColors.GrayText;
+                        item.Font = _deadFont;
+                    }
+                    else if (!issue.HasOwner)
+                    {
+                        item.ForeColor = SystemColors.GrayText;
+                    }
 
                     var subItems = item.SubItems;
                     subItems.Add(issue.Type);
