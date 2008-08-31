@@ -27,7 +27,18 @@
 
 namespace Gurtle
 {
+    #region Imports
+
     using System;
+
+    #endregion
+
+    /// <summary>
+    /// Convenience wrapper for Microsoft Script Control.
+    /// </summary>
+    /// <remarks>
+    /// This is not a comprehensive implementation.
+    /// </remarks>
 
     internal sealed class ScriptControl : IDisposable
     {
@@ -49,11 +60,6 @@ namespace Gurtle
         {
             get { return (string) Driver.Get("Language"); }
             set { Driver.Put("Language", value); }
-        }
-
-        public void AddCode(string code)
-        {
-            Driver.Invoke("AddCode", code);
         }
 
         public object Eval(string expression)

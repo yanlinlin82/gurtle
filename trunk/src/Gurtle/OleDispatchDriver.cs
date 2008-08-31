@@ -35,6 +35,13 @@ namespace Gurtle
 
     #endregion
 
+    /// <summary>
+    /// Drives an OLE Automation object via IDispatch::Invoke.
+    /// </summary>
+    /// <remarks>
+    /// This is not a comprehensive implementation.
+    /// </remarks>
+
     internal sealed class OleDispatchDriver : IDisposable
     {
         private object _obj;
