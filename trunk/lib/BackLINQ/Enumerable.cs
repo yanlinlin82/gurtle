@@ -686,11 +686,7 @@ namespace System.Linq
         {
             CheckNotNull(source, "source");
 
-            var list = new List<TSource>();
-            foreach (var item in source)
-                list.Add(item);
-
-            return list;
+            return new List<TSource>(source);
         }
 
         /// <summary>
