@@ -51,12 +51,11 @@ namespace Gurtle
         {
             Debug.Assert(reader != null);
 
-            var lines = reader.ReadLines().ToArray();
-
-            if (lines.Length == 0)
+            var firstLine = reader.ReadLine();
+            if (string.IsNullOrEmpty(firstLine))
                 return Enumerable.Empty<Issue>();
 
-            var headers = ParseValues(lines[0]).ToArray();
+            var headers = ParseValues(firstLine).ToArray();
 
             var bindings = Enum.GetNames(typeof(IssueField))
                 .Select(n => Array.FindIndex(headers, h => n.Equals(h, StringComparison.OrdinalIgnoreCase)))
@@ -64,7 +63,7 @@ namespace Gurtle
                 .ToArray();
 
             return //...
-                from line in lines.Skip(1)
+                from line in reader.ReadLines()
                 let values = ParseValues(line).ToArray()
                 let id = ParseInteger(bindings[(int)IssueField.Id](values), CultureInfo.InvariantCulture)
                 where id != null && id.Value > 0
