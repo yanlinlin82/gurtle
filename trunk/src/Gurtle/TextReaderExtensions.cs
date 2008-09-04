@@ -27,11 +27,15 @@
 
 namespace Gurtle
 {
+    #region Imports
+
     using System;
     using System.Collections.Generic;
     using System.IO;
 
-    internal static class StreamReaderExtensions
+    #endregion
+
+    internal static class TextReaderExtensions
     {
         public static IEnumerable<string> ReadLines(this TextReader reader)
         {
