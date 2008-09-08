@@ -31,6 +31,7 @@ namespace Gurtle
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Windows.Forms;
@@ -94,7 +95,8 @@ namespace Gurtle
 
                 foreach (var issue in issues)
                 {
-                    message.Append("Fixed issue #")
+                    message
+                        .Append(GetIssueTypeAddress(issue.Type)).Append(" issue #")
                         .Append(issue.Id).Append(": ")
                         .AppendLine(issue.Summary);
                 }
@@ -107,7 +109,7 @@ namespace Gurtle
                 throw;
             }
         }
-        
+
         public bool ValidateParameters(IntPtr hParentWnd, string parameters)
         {
             return ValidateParameters(WindowHandleWrapper.TryCreate(hParentWnd), parameters);
@@ -137,6 +139,20 @@ namespace Gurtle
                 var key = pair[0].Trim();
                 var value = pair.Length > 1 ? pair[1].Trim() : string.Empty;
                 yield return new KeyValuePair<string, string>(key, value);
+            }
+        }
+
+        private static string GetIssueTypeAddress(string issueType)
+        {
+            Debug.Assert(issueType != null);
+
+            switch (issueType.ToLowerInvariant())
+            {
+                case "defect"     : return "Fixed";
+                case "enhancement": return "Implemented";
+                case "task"       : return "Finished";
+                case "review"     : return "Reviewed";
+                default           : return "Addressed";
             }
         }
 
