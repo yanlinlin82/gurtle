@@ -447,7 +447,7 @@ namespace Gurtle
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            _selectedIssueObjects.AddRange(GetSelectedIssuesFromListView());
+            _selectedIssueObjects.AddRange(_issues.Where(lvi => lvi.Checked).Select(lvi => (Issue) lvi.Tag));
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
