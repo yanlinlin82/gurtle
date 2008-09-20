@@ -97,11 +97,18 @@ namespace Gurtle
             searchSourceItems.Add(new MultiFieldIssueSearchSource("All fields", MetaIssue.Properties));
 
             foreach (IssueField field in Enum.GetValues(typeof(IssueField)))
-                searchSourceItems.Add(new SingleFieldIssueSearchSource(field.ToString(), MetaIssue.GetPropertyByField(field)));
+            {
+                searchSourceItems.Add(new SingleFieldIssueSearchSource(field.ToString(), MetaIssue.GetPropertyByField(field),
+                    field == IssueField.Summary
+                    || field == IssueField.Id
+                    || field == IssueField.Stars
+                    ? SearchableStringSourceCharacteristics.None
+                    : SearchableStringSourceCharacteristics.Predefined));
+            }
 
             searchFieldBox.SelectedIndex = 0;
 
-            searchBox.EnableShortcutToSelectAllText();
+            //searchBox.EnableShortcutToSelectAllText();
 
             _updateClient = new WebClient();
 
@@ -415,6 +422,28 @@ namespace Gurtle
             ListIssues(_issues);
         }
 
+        private void SearchFieldBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var provider = (ISearchSourceStringProvider<Issue>)searchFieldBox.SelectedItem;
+            if (provider == null)
+                return;
+
+            var definitions = searchBox.Items;
+            definitions.Clear();
+
+            var isPredefined = SearchableStringSourceCharacteristics.Predefined == (
+                provider.SourceCharacteristics & SearchableStringSourceCharacteristics.Predefined);
+
+            if (!isPredefined)
+                return;
+
+            // TODO: Update definitions if issues are still being downloaded
+
+            definitions.AddRange(_issues
+                .Select(lvi => provider.ToSearchableString((Issue)lvi.Tag))
+                .Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray());
+        }
+
         private void UpdateControlStates()
         {
             detailButton.Enabled = issueListView.SelectedItems.Count == 1;
@@ -596,6 +625,13 @@ namespace Gurtle
             return client.CancelAsync;
         }
 
+        [ Serializable, Flags ]
+        private enum SearchableStringSourceCharacteristics
+        {
+            None,
+            Predefined
+        }
+
         /// <summary>
         /// Represents a provider that yields the string for an object that 
         /// can be used in text-based searches and indexing.
@@ -603,6 +639,7 @@ namespace Gurtle
 
         private interface ISearchSourceStringProvider<T>
         {
+            SearchableStringSourceCharacteristics SourceCharacteristics { get; }
             string ToSearchableString(T item);
         }
 
@@ -615,14 +652,16 @@ namespace Gurtle
         {
             private readonly string _label;
 
-            protected IssueSearchSource(string label)
+            protected IssueSearchSource(string label, SearchableStringSourceCharacteristics sourceCharacteristics)
             {
                 Debug.Assert(label != null);
                 Debug.Assert(label.Length > 0);
 
                 _label = label;
+                SourceCharacteristics = sourceCharacteristics;
             }
 
+            public SearchableStringSourceCharacteristics SourceCharacteristics { get; private set; }
             public abstract string ToSearchableString(Issue issue);
 
             public override string ToString()
@@ -640,8 +679,12 @@ namespace Gurtle
         {
             private readonly IProperty<Issue> _property;
 
-            public SingleFieldIssueSearchSource(string label, IProperty<Issue> property) :
-                base(label)
+            public SingleFieldIssueSearchSource(string label, IProperty<Issue> property) : 
+                this(label, property, SearchableStringSourceCharacteristics.None) {}
+
+            public SingleFieldIssueSearchSource(string label, IProperty<Issue> property, 
+                SearchableStringSourceCharacteristics sourceCharacteristics) :
+                base(label, sourceCharacteristics)
             {
                 Debug.Assert(property != null);
                 _property = property;
@@ -665,7 +708,7 @@ namespace Gurtle
             private readonly IProperty<Issue>[] _properties;
 
             public MultiFieldIssueSearchSource(string label, IEnumerable<IProperty<Issue>> properties) :
-                base(label)
+                base(label, SearchableStringSourceCharacteristics.None)
             {
                 Debug.Assert(properties != null);
                 _properties = properties.Where(p => p != null).ToArray();
