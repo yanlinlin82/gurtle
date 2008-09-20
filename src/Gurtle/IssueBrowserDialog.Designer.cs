@@ -47,11 +47,11 @@
             this.priorityColumn = new System.Windows.Forms.ColumnHeader();
             this.ownerColumn = new System.Windows.Forms.ColumnHeader();
             this.summaryColumn = new System.Windows.Forms.ColumnHeader();
-            this.searchBox = new System.Windows.Forms.TextBox();
             this.foundLabel = new System.Windows.Forms.Label();
             this.searchFieldBox = new System.Windows.Forms.ComboBox();
             this.updateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.includeClosedCheckBox = new System.Windows.Forms.CheckBox();
+            this.searchBox = new System.Windows.Forms.ComboBox();
             cancelButton = new System.Windows.Forms.Button();
             statusStrip = new System.Windows.Forms.StatusStrip();
             toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -217,15 +217,6 @@
             this.summaryColumn.Text = "Summary";
             this.summaryColumn.Width = 1000;
             // 
-            // searchBox
-            // 
-            this.searchBox.Location = new System.Drawing.Point(76, 7);
-            this.searchBox.Margin = new System.Windows.Forms.Padding(4);
-            this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(233, 22);
-            this.searchBox.TabIndex = 1;
-            this.searchBox.TextChanged += new System.EventHandler(this.SearchBox_TextChanged);
-            // 
             // foundLabel
             // 
             this.foundLabel.AutoSize = true;
@@ -244,7 +235,7 @@
             this.searchFieldBox.Name = "searchFieldBox";
             this.searchFieldBox.Size = new System.Drawing.Size(121, 24);
             this.searchFieldBox.TabIndex = 3;
-            this.searchFieldBox.SelectedIndexChanged += new System.EventHandler(this.SearchBox_TextChanged);
+            this.searchFieldBox.SelectedIndexChanged += new System.EventHandler(this.SearchFieldBox_SelectedIndexChanged);
             // 
             // updateNotifyIcon
             // 
@@ -268,6 +259,15 @@
             this.includeClosedCheckBox.UseVisualStyleBackColor = true;
             this.includeClosedCheckBox.CheckedChanged += new System.EventHandler(this.RefreshButton_Click);
             // 
+            // searchBox
+            // 
+            this.searchBox.FormattingEnabled = true;
+            this.searchBox.Location = new System.Drawing.Point(76, 7);
+            this.searchBox.Name = "searchBox";
+            this.searchBox.Size = new System.Drawing.Size(233, 24);
+            this.searchBox.TabIndex = 1;
+            this.searchBox.TextChanged += new System.EventHandler(this.SearchBox_TextChanged);
+            // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.okButton;
@@ -275,12 +275,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
             this.ClientSize = new System.Drawing.Size(849, 458);
+            this.Controls.Add(this.searchBox);
             this.Controls.Add(this.includeClosedCheckBox);
             this.Controls.Add(this.searchFieldBox);
             this.Controls.Add(this.foundLabel);
             this.Controls.Add(label2);
             this.Controls.Add(label1);
-            this.Controls.Add(this.searchBox);
             this.Controls.Add(this.refreshButton);
             this.Controls.Add(statusStrip);
             this.Controls.Add(this.okButton);
@@ -313,11 +313,11 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button refreshButton;
         private System.Windows.Forms.ToolStripStatusLabel workStatus;
-        private System.Windows.Forms.TextBox searchBox;
         private System.Windows.Forms.Label foundLabel;
         private System.Windows.Forms.ComboBox searchFieldBox;
         private System.Windows.Forms.NotifyIcon updateNotifyIcon;
         private System.Windows.Forms.CheckBox includeClosedCheckBox;
+        private System.Windows.Forms.ComboBox searchBox;
     }
 }
 
