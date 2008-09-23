@@ -8,7 +8,7 @@
     * Usually this means Windows 2000 SP3, Windows XP or a later Windows version
     * Keep in mind that most testing has been conducted on 32-bit versions of Windows XP and Windows Vista
   * Internet connection for reaching [http://code.google.com/hosting Google Code]
-  * Administrative privileges installation/uninstallation but not for usage
+  * Administrative privileges for installation/uninstallation but not usage
 
 == Requirements for Hacking Gurtle ==
 
