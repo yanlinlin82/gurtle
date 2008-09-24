@@ -42,6 +42,7 @@ namespace Gurtle
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows.Forms;
+    using IssueListViewItem = ListViewItem<Issue>;
 
     #endregion
 
@@ -60,8 +61,8 @@ namespace Gurtle
         private bool _closed;
         private WebClient _updateClient;
         private Func<IWin32Window, DialogResult> _upgrade;
-        private readonly List<ListViewItem> _issues;
-        private readonly ListViewSorter<ListViewItem, Issue> _sorter;
+        private readonly List<IssueListViewItem> _issues;
+        private readonly ListViewSorter<IssueListViewItem, Issue> _sorter;
         private WebClient _issueOptionsClient;
         private readonly Font _deadFont;
         private ICollection<string> _closedStatuses;
@@ -73,14 +74,14 @@ namespace Gurtle
             _titleFormat = Text;
             _foundFormat = foundLabel.Text;
 
-            _issues = new List<ListViewItem>();
+            _issues = new List<IssueListViewItem>();
             _selectedIssueObjects = new List<Issue>();
 
             _deadFont = new Font(issueListView.Font, FontStyle.Strikeout);
             _closedStatuses = new string[0];
 
-            _sorter = new ListViewSorter<ListViewItem, Issue>(issueListView, 
-                          item => (Issue) item.Tag, 
+            _sorter = new ListViewSorter<IssueListViewItem, Issue>(issueListView, 
+                          item => item.Tag, 
                           new Func<Issue, IComparable>[] {
                               issue => (IComparable) issue.Id,
                               issue => (IComparable) issue.Type,
@@ -380,9 +381,9 @@ namespace Gurtle
 
         private IEnumerable<Issue> GetSelectedIssuesFromListView(Func<ListView, IEnumerable> itemsSelector)
         {
-            return from ListViewItem item 
+            return from IssueListViewItem item 
                    in (itemsSelector != null ? itemsSelector(issueListView) : issueListView.CheckedItems)
-                   select (Issue) item.Tag;
+                   select item.Tag;
         }
 
         private void IssueListView_DoubleClick(object sender, EventArgs e)
@@ -440,7 +441,7 @@ namespace Gurtle
             // TODO: Update definitions if issues are still being downloaded
 
             definitions.AddRange(_issues
-                .Select(lvi => provider.ToSearchableString((Issue)lvi.Tag))
+                .Select(lvi => provider.ToSearchableString(lvi.Tag))
                 .Distinct(StringComparer.CurrentCultureIgnoreCase).ToArray());
         }
 
@@ -476,7 +477,7 @@ namespace Gurtle
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            _selectedIssueObjects.AddRange(_issues.Where(lvi => lvi.Checked).Select(lvi => (Issue) lvi.Tag));
+            _selectedIssueObjects.AddRange(_issues.Where(lvi => lvi.Checked).Select(lvi => lvi.Tag));
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -505,7 +506,7 @@ namespace Gurtle
                 {
                     var id = issue.Id.ToString(CultureInfo.InvariantCulture);
 
-                    var item = new ListViewItem(id)
+                    var item = new IssueListViewItem(id)
                     {
                         Tag = issue,
                         UseItemStyleForSubItems = true
@@ -539,7 +540,7 @@ namespace Gurtle
             return items.Length > 0;
         }
 
-        private void ListIssues(IEnumerable<ListViewItem> items)
+        private void ListIssues(IEnumerable<IssueListViewItem> items)
         {
             Debug.Assert(items != null);
 
@@ -548,7 +549,7 @@ namespace Gurtle
             {
                 var provider = (ISearchSourceStringProvider<Issue>) searchFieldBox.SelectedItem;
                 items = from item in items
-                        let issue = (Issue) item.Tag
+                        let issue = item.Tag
                         where searchWords.All(word => provider.ToSearchableString(issue).IndexOf(word, StringComparison.CurrentCultureIgnoreCase) >= 0)
                         select item;
             }
