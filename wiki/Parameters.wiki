@@ -1,4 +1,5 @@
 #summary Gurtle plug-in parameters for TortoiseSVN
+#labels Featured
 
 = Parameters =
 
@@ -16,4 +17,4 @@ PARAMETER  = NAME "=" VALUE
 The possible values for NAME and VALUE are described in the table below:
 
 || NAME || VALUE ||
-|| `project` || Name (always in lowercase) of the project hosted at Google Code. For the example, for the project at http://gurtle.googlecode.com/, the value would be for this parameter would be `gurtle`.  ||
+|| `project` || Name (always in lowercase) of the project hosted at Google Code. For the example, for the project at http://gurtle.googlecode.com/, the value for this parameter would be `gurtle`.  ||
