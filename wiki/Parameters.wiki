@@ -3,11 +3,11 @@
 
 = Parameters =
 
-When you configure a working copy path for Gurtle in the Issue Tracker Integration area of TortoiseSVN Settings, you will need to supply a values for the *Parameters* field:
+When you configure a working copy path for Gurtle in the Issue Tracker Integration area of TortoiseSVN Settings, you will need to supply values for the *Parameters* field:
 
 http://gurtle.googlecode.com/svn/wiki/SettingsIssueTracker.png
 
-The parameters for Gurtle is a semi-colon delimited list of name and value pairs where each name and value paire are separated by an equal (=) sign. The syntax can be summarized as follows:
+The parameters for Gurtle is a semi-colon delimited list of name and value pairs where the name and value within each pair is separated by an equal (=) sign. The syntax can be summarized as follows:
 
 {{{
 PARAMETERS = PARAMETER ( ";" PARAMETER ) *
