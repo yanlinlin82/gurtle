@@ -109,7 +109,7 @@ namespace Gurtle
 
             searchFieldBox.SelectedIndex = 0;
 
-            //searchBox.EnableShortcutToSelectAllText();
+            searchBox.EnableShortcutToSelectAllText();
 
             _updateClient = new WebClient();
 
