@@ -42,7 +42,7 @@ namespace Gurtle
     internal static class IssueTableParser
     {
         public static readonly Regex _csvex = new Regex(
-            "(?:^|,)\"((?:\"{2}|[^\"])+)\"",
+            "(?:^|,)\"((?:\"{2}|[^\"])+)?\"",
             RegexOptions.CultureInvariant
             | RegexOptions.IgnorePatternWhitespace
             | RegexOptions.Compiled);

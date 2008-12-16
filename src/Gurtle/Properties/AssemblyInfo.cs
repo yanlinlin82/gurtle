@@ -43,8 +43,8 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("944193f5-15b9-4468-9a54-572f68b9ce5a")]
 
-[assembly: AssemblyVersion("0.2.0.0")]
-[assembly: AssemblyFileVersion("0.2.10424.0724")]
+[assembly: AssemblyVersion("0.2.10716.0")]
+[assembly: AssemblyFileVersion("0.2.10716.1454")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("DEBUG")]
