@@ -42,29 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\lib\backlinq\Enumerable.cs">
-      <Link>BackLinq\Enumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\backlinq\Enumerable.Sum+Average.cs">
-      <Link>BackLinq\Enumerable.Sum+Average.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\backlinq\ExtensionAttribute.cs">
-      <Link>BackLinq\ExtensionAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\backlinq\Func.cs">
-      <Link>BackLinq\Func.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\backlinq\Grouping.cs">
-      <Link>BackLinq\Grouping.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\backlinq\IOrderedEnumerable.cs">
-      <Link>BackLinq\IOrderedEnumerable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\backlinq\Lookup.cs">
-      <Link>BackLinq\Lookup.cs</Link>
-    </Compile>
-    <Compile Include="..\..\lib\backlinq\OrderedEnumerable.cs">
-      <Link>BackLinq\OrderedEnumerable.cs</Link>
+    <Compile Include="..\..\lib\backlinq-1.0.cs">
+      <Link>backlinq-1.0.cs</Link>
     </Compile>
     <Compile Include="Actions.cs" />
     <Compile Include="ByteSizeFormatter.cs" />
