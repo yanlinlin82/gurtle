@@ -477,7 +477,48 @@ namespace Gurtle
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            _selectedIssueObjects.AddRange(_issues.Where(lvi => lvi.Checked).Select(lvi => lvi.Tag));
+        }
+        
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            if (DialogResult != DialogResult.OK || e.Cancel)
+                return;
+
+            var selectedIssues = _issues.Where(lvi => lvi.Checked)
+                                        .Select(lvi => lvi.Tag)
+                                        .ToArray();
+
+            //
+            // If the user has selected unowned or closed issues then
+            // provide a warning and confirm the intention.
+            //
+
+            var warnIssues = selectedIssues.Where(issue => !issue.HasOwner 
+                                                           || _closedStatuses.Any(s => issue.Status.Equals(s, StringComparison.InvariantCultureIgnoreCase)));
+            if (warnIssues.Any())
+            {
+                var message = string.Format(
+                    "You selected one or more unowned or closed issues ({0}). "
+                    + "Normally you should only select open issues with owners assigned. "
+                    + "Proceed anyway?",
+                    string.Join(", ", warnIssues.OrderBy(issue => issue.Id)
+                                                .Select(issue => "#" + issue.Id).ToArray()));
+                
+                var reply = MessageBox.Show(this, message, "Unowned/Closed Issues Warning",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, 
+                    /* no */ MessageBoxDefaultButton.Button2);
+
+                if (reply == DialogResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
+            }
+
+            _selectedIssueObjects.AddRange(selectedIssues);
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
