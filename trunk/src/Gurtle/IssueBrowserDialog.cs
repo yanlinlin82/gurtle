@@ -61,7 +61,7 @@ namespace Gurtle
         private bool _closed;
         private WebClient _updateClient;
         private Func<IWin32Window, DialogResult> _upgrade;
-        private readonly List<IssueListViewItem> _issues;
+        private readonly ObservableCollection<IssueListViewItem> _issues;
         private readonly ListViewSorter<IssueListViewItem, Issue> _sorter;
         private WebClient _issueOptionsClient;
         private readonly Font _deadFont;
@@ -74,7 +74,12 @@ namespace Gurtle
             _titleFormat = Text;
             _foundFormat = foundLabel.Text;
 
-            _issues = new List<IssueListViewItem>();
+            var issues = _issues = new ObservableCollection<IssueListViewItem>();
+            issues.ItemAdded += (sender, args) => ListIssues(Enumerable.Repeat(args.Item, 1));
+            issues.ItemsAdded += (sender, args) => ListIssues(args.Items);
+            issues.ItemRemoved += (sender, args) => issueListView.Items.Remove(args.Item);
+            issues.Cleared += delegate { issueListView.Items.Clear(); };
+
             _selectedIssueObjects = new List<Issue>();
 
             _deadFont = new Font(issueListView.Font, FontStyle.Strikeout);
@@ -523,8 +528,7 @@ namespace Gurtle
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
-            _issues.Clear();
-            issueListView.Items.Clear();
+            _issues.Clear();            
             OnIssuesDownloaded(Enumerable.Empty<Issue>());
             UpdateTitle();
             DownloadIssues();
@@ -576,7 +580,6 @@ namespace Gurtle
                 .ToArray();
 
             _issues.AddRange(items);
-            ListIssues(items);
 
             return items.Length > 0;
         }
