@@ -1,4 +1,4 @@
-﻿#region License, Terms and Author(s)
+#region License, Terms and Author(s)
 //
 // Gurtle - IBugTraqProvider for Google Code
 // Copyright (c) 2008 Atif Aziz. All rights reserved.
@@ -25,29 +25,26 @@
 //
 #endregion
 
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
+namespace Gurtle
+{
+    #region Imports
 
-[assembly: AssemblyTitle("Gurtle")]
-[assembly: AssemblyDescription("Issue tracker plug-in for projects hosted by Google Code")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Gurtle")]
-[assembly: AssemblyCopyright("Copyright (c) Atif Aziz. All rights reserved.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+    using System;
+    using System.Collections.Generic;
 
-[assembly: ComVisible(false)]
-[assembly: CLSCompliant(true)]
+    #endregion
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("944193f5-15b9-4468-9a54-572f68b9ce5a")]
+    [ Serializable ]
+    internal class CollectionItemBatchEventArgs<T> : EventArgs
+    {
+        public CollectionItemBatchEventArgs(IEnumerable<T> items)
+        {
+            if (items == null)
+                throw new ArgumentNullException("items");
 
-[assembly: AssemblyVersion("0.2.10716.0")]
-[assembly: AssemblyFileVersion("0.2.11029.1809")]
+            Items = items;
+        }
 
-#if DEBUG
-[assembly: AssemblyConfiguration("DEBUG")]
-#else
-[assembly: AssemblyConfiguration("RELEASE")]
-#endif
+        public IEnumerable<T> Items { get; private set; }
+    }
+}
