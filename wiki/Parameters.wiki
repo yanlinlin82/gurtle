@@ -1,11 +1,9 @@
-#summary Gurtle plug-in parameters for TortoiseSVN
+#summary How to setup Gurtle plug-in parameters for TortoiseSVN
 #labels Featured
 
 = Parameters =
 
-When you configure a working copy path for Gurtle in the Issue Tracker Integration area of TortoiseSVN Settings, you will need to supply values for the *Parameters* field:
-
-http://gurtle.googlecode.com/svn/wiki/SettingsIssueTracker.png
+Once you have Gurtle installed on your system, there are two ways to enable it in TortoiseSVN (TSVN) for a given Google Code project. If you are using TSVN 1.5 then the parameters have to be configured manually in TSVN Settings for each working copy  and this has to be done by each member of the project on his or her workstation(s). If you are using TSVN version 1.6 or later then you can set the Gurtle and TSVN configuration in proprties in the project's Subverion repository once. Each project member will then simply inherit the settings by checking out or updaing their working copy and Gurtle will be automatically enabled for the project in TSVN.
 
 The parameters for Gurtle is a semi-colon delimited list of name and value pairs where the name and value within each pair is separated by an equal (=) sign. The syntax can be summarized as follows:
 
@@ -18,3 +16,27 @@ The possible values for NAME and VALUE are described in the table below:
 
 || NAME || VALUE ||
 || `project` || Name (always in lowercase) of the project hosted at Google Code. For the example, for the project at http://gurtle.googlecode.com/, the value for this parameter would be `gurtle`.  ||
+
+== Local Configuration in TSVN 1.5 or Later == 
+
+You configure a working copy path for Gurtle in the Issue Tracker Integration area of TSVN Settings. You will need to supply values for the *Parameters* field:
+
+http://gurtle.googlecode.com/svn/wiki/SettingsIssueTracker.png
+
+== Central Configuration in SVN Repository (TSVN 1.6 or Later) == 
+
+TSVN 1.6 or later can pick up the parameters automatically from a working copy of a project by looking up the `bugtraq:provideruuid` and `bugtraq:provideruuid` properties. This enables  all users on a project to be synchronized on the same issue tracker plug-in and settings.
+
+For Gurtle, `bugtraq:provideruuid` must always be set to `{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}` and the `bugtraq:providerparams` should be set to Gurtle-specific parameters described above, e.g. `project=gurtle`.
+
+Below is an example of how you can set these properties (where ZZZ is the Google Code project name _in lowercase_):
+
+{{{
+$ svn propset bugtraq:provideruuid {91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E} .
+property 'bugtraq:provideruuid' set on '.'
+
+$ svn propset bugtraq:providerparams project=ZZZ .
+property 'bugtraq:providerparams' set on '.'
+
+$ svn commit -m "Added TSVN/Gurtle IBugTraqProvider properties."
+}}}
