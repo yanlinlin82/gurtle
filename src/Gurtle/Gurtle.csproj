@@ -64,6 +64,7 @@
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="IssueField.cs" />
+    <Compile Include="ParametersParseException.cs" />
     <Compile Include="ListViewItem.cs" />
     <Compile Include="ListViewSorter.cs" />
     <Compile Include="MetaIssue.cs" />
