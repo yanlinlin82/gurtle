@@ -45,6 +45,12 @@ namespace Gurtle
 
         public static Parameters Parse(string str)
         {
+            if (str == null) throw new ArgumentNullException("str");
+
+            str = str.Trim();
+            if (str.Length == 0)
+                return new Parameters();
+
             var dict = ParsePairs(str.Split(';')).ToDictionary(
                            p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
