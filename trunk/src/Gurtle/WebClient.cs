@@ -36,6 +36,15 @@ namespace Gurtle
 
     internal sealed class WebClient : System.Net.WebClient
     {
+        private static readonly string _defaultUserAgentString;
+
+        static WebClient()
+        {
+            var assemblyName = typeof(WebClient).Assembly.GetName();
+            _defaultUserAgentString = assemblyName.Name.ToLowerInvariant()
+                                    + "/" + assemblyName.Version.ToString(2);
+        }
+
         protected override WebRequest GetWebRequest(Uri address)
         {
             if (address == null) throw new ArgumentNullException("address");
@@ -52,15 +61,15 @@ namespace Gurtle
                 //
 
                 if (string.IsNullOrEmpty(httpRequest.UserAgent))
-                {
-                    var name = typeof(WebClient).Assembly.GetName();
-                    httpRequest.UserAgent = name.Name.ToLowerInvariant() 
-                                          + "/" 
-                                          + name.Version.ToString(2);
-                }
+                    httpRequest.UserAgent = DefaultUserAgentString;
             }
 
             return request;
+        }
+
+        public static string DefaultUserAgentString
+        {
+            get { return _defaultUserAgentString; }
         }
     }
 }
