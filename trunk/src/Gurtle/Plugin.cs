@@ -43,7 +43,7 @@ namespace Gurtle
     [ ComVisible(true) ]
     [ Guid("91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E") ]
     [ ClassInterface(ClassInterfaceType.None) ]
-    public sealed class Plugin : IBugTraqProvider
+    public sealed class Plugin : IBugTraqProvider2
     {
         public string GetCommitMessage(
             IntPtr hParentWnd, 
@@ -124,6 +124,48 @@ namespace Gurtle
         public string GetLinkText(IntPtr hParentWnd, string parameters)
         {
             return "Select Issue";
+        }
+
+        public string GetCommitMessage2(IntPtr hParentWnd, 
+            string parameters, 
+            string commonURL, string commonRoot, string[] pathList, 
+            string originalMessage, string bugID, out string bugIDOut, 
+            out string[] revPropNames, out string[] revPropValues)
+        {
+            bugIDOut = bugID;
+
+            // If no revision properties are to be set, 
+            // the plug-in MUST return empty arrays. 
+
+            revPropNames = new string[0];
+            revPropValues = new string[0];
+            
+            return GetCommitMessage(WindowHandleWrapper.TryCreate(hParentWnd), parameters, originalMessage);
+        }
+
+        public string CheckCommit(IntPtr hParentWnd, 
+            string parameters, 
+            string commonURL, string commonRoot, string[] pathList, 
+            string commitMessage)
+        {
+            return null;
+        }
+
+        public string OnCommitFinished(IntPtr hParentWnd, 
+            string commonRoot, string[] pathList, 
+            string logMessage, int revision)
+        {
+            return null;
+        }
+
+        public bool HasOptions()
+        {
+            return false;
+        }
+
+        public string ShowOptionsDialog(IntPtr hParentWnd, string parameters)
+        {
+            return parameters;
         }
 
         private static IEnumerable<KeyValuePair<string, string>> ParseParameters(string parameters)

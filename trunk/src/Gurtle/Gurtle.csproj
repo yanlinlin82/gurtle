@@ -54,6 +54,7 @@
     <Compile Include="DelegatingComparer.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="IBugTraqProvider.cs" />
+    <Compile Include="IBugTraqProvider2.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="IssueBrowserDialog.cs">
       <SubType>Form</SubType>

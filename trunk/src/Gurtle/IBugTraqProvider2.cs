@@ -1,4 +1,4 @@
-﻿namespace Interop.BugTraqProvider
+namespace Interop.BugTraqProvider
 {
     using System;
     using System.Runtime.InteropServices;
@@ -11,7 +11,7 @@
     // http://tortoisesvn.tigris.org/svn/tortoisesvn/trunk/contrib/issue-tracker-plugins/inc/IBugTraqProvider.idl
     //
     // See also:
-    // http://tortoisesvn.net/docs/release/TortoiseSVN_en/tsvn-ibugtraqprovider.html#tsvn-ibugtraqprovider-1
+    // http://tortoisesvn.net/docs/release/TortoiseSVN_en/tsvn-ibugtraqprovider-2.html
     //
 
     /// <remarks>
@@ -21,8 +21,8 @@
 
     [ ComImport ]
     [ InterfaceType(ComInterfaceType.InterfaceIsIUnknown) ]
-    [ Guid("298B927C-7220-423C-B7B4-6E241F00CD93") ]
-    internal interface IBugTraqProvider
+    [ Guid("C5C85E31-2F9B-4916-A7BA-8E27D481EE83") ]
+    internal interface IBugTraqProvider2 : IBugTraqProvider
     {
         /// <summary>
         /// The ValidateParameters method is called from the settings 
@@ -56,7 +56,7 @@
         /// </remarks>
 
         [return: MarshalAs(UnmanagedType.VariantBool)]
-        bool ValidateParameters(IntPtr hParentWnd,
+        new bool ValidateParameters(IntPtr hParentWnd,
             [MarshalAs(UnmanagedType.BStr)] string parameters);
 
         /// <summary>
@@ -83,7 +83,7 @@
         /// </remarks>
 
         [return: MarshalAs(UnmanagedType.BStr)]
-        string GetLinkText(IntPtr hParentWnd,
+        new string GetLinkText(IntPtr hParentWnd,
             [MarshalAs(UnmanagedType.BStr)] string parameters);
 
         /// <summary>
@@ -118,10 +118,112 @@
         /// </remarks>
 
         [return: MarshalAs(UnmanagedType.BStr)]
-        string GetCommitMessage(IntPtr hParentWnd,
+        new string GetCommitMessage(IntPtr hParentWnd,
             [MarshalAs(UnmanagedType.BStr)] string parameters,
             [MarshalAs(UnmanagedType.BStr)] string commonRoot,
             [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_BSTR)] string[] pathList,
             [MarshalAs(UnmanagedType.BStr)] string originalMessage);
+
+        /// <remarks>
+        /// <code>
+        /// HRESULT GetCommitMessage2 (
+        /// 		[in] HWND hParentWnd,					// Parent window for your provider's UI.
+        /// 		[in] BSTR parameters,					// Parameters for your provider.
+        /// 		[in] BSTR commonURL,					// the common URL of the commit
+        /// 		[in] BSTR commonRoot,
+        /// 		[in] SAFEARRAY(BSTR) pathList,
+        /// 		[in] BSTR originalMessage,				// The text already present in the commit message.
+        /// 												// Your provider should include this text in the new message, where appropriate.
+        /// 		// you can assign custom revision properties to a commit by setting the next two params.
+        /// 		// note: both safearrays must be of the same length. For every property name there must be a property value!
+        /// 		[in] BSTR bugID,						// the content of the bugID field (if shown)
+        /// 		[out] BSTR * bugIDOut,					// modified content of the bugID field
+        /// 		[out] SAFEARRAY(BSTR) * revPropNames,	// a list of revision property names which are applied to the commit
+        /// 		[out] SAFEARRAY(BSTR) * revPropValues,	// a list of revision property values which are applied to the commit
+        /// 		[out, retval] BSTR * newMessage			// The new text for the commit message. This replaces the original message.
+        /// 	);
+        /// </code>
+        /// </remarks>
+
+        [return: MarshalAs(UnmanagedType.BStr)]
+        string GetCommitMessage2(IntPtr hParentWnd,
+            [MarshalAs(UnmanagedType.BStr)] string parameters,
+            [MarshalAs(UnmanagedType.BStr)] string commonURL,
+            [MarshalAs(UnmanagedType.BStr)] string commonRoot,
+            [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_BSTR)] string[] pathList,
+            [MarshalAs(UnmanagedType.BStr)] string originalMessage,
+            [MarshalAs(UnmanagedType.BStr)] string bugID,
+            [MarshalAs(UnmanagedType.BStr)] out string bugIDOut,
+            [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_BSTR)] out string[] revPropNames,
+            [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_BSTR)] out string[] revPropValues);
+
+        /// <remarks>
+        /// <code>
+        /// HRESULT CheckCommit (
+        /// 		[in] HWND hParentWnd,
+        /// 		[in] BSTR parameters,
+        /// 		[in] BSTR commonURL,
+        /// 		[in] BSTR commonRoot,
+        /// 		[in] SAFEARRAY(BSTR) pathList,
+        /// 		[in] BSTR commitMessage,
+        /// 		[out, retval] BSTR * errorMessage
+        /// 		);
+        /// </code>
+        /// </remarks>
+
+        [return: MarshalAs(UnmanagedType.BStr)]
+        string CheckCommit(IntPtr hParentWnd,
+            [MarshalAs(UnmanagedType.BStr)] string parameters,
+            [MarshalAs(UnmanagedType.BStr)] string commonURL,
+            [MarshalAs(UnmanagedType.BStr)] string commonRoot,
+            [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_BSTR)] string[] pathList,
+            [MarshalAs(UnmanagedType.BStr)] string commitMessage);
+
+        /// <remarks>
+        /// <code>
+        /// HRESULT	OnCommitFinished (
+        /// 		[in] HWND hParentWnd,					// Parent window for any (error) UI that needs to be displayed.
+        /// 		[in] BSTR commonRoot,					// The common root of all paths that got committed.
+        /// 		[in] SAFEARRAY(BSTR) pathList,			// All the paths that got committed.
+        /// 		[in] BSTR logMessage,					// The text already present in the commit message.
+        /// 		[in] ULONG revision,					// The revision of the commit.
+        /// 		[out, retval] BSTR * error				// An error to show to the user if this function returns something else than S_OK
+        /// 		);
+        /// </code>
+        /// </remarks>
+        
+        [return: MarshalAs(UnmanagedType.BStr)]
+        string OnCommitFinished(
+            IntPtr hParentWnd,
+            [MarshalAs(UnmanagedType.BStr)] string commonRoot,
+            [MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_BSTR)] string[] pathList,
+            [MarshalAs(UnmanagedType.BStr)] string logMessage,
+            [MarshalAs(UnmanagedType.U4)] int revision);
+
+        /// <remarks>
+        /// <code>
+        /// HRESULT HasOptions(
+        /// 		[out, retval] VARIANT_BOOL *ret			// Whether the provider provides options
+        /// 		);
+        /// </code>
+        /// </remarks>
+        
+        [return: MarshalAs(UnmanagedType.VariantBool)]
+        bool HasOptions();
+
+        /// <remarks>
+        /// <code>
+        /// HRESULT ShowOptionsDialog(
+        /// 		[in] HWND hParentWnd,					// Parent window for the options dialog
+        /// 		[in] BSTR parameters,					// Parameters for your provider.
+        /// 		[out, retval] BSTR * newparameters		// the parameters string
+        /// 		);
+        /// </code>
+        /// </remarks>
+
+        [return: MarshalAs(UnmanagedType.BStr)]
+        string ShowOptionsDialog(
+            IntPtr hParentWnd,
+            [MarshalAs(UnmanagedType.BStr)] string parameters);
     }
 }
