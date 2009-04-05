@@ -154,12 +154,33 @@ namespace Gurtle
 
         public bool HasOptions()
         {
-            return false;
+            return true;
         }
 
         public string ShowOptionsDialog(IntPtr hParentWnd, string parameters)
         {
-            return parameters;
+            return ShowOptionsDialog(WindowHandleWrapper.TryCreate(hParentWnd), parameters);
+        }
+
+        [ ComVisible(false) ]
+        public static string ShowOptionsDialog(IWin32Window parentWindow, string parameterString)
+        {
+            Parameters parameters;
+            
+            try
+            {
+                parameters = Parameters.Parse(parameterString);
+            }
+            catch (ParametersParseException e)
+            {
+                MessageBox.Show(e.Message, "Invalid Parameters", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return parameterString;
+            }
+
+            var dialog = new OptionsDialog { Parameters = parameters };           
+            return dialog.ShowDialog(parentWindow) == DialogResult.OK 
+                 ? dialog.Parameters.ToString() 
+                 : parameterString;
         }
 
         private static string GetIssueTypeAddress(string issueType)

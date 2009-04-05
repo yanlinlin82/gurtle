@@ -48,12 +48,21 @@ namespace Gurtle
             var dict = ParsePairs(str.Split(';')).ToDictionary(
                            p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
 
-            var result = new Parameters
+            Parameters parameters;
+            
+            try
             {
-                Project = dict.TryPop("project"),
-                User = dict.TryPop("user"),
-                Status = dict.TryPop("status"),
-            };
+                parameters = new Parameters
+                {
+                    Project = dict.TryPop("project"),
+                    User = dict.TryPop("user"),
+                    Status = dict.TryPop("status"),
+                };
+            }
+            catch (ArgumentException e)
+            {
+                throw new ParametersParseException(e.Message, e);    
+            }
 
             if (dict.Any())
             {
@@ -61,7 +70,7 @@ namespace Gurtle
                     "Parameter '{0}' is unknown.", dict.Keys.First()));
             }
 
-            return result;
+            return parameters;
         }
 
         public string Project
