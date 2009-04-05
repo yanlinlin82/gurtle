@@ -36,10 +36,26 @@ namespace Gurtle
 
     internal sealed class GoogleCodeProject
     {
-        public static bool IsValidProjectName(string value)
+        public static readonly Uri HostingUrl = new Uri("http://code.google.com/hosting/");
+
+        public static Uri ProjectUrlFromName(string name)
         {
-            if (value == null) 
-                throw new ArgumentNullException("value");
+            if (name == null) throw new ArgumentNullException("name");
+            if (!IsValidProjectName(name)) throw new ArgumentException(null, "name");
+            return new Uri("http://code.google.com/p/" + name);
+        }
+
+        public static Uri SimpleProjectUrlFromName(string name)
+        {
+            if (name == null) throw new ArgumentNullException("name");
+            if (!IsValidProjectName(name)) throw new ArgumentException(null, "name");
+            return new Uri("http://" + name + ".googlecode.com/");
+        }
+
+        public static bool IsValidProjectName(string name)
+        {
+            if (name == null) 
+                throw new ArgumentNullException("name");
             
             //
             // From http://code.google.com/hosting/createProject:
@@ -49,7 +65,7 @@ namespace Gurtle
             //    with no spaces."
             //
 
-            return value.Length > 0 && Regex.IsMatch(value, @"^[a-z][a-z0-9-]*$");
+            return name.Length > 0 && Regex.IsMatch(name, @"^[a-z][a-z0-9-]*$");
         }
     }
 }

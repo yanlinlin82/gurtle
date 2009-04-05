@@ -64,6 +64,12 @@
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="IssueField.cs" />
+    <Compile Include="OptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptionsDialog.Designer.cs">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ParametersParseException.cs" />
     <Compile Include="ListViewItem.cs" />
     <Compile Include="ListViewSorter.cs" />
@@ -76,6 +82,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="IssueBrowserDialog.resx">
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsDialog.resx">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Property.cs" />
     <Compile Include="ScriptControl.cs" />
