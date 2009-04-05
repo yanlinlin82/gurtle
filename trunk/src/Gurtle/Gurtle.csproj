@@ -53,6 +53,7 @@
     <Compile Include="CustomFormatter.cs" />
     <Compile Include="DelegatingComparer.cs" />
     <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="GoogleCodeProject.cs" />
     <Compile Include="IBugTraqProvider.cs" />
     <Compile Include="IBugTraqProvider2.cs" />
     <Compile Include="Issue.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="IssueTableParser.cs" />
     <Compile Include="ObservableCollection.cs" />
     <Compile Include="OleDispatchDriver.cs" />
+    <Compile Include="Parameters.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="IssueBrowserDialog.resx">

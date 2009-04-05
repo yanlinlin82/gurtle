@@ -32,7 +32,6 @@ namespace Gurtle
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Text;
     using System.Windows.Forms;
     using System.Runtime.InteropServices;
@@ -50,34 +49,29 @@ namespace Gurtle
             string parameters, string commonRoot, string[] pathList,
             string originalMessage)
         {
-            return GetCommitMessage(WindowHandleWrapper.TryCreate(hParentWnd), parameters, originalMessage);
+            return GetCommitMessage(WindowHandleWrapper.TryCreate(hParentWnd), Parameters.Parse(parameters), originalMessage);
         }
 
         [ ComVisible(false) ]
         public static string GetCommitMessage(
             IWin32Window parentWindow, 
-            string parameters, string originalMessage)
+            Parameters parameters, string originalMessage)
         {
+            if (parameters == null) throw new ArgumentNullException("parameters");
+            
             try
             {
-                var settings = ParseParameters(parameters)
-                    .ToDictionary(p => p.Key, p => p.Value, StringComparer.OrdinalIgnoreCase);
-
-                string project;
-                if (!settings.TryGetValue("project", out project) || project.Length == 0)
+                string project = parameters.Project;
+                if (project.Length == 0)
                     throw new ApplicationException("Missing Google Code project specification.");
-
-                string userName, status;
-                settings.TryGetValue("user", out userName);
-                settings.TryGetValue("status", out status);
 
                 IList<Issue> issues;
 
                 using (var dialog = new IssueBrowserDialog
                 {
                     Project = project,
-                    UserNamePattern = userName,
-                    StatusPattern = status,
+                    UserNamePattern = parameters.User,
+                    StatusPattern = parameters.Status,
                     UpdateCheckEnabled = true,
                 })
                 {
@@ -139,8 +133,8 @@ namespace Gurtle
 
             revPropNames = new string[0];
             revPropValues = new string[0];
-            
-            return GetCommitMessage(WindowHandleWrapper.TryCreate(hParentWnd), parameters, originalMessage);
+
+            return GetCommitMessage(WindowHandleWrapper.TryCreate(hParentWnd), Parameters.Parse(parameters), originalMessage);
         }
 
         public string CheckCommit(IntPtr hParentWnd, 
@@ -166,22 +160,6 @@ namespace Gurtle
         public string ShowOptionsDialog(IntPtr hParentWnd, string parameters)
         {
             return parameters;
-        }
-
-        private static IEnumerable<KeyValuePair<string, string>> ParseParameters(string parameters)
-        {
-            return ParseParameters(parameters.Split(';'));
-        }
-        
-        private static IEnumerable<KeyValuePair<string, string>> ParseParameters(IEnumerable<string> parameters)
-        {
-            foreach (var parameter in parameters)
-            {
-                var pair = parameter.Split(new[] {'='}, 2);
-                var key = pair[0].Trim();
-                var value = pair.Length > 1 ? pair[1].Trim() : string.Empty;
-                yield return new KeyValuePair<string, string>(key, value);
-            }
         }
 
         private static string GetIssueTypeAddress(string issueType)
