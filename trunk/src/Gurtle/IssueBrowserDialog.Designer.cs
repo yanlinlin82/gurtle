@@ -64,10 +64,10 @@
             // 
             cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            cancelButton.Location = new System.Drawing.Point(761, 402);
+            cancelButton.Location = new System.Drawing.Point(761, 427);
             cancelButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             cancelButton.Name = "cancelButton";
-            cancelButton.Size = new System.Drawing.Size(75, 28);
+            cancelButton.Size = new System.Drawing.Size(75, 30);
             cancelButton.TabIndex = 10;
             cancelButton.Text = "Cancel";
             cancelButton.UseVisualStyleBackColor = true;
@@ -77,7 +77,7 @@
             statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel,
             this.workStatus});
-            statusStrip.Location = new System.Drawing.Point(0, 433);
+            statusStrip.Location = new System.Drawing.Point(0, 462);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
             statusStrip.Size = new System.Drawing.Size(849, 25);
@@ -105,10 +105,10 @@
             // detailButton
             // 
             this.detailButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.detailButton.Location = new System.Drawing.Point(12, 402);
+            this.detailButton.Location = new System.Drawing.Point(12, 427);
             this.detailButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.detailButton.Name = "detailButton";
-            this.detailButton.Size = new System.Drawing.Size(75, 28);
+            this.detailButton.Size = new System.Drawing.Size(75, 30);
             this.detailButton.TabIndex = 6;
             this.detailButton.Text = "&Details";
             toolTip.SetToolTip(this.detailButton, "Open details of selected issue in the browser");
@@ -119,10 +119,10 @@
             // 
             this.refreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.refreshButton.Enabled = false;
-            this.refreshButton.Location = new System.Drawing.Point(93, 402);
+            this.refreshButton.Location = new System.Drawing.Point(93, 427);
             this.refreshButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(75, 28);
+            this.refreshButton.Size = new System.Drawing.Size(75, 30);
             this.refreshButton.TabIndex = 7;
             this.refreshButton.Text = "&Refresh";
             toolTip.SetToolTip(this.refreshButton, "Reload the issue list");
@@ -134,16 +134,16 @@
             label1.AutoSize = true;
             label1.Location = new System.Drawing.Point(12, 7);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(57, 17);
+            label1.Size = new System.Drawing.Size(55, 17);
             label1.TabIndex = 0;
             label1.Text = "&Search:";
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(316, 10);
+            label2.Location = new System.Drawing.Point(316, 11);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(19, 17);
+            label2.Size = new System.Drawing.Size(18, 17);
             label2.TabIndex = 2;
             label2.Text = "in";
             // 
@@ -151,10 +151,10 @@
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(681, 402);
+            this.okButton.Location = new System.Drawing.Point(681, 427);
             this.okButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 28);
+            this.okButton.Size = new System.Drawing.Size(75, 30);
             this.okButton.TabIndex = 9;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -176,11 +176,11 @@
             this.issueListView.FullRowSelect = true;
             this.issueListView.GridLines = true;
             this.issueListView.HideSelection = false;
-            this.issueListView.Location = new System.Drawing.Point(0, 36);
+            this.issueListView.Location = new System.Drawing.Point(0, 38);
             this.issueListView.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.issueListView.MultiSelect = false;
             this.issueListView.Name = "issueListView";
-            this.issueListView.Size = new System.Drawing.Size(848, 360);
+            this.issueListView.Size = new System.Drawing.Size(848, 382);
             this.issueListView.TabIndex = 5;
             this.issueListView.UseCompatibleStateImageBehavior = false;
             this.issueListView.View = System.Windows.Forms.View.Details;
@@ -220,9 +220,9 @@
             // foundLabel
             // 
             this.foundLabel.AutoSize = true;
-            this.foundLabel.Location = new System.Drawing.Point(490, 10);
+            this.foundLabel.Location = new System.Drawing.Point(490, 11);
             this.foundLabel.Name = "foundLabel";
-            this.foundLabel.Size = new System.Drawing.Size(66, 17);
+            this.foundLabel.Size = new System.Drawing.Size(70, 17);
             this.foundLabel.TabIndex = 4;
             this.foundLabel.Text = "{0} found";
             this.foundLabel.Visible = false;
@@ -233,7 +233,7 @@
             this.searchFieldBox.FormattingEnabled = true;
             this.searchFieldBox.Location = new System.Drawing.Point(341, 7);
             this.searchFieldBox.Name = "searchFieldBox";
-            this.searchFieldBox.Size = new System.Drawing.Size(121, 24);
+            this.searchFieldBox.Size = new System.Drawing.Size(121, 25);
             this.searchFieldBox.TabIndex = 3;
             this.searchFieldBox.SelectedIndexChanged += new System.EventHandler(this.SearchFieldBox_SelectedIndexChanged);
             // 
@@ -251,9 +251,9 @@
             // 
             this.includeClosedCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.includeClosedCheckBox.AutoSize = true;
-            this.includeClosedCheckBox.Location = new System.Drawing.Point(175, 406);
+            this.includeClosedCheckBox.Location = new System.Drawing.Point(175, 432);
             this.includeClosedCheckBox.Name = "includeClosedCheckBox";
-            this.includeClosedCheckBox.Size = new System.Drawing.Size(164, 21);
+            this.includeClosedCheckBox.Size = new System.Drawing.Size(155, 21);
             this.includeClosedCheckBox.TabIndex = 8;
             this.includeClosedCheckBox.Text = "I&nclude closed issues";
             this.includeClosedCheckBox.UseVisualStyleBackColor = true;
@@ -264,17 +264,17 @@
             this.searchBox.FormattingEnabled = true;
             this.searchBox.Location = new System.Drawing.Point(76, 7);
             this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(233, 24);
+            this.searchBox.Size = new System.Drawing.Size(233, 25);
             this.searchBox.TabIndex = 1;
             this.searchBox.TextChanged += new System.EventHandler(this.SearchBox_TextChanged);
             // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.okButton;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = cancelButton;
-            this.ClientSize = new System.Drawing.Size(849, 458);
+            this.ClientSize = new System.Drawing.Size(849, 487);
             this.Controls.Add(this.searchBox);
             this.Controls.Add(this.includeClosedCheckBox);
             this.Controls.Add(this.searchFieldBox);
@@ -287,6 +287,7 @@
             this.Controls.Add(cancelButton);
             this.Controls.Add(this.detailButton);
             this.Controls.Add(this.issueListView);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimizeBox = false;
             this.Name = "IssueBrowserDialog";
