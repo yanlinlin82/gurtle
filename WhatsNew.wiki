@@ -1,0 +1,34 @@
+#summary What's new and fixed with each version
+#labels Featured
+
+= Version 0.3 =
+
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.3.zip Download this version]
+
+  * Issue #6: Vary log message text with issue type
+  * Issue #12: Warn when unowned/closed issues are selected
+  * Issue #15: Selected issues that are invisible do not appear in log
+  * Issue #22: r69 does not build
+  * Issue #23: Issue fields are off
+  * Issue #19: Mention new TSVN properties in Wiki or docs
+  * Issue #20: Add support for IBugTraqProvider2
+  * Issue #26: Add an options dialog to configure parameters
+
+= Version 0.2 =
+
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.2.zip Download this version]
+
+  * Issue #1: Wrong property name
+  * Issue #3: Make Grid sortable
+  * Issue #4: Add search box for finding issue
+  * Issue #7: Add option to fetch all issues, including closed ones
+  * Issue #8: Allow searching issues during download
+  * Issue #9: Multi-word search for summaries
+  * Issue #10: Use checkboxes for selection of issues
+  * Issue #11: Notify of updates via tray icon
+
+= Version 0.1 =
+
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.1.zip Download this version]
+
+  * Initial public release.
