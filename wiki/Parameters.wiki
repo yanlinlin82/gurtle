@@ -25,6 +25,10 @@ You configure a working copy path for Gurtle in the Issue Tracker Integration ar
 
 http://gurtle.googlecode.com/svn/wiki/SettingsIssueTracker.png
 
+If you are using TSVN 1.6 or later, you will see an *Options* button (as shown above) that you can use to configure the parameters interactively. Pressing the button will display the following dialog box using which, for example, you can specify the Google Code project:
+
+http://gurtle.googlecode.com/svn/wiki/OptionsDialog.png
+
 == Central Configuration via SVN Repository ==
 
 This section applies to TSVN 1.6 or later.
