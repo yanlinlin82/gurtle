@@ -1,9 +1,9 @@
 #summary What's new and fixed with each version
 #labels Featured
 
-[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.3.zip Download latest version]
+= Version 0.3 =
 
-= [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.3.zip Version 0.3] =
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.3.zip Download this version]
 
   * Issue #6: Vary log message text with issue type
   * Issue #12: Warn when unowned/closed issues are selected
@@ -14,7 +14,9 @@
   * Issue #20: Add support for IBugTraqProvider2
   * Issue #26: Add an options dialog to configure parameters
 
-= [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.2.zip Version 0.2] =
+= Version 0.2 =
+
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.2.zip Download this version]
 
   * Issue #1: Wrong property name
   * Issue #3: Make Grid sortable
@@ -25,6 +27,8 @@
   * Issue #10: Use checkboxes for selection of issues
   * Issue #11: Notify of updates via tray icon
 
-= [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.1.zip Version 0.1] =
+= Version 0.1 =
+
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.1.zip Download this version]
 
   * Initial public release.
