@@ -241,7 +241,7 @@ namespace Gurtle
             var href = headers.Find("href").MaskNull();
 
             if (href.Length == 0 || !Uri.IsWellFormedUriString(href, UriKind.Absolute))
-                href = "http://code.google.com/p/gurtle/downloads/list";
+                href = new Uri(GoogleCodeProject.ProjectUrlFromName("gurtle"), "downloads/list").ToString();
 
             var thisVersion = typeof(Plugin).Assembly.GetName().Version;
             if (version <= thisVersion)
@@ -317,7 +317,7 @@ namespace Gurtle
                 }
             };
 
-            client.DownloadStringAsync(new Uri(string.Format("http://code.google.com/p/{0}/feeds/issueOptions", Project)));
+            client.DownloadStringAsync(new Uri(GoogleCodeProject.ProjectUrlFromName(Project), "feeds/issueOptions"));
             _issueOptionsClient = client;
         }
 
@@ -407,9 +407,8 @@ namespace Gurtle
         {
             Debug.Assert(issue != null);
 
-            Process.Start(
-                string.Format("http://code.google.com/p/{0}/issues/detail?id={1}",
-                Project, issue.Id.ToString(CultureInfo.InvariantCulture)));
+            Process.Start(new Uri(GoogleCodeProject.ProjectUrlFromName(Project), 
+                "issues/detail?id=" + issue.Id.ToString(CultureInfo.InvariantCulture)).ToString());
         }
 
         private void IssueListView_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -632,8 +631,8 @@ namespace Gurtle
             var client = new WebClient();
 
             Action<int> pager = next => client.DownloadStringAsync(
-                new Uri(string.Format("http://code.google.com/p/{0}/issues/csv?start={1}&colspec={2}{3}",
-                    project, next.ToString(CultureInfo.InvariantCulture),
+                new Uri(GoogleCodeProject.ProjectUrlFromName(project), string.Format("issues/csv?start={0}&colspec={1}{2}",
+                    next.ToString(CultureInfo.InvariantCulture),
                     string.Join("%20", Enum.GetNames(typeof(IssueField))),
                     includeClosedIssues ? "&can=1" : string.Empty)));
 

@@ -42,7 +42,7 @@ namespace Gurtle
         {
             if (name == null) throw new ArgumentNullException("name");
             if (!IsValidProjectName(name)) throw new ArgumentException(null, "name");
-            return new Uri("http://code.google.com/p/" + name);
+            return new Uri("http://code.google.com/p/" + name + "/");
         }
 
         public static Uri SimpleProjectUrlFromName(string name)
