@@ -241,7 +241,7 @@ namespace Gurtle
             var href = headers.Find("href").MaskNull();
 
             if (href.Length == 0 || !Uri.IsWellFormedUriString(href, UriKind.Absolute))
-                href = new Uri(GoogleCodeProject.ProjectUrlFromName("gurtle"), "downloads/list").ToString();
+                href = GoogleCodeProject.Url("gurtle", "downloads/list").ToString();
 
             var thisVersion = typeof(Plugin).Assembly.GetName().Version;
             if (version <= thisVersion)
@@ -317,7 +317,7 @@ namespace Gurtle
                 }
             };
 
-            client.DownloadStringAsync(new Uri(GoogleCodeProject.ProjectUrlFromName(Project), "feeds/issueOptions"));
+            client.DownloadStringAsync(GoogleCodeProject.Url(Project, "feeds/issueOptions"));
             _issueOptionsClient = client;
         }
 
@@ -406,9 +406,7 @@ namespace Gurtle
         private void ShowIssueDetails(Issue issue)
         {
             Debug.Assert(issue != null);
-
-            Process.Start(new Uri(GoogleCodeProject.ProjectUrlFromName(Project), 
-                "issues/detail?id=" + issue.Id.ToString(CultureInfo.InvariantCulture)).ToString());
+            Process.Start(GoogleCodeProject.FormatUrl(Project, "issues/detail?id={0}", issue.Id).ToString());
         }
 
         private void IssueListView_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -631,10 +629,10 @@ namespace Gurtle
             var client = new WebClient();
 
             Action<int> pager = next => client.DownloadStringAsync(
-                new Uri(GoogleCodeProject.ProjectUrlFromName(project), string.Format("issues/csv?start={0}&colspec={1}{2}",
+                GoogleCodeProject.FormatUrl(project, "issues/csv?start={0}&colspec={1}{2}",
                     next.ToString(CultureInfo.InvariantCulture),
                     string.Join("%20", Enum.GetNames(typeof(IssueField))),
-                    includeClosedIssues ? "&can=1" : string.Empty)));
+                    includeClosedIssues ? "&can=1" : string.Empty));
 
             client.DownloadStringCompleted += (sender, args) =>
             {
