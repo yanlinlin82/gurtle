@@ -30,6 +30,7 @@ namespace Gurtle
     #region Imports
 
     using System;
+    using System.Globalization;
     using System.Text.RegularExpressions;
 
     #endregion
@@ -38,18 +39,29 @@ namespace Gurtle
     {
         public static readonly Uri HostingUrl = new Uri("http://code.google.com/hosting/");
 
-        public static Uri ProjectUrlFromName(string name)
+        public static Uri Url(string projectName)
         {
-            if (name == null) throw new ArgumentNullException("name");
-            if (!IsValidProjectName(name)) throw new ArgumentException(null, "name");
-            return new Uri("http://code.google.com/p/" + name + "/");
+            return Url(projectName, null);
         }
 
-        public static Uri SimpleProjectUrlFromName(string name)
+        public static Uri Url(string projectName, string relativeUrl)
         {
-            if (name == null) throw new ArgumentNullException("name");
-            if (!IsValidProjectName(name)) throw new ArgumentException(null, "name");
-            return new Uri("http://" + name + ".googlecode.com/");
+            if (projectName == null) throw new ArgumentNullException("projectName");
+            if (!IsValidProjectName(projectName)) throw new ArgumentException(null, "projectName");
+            var baseUrl = new Uri("http://code.google.com/p/" + projectName + "/");
+            return string.IsNullOrEmpty(relativeUrl) ? baseUrl : new Uri(baseUrl, relativeUrl);
+        }
+
+        public static Uri FormatUrl(string projectName, string relativeUrl, params object[] args)
+        {
+            return Url(projectName, string.Format(CultureInfo.InvariantCulture, relativeUrl, args));
+        }
+        
+        public static Uri DnsUrl(string projectName)
+        {
+            if (projectName == null) throw new ArgumentNullException("projectName");
+            if (!IsValidProjectName(projectName)) throw new ArgumentException(null, "projectName");
+            return new Uri("http://" + projectName + ".googlecode.com/");
         }
 
         public static bool IsValidProjectName(string name)
@@ -60,7 +72,7 @@ namespace Gurtle
             //
             // From http://code.google.com/hosting/createProject:
             //
-            //   "...project's name must consist of a lowercase letter, 
+            //   "...project's projectName must consist of a lowercase letter, 
             //    followed by lowercase letters, digits, and dashes, 
             //    with no spaces."
             //

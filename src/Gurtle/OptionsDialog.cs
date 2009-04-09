@@ -58,7 +58,7 @@
             _okButton.Enabled = _testButton.Enabled = isValid;
             
             _linkLabel.Text = (isValid 
-                            ? GoogleCodeProject.ProjectUrlFromName(projectName)
+                            ? GoogleCodeProject.Url(projectName)
                             : GoogleCodeProject.HostingUrl).ToString();
         }
 
@@ -72,7 +72,7 @@
             try
             {
                 var projectName = _projectNameBox.Text;
-                var url = GoogleCodeProject.SimpleProjectUrlFromName(projectName);
+                var url = GoogleCodeProject.DnsUrl(projectName);
                 new WebClient().DownloadData(url);
                 var message = string.Format("The Google Code project '{0}' appears valid and reachable at {1}.", projectName, url);
                 MessageBox.Show(message, "Test Passed", MessageBoxButtons.OK, MessageBoxIcon.Information);
