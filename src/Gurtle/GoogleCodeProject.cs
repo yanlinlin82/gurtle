@@ -34,7 +34,7 @@ namespace Gurtle
 
     #endregion
 
-    internal sealed class GoogleCodeProject
+    internal static class GoogleCodeProject
     {
         public static readonly Uri HostingUrl = new Uri("http://code.google.com/hosting/");
 
