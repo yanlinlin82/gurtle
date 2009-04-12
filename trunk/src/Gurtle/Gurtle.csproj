@@ -64,6 +64,18 @@
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="IssueField.cs" />
+    <Compile Include="IssueUpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IssueUpdateDialog.Designer.cs">
+      <DependentUpon>IssueUpdateDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IssueUpdatePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IssueUpdatePage.Designer.cs">
+      <DependentUpon>IssueUpdatePage.cs</DependentUpon>
+    </Compile>
     <Compile Include="OptionsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +94,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="IssueBrowserDialog.resx">
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IssueUpdateDialog.resx">
+      <DependentUpon>IssueUpdateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IssueUpdatePage.resx">
+      <DependentUpon>IssueUpdatePage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OptionsDialog.resx">
       <DependentUpon>OptionsDialog.cs</DependentUpon>
