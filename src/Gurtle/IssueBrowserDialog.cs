@@ -476,10 +476,6 @@ namespace Gurtle
             member = null;
             free(local);
         }
-
-        private void OKButton_Click(object sender, EventArgs e)
-        {
-        }
         
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
