@@ -16,5 +16,14 @@
             page.Controls.Add(new IssueUpdatePage() { Dock = DockStyle.Fill });
             tabs.TabPages.Add(page);
         }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            if (DialogResult == DialogResult.OK)
+            {
+                new CredentialsDialog { Realm = "Google Code" }.ShowDialog(this);
+            }
+            base.OnClosing(e);
+        }
     }
 }

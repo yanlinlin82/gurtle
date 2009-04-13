@@ -50,6 +50,12 @@
     <Compile Include="CollectionItemBatchEventArgs.cs" />
     <Compile Include="CollectionItemEventArgs.cs" />
     <Compile Include="ComboBoxExtensions.cs" />
+    <Compile Include="CredentialsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CredentialsDialog.Designer.cs">
+      <DependentUpon>CredentialsDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomFormatter.cs" />
     <Compile Include="DelegatingComparer.cs" />
     <Compile Include="DictionaryExtensions.cs" />
@@ -92,6 +98,9 @@
     <Compile Include="Parameters.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CredentialsDialog.resx">
+      <DependentUpon>CredentialsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="IssueBrowserDialog.resx">
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </EmbeddedResource>
