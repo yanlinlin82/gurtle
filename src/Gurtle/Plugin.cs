@@ -44,6 +44,8 @@ namespace Gurtle
     [ ClassInterface(ClassInterfaceType.None) ]
     public sealed class Plugin : IBugTraqProvider2
     {
+        private IList<Issue> _issues;
+
         public string GetCommitMessage(
             IntPtr hParentWnd, 
             string parameters, string commonRoot, string[] pathList,
@@ -53,7 +55,7 @@ namespace Gurtle
         }
 
         [ ComVisible(false) ]
-        public static string GetCommitMessage(
+        public string GetCommitMessage(
             IWin32Window parentWindow, 
             Parameters parameters, string originalMessage)
         {
@@ -80,6 +82,8 @@ namespace Gurtle
 
                     if (reply != DialogResult.OK || issues.Count == 0)
                         return originalMessage;
+
+                    _issues = issues;
                 }
 
                 var message = new StringBuilder(originalMessage);
@@ -149,6 +153,22 @@ namespace Gurtle
             string commonRoot, string[] pathList, 
             string logMessage, int revision)
         {
+            return OnCommitFinished(WindowHandleWrapper.TryCreate(hParentWnd), commonRoot, pathList, logMessage, revision);
+        }
+
+        public string OnCommitFinished(IWin32Window parentWindow,
+            string commonRoot, string[] pathList,
+            string logMessage, int revision)
+        {
+            if (_issues == null || _issues.Count == 0)
+                return null;
+
+            using (var dialog = new IssueUpdateDialog())
+            {
+                dialog.Issues = _issues;
+                dialog.ShowDialog(parentWindow);
+            }
+            
             return null;
         }
 
