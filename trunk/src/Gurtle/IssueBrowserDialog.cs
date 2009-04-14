@@ -74,6 +74,8 @@ namespace Gurtle
             _titleFormat = Text;
             _foundFormat = foundLabel.Text;
 
+            new WindowSettings(Properties.Settings.Default, this);
+
             var issues = _issues = new ObservableCollection<IssueListViewItem>();
             issues.ItemAdded += (sender, args) => ListIssues(Enumerable.Repeat(args.Item, 1));
             issues.ItemsAdded += (sender, args) => ListIssues(args.Items);
