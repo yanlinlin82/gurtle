@@ -37,13 +37,16 @@ namespace Gurtle
     #region Imports
 
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Drawing;
+    using System.Linq;
     using System.Windows.Forms;
 
     #endregion
 
     [Serializable]
-    public sealed class WindowSettings
+    internal sealed class WindowSettings
     {
         public Point Location { get; set; }
         public Size Size { get; set; }
@@ -52,31 +55,35 @@ namespace Gurtle
 
         public void Record(Form form, params SplitContainer[] splitters)
         {
-            bool shouldRecordSplitters;
+            if (form == null) throw new ArgumentNullException("form");
+
             switch (form.WindowState)
             {
                 case FormWindowState.Maximized:
+                {
                     RecordWindowPosition(form.RestoreBounds);
-                    shouldRecordSplitters = true;
+                    RecordSplitters(splitters);
                     break;
+                }
                 case FormWindowState.Normal:
-                    shouldRecordSplitters =
-                        RecordWindowPosition(form.Bounds);
+                {
+                    if (RecordWindowPosition(form.Bounds))
+                        RecordSplitters(splitters);
                     break;
+                }
                 default:
-                    // Don't record anything when closing while minimized.
-                    return;
+                {
+                    return; // Don't record anything when closing while minimized.
+                }
             }
+            
             WindowState = form.WindowState;
-            if (shouldRecordSplitters)
-            {
-                RecordSplitters(splitters);
-            }
-
         }
 
         public void Restore(Form form, params SplitContainer[] splitters)
         {
+            if (form == null) throw new ArgumentNullException("form");
+
             if (IsOnScreen(Location, Size))
             {
                 form.Location = Location;
@@ -90,61 +97,55 @@ namespace Gurtle
             }
         }
 
-        private void RestoreSplitters(SplitContainer[] splitters)
+        private void RestoreSplitters(IList<SplitContainer> splitters)
         {
-            for (int i = 0; i < splitters.Length && i < SplitterDistances.Length; i++)
-            {
-                var splitter = splitters[i];
-                int splitterDistance = SplitterDistances[i];
-                int splitterSize =
-                    splitter.Orientation == Orientation.Vertical
-                        ? splitter.Width
-                        : splitter.Height;
-                bool isDistanceLegal =
-                    splitter.Panel1MinSize <= splitterDistance
-                    && splitterDistance <= splitterSize - splitter.Panel2MinSize;
-                if (isDistanceLegal)
-                {
-                    splitter.SplitterDistance = splitterDistance;
-                }
+            if (splitters == null || splitters.Count == 0)
+                return;
+
+            for (var i = 0; i < splitters.Count && i < SplitterDistances.Length; i++)
+                RestoreSplitter(splitters[i], SplitterDistances[i]);
+        }
+
+        private static void RestoreSplitter(SplitContainer splitter, int distance) 
+        {
+            Debug.Assert(splitter != null);
+
+            var size = splitter.Orientation == Orientation.Vertical
+                     ? splitter.Width
+                     : splitter.Height;
+
+            if (splitter.Panel1MinSize <= distance
+                && distance <= size - splitter.Panel2MinSize) // is distance legal?
+            {   
+                splitter.SplitterDistance = distance;
             }
         }
 
         private bool RecordWindowPosition(Rectangle bounds)
         {
-            bool isOnScreen = IsOnScreen(bounds.Location, bounds.Size);
-            if (isOnScreen)
-            {
-                Location = bounds.Location;
-                Size = bounds.Size;
-            }
-            return isOnScreen;
+            if (!IsOnScreen(bounds.Location, bounds.Size))
+                return false;
+
+            Location = bounds.Location;
+            Size = bounds.Size;
+            return true;
         }
 
-        private void RecordSplitters(SplitContainer[] splitters)
+        private void RecordSplitters(IEnumerable<SplitContainer> splitters)
         {
-            SplitterDistances = new int[splitters.Length];
-            for (int i = 0; i < splitters.Length; i++)
-            {
-                SplitterDistances[i] = splitters[i].SplitterDistance;
-            }
+            SplitterDistances = splitters != null 
+                              ? splitters.Select(s => s.SplitterDistance).ToArray() 
+                              : null;
         }
 
-        private bool IsOnScreen(Point location, Size size)
+        private static bool IsOnScreen(Point location, Size size)
         {
             return IsOnScreen(location) && IsOnScreen(location + size);
         }
 
-        private bool IsOnScreen(Point location)
+        private static bool IsOnScreen(Point location)
         {
-            foreach (var screen in Screen.AllScreens)
-            {
-                if (screen.WorkingArea.Contains(location))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return Screen.AllScreens.Any(screen => screen.WorkingArea.Contains(location));
         }
     }
 }
