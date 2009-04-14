@@ -121,6 +121,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WindowHandleWrapper.cs" />
+    <Compile Include="WindowSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KnightRider.gif" />
