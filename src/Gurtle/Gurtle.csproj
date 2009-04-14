@@ -113,8 +113,14 @@
     <EmbeddedResource Include="OptionsDialog.resx">
       <DependentUpon>OptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Property.cs" />
     <Compile Include="ScriptControl.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="TextReaderExtensions.cs" />
     <Compile Include="WebClient.cs">
@@ -127,6 +133,11 @@
     <None Include="KnightRider.gif" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Update.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

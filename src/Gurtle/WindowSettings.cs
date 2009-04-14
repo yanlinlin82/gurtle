@@ -38,6 +38,8 @@ namespace Gurtle
 
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Configuration;
     using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
@@ -45,97 +47,125 @@ namespace Gurtle
 
     #endregion
 
+    /// <summary>
+    /// Saves and restores the location, size and state of a form to and 
+    /// from a specific <see cref="SettingsBase" /> object.
+    /// </summary>
+
     [Serializable]
     internal sealed class WindowSettings
     {
-        public Point Location { get; set; }
-        public Size Size { get; set; }
-        public FormWindowState WindowState { get; set; }
-        public int[] SplitterDistances { get; set; }
+        private Form _form;
+        private SettingsBase _settings;
+        private SettingsProperty _location;
+        private SettingsProperty _size;
+        private SettingsProperty _windowState;
 
-        public void Record(Form form, params SplitContainer[] splitters)
+        public WindowSettings(SettingsBase settings, Form form) :
+            this(settings, form, null) {}
+
+        public WindowSettings(SettingsBase settings, Form form, string prefix)
         {
+            if (settings == null) throw new ArgumentNullException("settings");
             if (form == null) throw new ArgumentNullException("form");
 
-            switch (form.WindowState)
+            _form = form;
+            _settings = settings;
+
+            if (string.IsNullOrEmpty(prefix))
+                prefix = form.GetType().Name;
+
+            var properties = settings.Properties;
+            _location = properties[prefix + "Location"];
+            _size = properties[prefix + "Size"];
+            _windowState = properties[prefix + "WindowState"];
+
+            form.Load += OnFormLoad;
+            form.Closing += OnFormClosing;
+            form.Disposed += OnFormDisposed;
+        }
+
+        public Point? Location
+        {
+            get { return (Point?) _settings[_location.Name]; }
+            set { _settings[_location.Name] = value; }
+        }
+
+        public Size? Size
+        {
+            get { return (Size?) _settings[_size.Name]; }
+            set { _settings[_size.Name] = value; }
+        }
+
+        public FormWindowState? WindowState
+        {
+            get { return (FormWindowState?) _settings[_windowState.Name]; }
+            set { _settings[_windowState.Name] = value; }
+        }
+
+        private void OnFormDisposed(object sender, EventArgs e)
+        {
+            var form = _form;
+
+            _form = null;
+            _settings = null;
+            _location = _size = _windowState = null;
+
+            Debug.Assert(form != null);
+
+            form.Load -= OnFormLoad;
+            form.Closing -= OnFormClosing;
+            form.Disposed -= OnFormDisposed;
+        }
+
+        private void OnFormLoad(object sender, EventArgs e)
+        {
+            Recall();
+        }
+
+        private void OnFormClosing(object sender, CancelEventArgs e)
+        {
+            Remember();
+        }
+
+        public void Remember()
+        {
+            var form = _form;
+            if (form == null)
+                throw new InvalidOperationException();
+
+            var bounds = FormBoundsFromWindowState(form);
+
+            if (bounds != null)
             {
-                case FormWindowState.Maximized:
-                {
-                    RecordWindowPosition(form.RestoreBounds);
-                    RecordSplitters(splitters);
-                    break;
-                }
-                case FormWindowState.Normal:
-                {
-                    if (RecordWindowPosition(form.Bounds))
-                        RecordSplitters(splitters);
-                    break;
-                }
-                default:
-                {
-                    return; // Don't record anything when closing while minimized.
-                }
+                if (!IsOnScreen(bounds.Value.Location, bounds.Value.Size))
+                    return;
+
+                Location = bounds.Value.Location;
+                Size = bounds.Value.Size;
             }
-            
+
             WindowState = form.WindowState;
         }
 
-        public void Restore(Form form, params SplitContainer[] splitters)
+        public void Recall()
         {
-            if (form == null) throw new ArgumentNullException("form");
+            var form = _form;
+            if (form == null)
+                throw new InvalidOperationException();
+            
+            var location = Location ?? form.Location;
+            var size = Size ?? form.Size;
 
-            if (IsOnScreen(Location, Size))
+            if (IsOnScreen(location, size))
             {
-                form.Location = Location;
-                form.Size = Size;
-                form.WindowState = WindowState;
-                RestoreSplitters(splitters);
+                form.Location = location;
+                form.Size = size;
             }
-            else
-            {
-                form.WindowState = WindowState;
-            }
-        }
 
-        private void RestoreSplitters(IList<SplitContainer> splitters)
-        {
-            if (splitters == null || splitters.Count == 0)
-                return;
-
-            for (var i = 0; i < splitters.Count && i < SplitterDistances.Length; i++)
-                RestoreSplitter(splitters[i], SplitterDistances[i]);
-        }
-
-        private static void RestoreSplitter(SplitContainer splitter, int distance) 
-        {
-            Debug.Assert(splitter != null);
-
-            var size = splitter.Orientation == Orientation.Vertical
-                     ? splitter.Width
-                     : splitter.Height;
-
-            if (splitter.Panel1MinSize <= distance
-                && distance <= size - splitter.Panel2MinSize) // is distance legal?
-            {   
-                splitter.SplitterDistance = distance;
-            }
-        }
-
-        private bool RecordWindowPosition(Rectangle bounds)
-        {
-            if (!IsOnScreen(bounds.Location, bounds.Size))
-                return false;
-
-            Location = bounds.Location;
-            Size = bounds.Size;
-            return true;
-        }
-
-        private void RecordSplitters(IEnumerable<SplitContainer> splitters)
-        {
-            SplitterDistances = splitters != null 
-                              ? splitters.Select(s => s.SplitterDistance).ToArray() 
-                              : null;
+            var windowState = WindowState;
+            if (windowState != null)
+                form.WindowState = WindowState.Value;
         }
 
         private static bool IsOnScreen(Point location, Size size)
@@ -146,6 +176,18 @@ namespace Gurtle
         private static bool IsOnScreen(Point location)
         {
             return Screen.AllScreens.Any(screen => screen.WorkingArea.Contains(location));
+        }
+
+        private static Rectangle? FormBoundsFromWindowState(Form form)
+        {
+            Debug.Assert(form != null);
+
+            switch (form.WindowState)
+            {
+                case FormWindowState.Maximized: return form.RestoreBounds;
+                case FormWindowState.Normal: return form.Bounds;
+                default: return null; // Don't record anything when closing while minimized.
+            }
         }
     }
 }

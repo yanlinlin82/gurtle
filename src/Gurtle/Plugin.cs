@@ -80,6 +80,8 @@ namespace Gurtle
                     var reply = dialog.ShowDialog(parentWindow);
                     issues = dialog.SelectedIssueObjects;
 
+                    Properties.Settings.Default.Save();
+
                     if (reply != DialogResult.OK || issues.Count == 0)
                         return originalMessage;
 
