@@ -77,10 +77,13 @@ namespace Gurtle
                     UpdateCheckEnabled = true,
                 })
                 {
+                    var settings = Properties.Settings.Default;
+                    new WindowSettings(settings, dialog);
+
                     var reply = dialog.ShowDialog(parentWindow);
                     issues = dialog.SelectedIssueObjects;
 
-                    Properties.Settings.Default.Save();
+                    settings.Save();
 
                     if (reply != DialogResult.OK || issues.Count == 0)
                         return originalMessage;
