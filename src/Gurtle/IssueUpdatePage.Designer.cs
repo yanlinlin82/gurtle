@@ -31,8 +31,8 @@
             System.Windows.Forms.Label label1;
             this.statusBox = new System.Windows.Forms.ComboBox();
             this.commentBox = new System.Windows.Forms.TextBox();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.summaryLabel = new System.Windows.Forms.Label();
+            this.summaryLabel = new System.Windows.Forms.LinkLabel();
+            this.revisionsLabel = new System.Windows.Forms.LinkLabel();
             label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -65,34 +65,42 @@
             this.commentBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.commentBox.Size = new System.Drawing.Size(589, 203);
             this.commentBox.TabIndex = 1;
-            // 
-            // linkLabel1
-            // 
-            this.linkLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(420, 40);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(172, 17);
-            this.linkLabel1.TabIndex = 2;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "Go to on-line issue details";
+            this.commentBox.TextChanged += new System.EventHandler(this.CommentBox_TextChanged);
             // 
             // summaryLabel
             // 
+            this.summaryLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.summaryLabel.AutoEllipsis = true;
-            this.summaryLabel.Location = new System.Drawing.Point(4, 4);
+            this.summaryLabel.Location = new System.Drawing.Point(3, 8);
             this.summaryLabel.Name = "summaryLabel";
-            this.summaryLabel.Size = new System.Drawing.Size(588, 23);
-            this.summaryLabel.TabIndex = 4;
-            this.summaryLabel.Text = "Issue summary goes here";
+            this.summaryLabel.Size = new System.Drawing.Size(589, 17);
+            this.summaryLabel.TabIndex = 2;
+            this.summaryLabel.TabStop = true;
+            this.summaryLabel.Text = "Summary";
+            this.summaryLabel.UseMnemonic = false;
+            this.summaryLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Summary_LinkClicked);
+            // 
+            // revisionsLabel
+            // 
+            this.revisionsLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.revisionsLabel.AutoEllipsis = true;
+            this.revisionsLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.revisionsLabel.Location = new System.Drawing.Point(236, 37);
+            this.revisionsLabel.Name = "revisionsLabel";
+            this.revisionsLabel.Size = new System.Drawing.Size(356, 23);
+            this.revisionsLabel.TabIndex = 4;
+            this.revisionsLabel.Text = "Revisions: {0}";
+            this.revisionsLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.RevisionsLabel_LinkClicked);
             // 
             // IssueUpdatePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.summaryLabel);
+            this.Controls.Add(this.revisionsLabel);
             this.Controls.Add(label1);
-            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.summaryLabel);
             this.Controls.Add(this.commentBox);
             this.Controls.Add(this.statusBox);
             this.Name = "IssueUpdatePage";
@@ -106,7 +114,9 @@
 
         private System.Windows.Forms.ComboBox statusBox;
         private System.Windows.Forms.TextBox commentBox;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.Label summaryLabel;
+        private System.Windows.Forms.LinkLabel summaryLabel;
+        private System.Windows.Forms.LinkLabel revisionsLabel;
+
+
     }
 }
