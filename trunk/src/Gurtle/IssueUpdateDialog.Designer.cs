@@ -53,6 +53,7 @@
             this.tabs.Location = new System.Drawing.Point(12, 13);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
+            this.tabs.ShowToolTips = true;
             this.tabs.Size = new System.Drawing.Size(718, 311);
             this.tabs.TabIndex = 0;
             // 
@@ -81,6 +82,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "IssueUpdateDialog";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Update Issues";
             this.ResumeLayout(false);
 
