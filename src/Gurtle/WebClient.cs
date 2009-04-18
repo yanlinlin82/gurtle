@@ -30,13 +30,21 @@ namespace Gurtle
     #region Imports
 
     using System;
+    using System.Diagnostics;
+    using System.IO;
     using System.Net;
+    using System.Net.Mime;
+    using System.Text;
 
     #endregion
 
     internal sealed class WebClient : System.Net.WebClient
     {
         private static readonly string _defaultUserAgentString;
+
+        public new event EventHandler<DownloadStringCompletedEventArgs> DownloadStringCompleted;
+
+        private bool _downloadingString;
 
         static WebClient()
         {
@@ -70,6 +78,68 @@ namespace Gurtle
         public static string DefaultUserAgentString
         {
             get { return _defaultUserAgentString; }
+        }
+
+        public new void DownloadStringAsync(Uri address)
+        {
+            Debug.Assert(address.IsAbsoluteUri);
+
+            try
+            {
+                _downloadingString = true;
+                DownloadDataAsync(address);
+            }
+            catch (Exception)
+            {
+                _downloadingString = false;
+                throw;
+            }
+        }
+
+        protected override void OnDownloadDataCompleted(DownloadDataCompletedEventArgs e)
+        {
+            if (_downloadingString)
+            {
+                _downloadingString = false;
+                
+                var result = !e.Cancelled && e.Error == null 
+                           ? GetDownloadEncoding().GetString(e.Result) 
+                           : null;
+                
+                var handler = DownloadStringCompleted;
+                if (handler != null)
+                    DownloadStringCompleted(this, new DownloadStringCompletedEventArgs(result, e.Error, e.Cancelled, e.UserState));
+            }
+            else
+            {
+                base.OnDownloadDataCompleted(e);
+            }
+        }
+
+        private Encoding GetDownloadEncoding() 
+        {
+            var header = ResponseHeaders[HttpResponseHeader.ContentType];
+            if (string.IsNullOrEmpty(header))
+                return Encoding;
+
+            ContentType contentType;
+            try
+            {
+                contentType = new ContentType(header);
+            }
+            catch (FormatException)
+            {
+                return Encoding;
+            }
+
+            try
+            {
+                return Encoding.GetEncoding(contentType.CharSet);
+            }
+            catch (ArgumentException)
+            {
+                return Encoding;
+            }
         }
     }
 }
