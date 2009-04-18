@@ -1,4 +1,4 @@
-﻿#region License, Terms and Author(s)
+#region License, Terms and Author(s)
 //
 // Gurtle - IBugTraqProvider for Google Code
 // Copyright (c) 2008 Atif Aziz. All rights reserved.
@@ -25,29 +25,32 @@
 //
 #endregion
 
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
+namespace Gurtle
+{
+    #region Imports
 
-[assembly: AssemblyTitle("Gurtle")]
-[assembly: AssemblyDescription("Issue tracker plug-in for projects hosted by Google Code")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Gurtle")]
-[assembly: AssemblyCopyright("Copyright (c) Atif Aziz. All rights reserved.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+    using System;
+    using System.ComponentModel;
 
-[assembly: ComVisible(false)]
-[assembly: CLSCompliant(true)]
+    #endregion
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("944193f5-15b9-4468-9a54-572f68b9ce5a")]
+    internal sealed class DownloadStringCompletedEventArgs : AsyncCompletedEventArgs
+    {
+        private readonly string _result;
 
-[assembly: AssemblyVersion("0.3.0.0")]
-[assembly: AssemblyFileVersion("0.3.11118.2223")]
+        public DownloadStringCompletedEventArgs(string result, Exception error, bool cancelled, object userState) : 
+            base(error, cancelled, userState)
+        {
+            _result = result;
+        }
 
-#if DEBUG
-[assembly: AssemblyConfiguration("DEBUG")]
-#else
-[assembly: AssemblyConfiguration("RELEASE")]
-#endif
+        public string Result
+        {
+            get
+            {
+                RaiseExceptionIfNecessary(); 
+                return _result;
+            }
+        }
+    }
+}

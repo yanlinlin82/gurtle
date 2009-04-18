@@ -59,6 +59,7 @@
     <Compile Include="CustomFormatter.cs" />
     <Compile Include="DelegatingComparer.cs" />
     <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="DownloadStringCompletedEventArgs.cs" />
     <Compile Include="GoogleCodeProject.cs" />
     <Compile Include="IBugTraqProvider.cs" />
     <Compile Include="IBugTraqProvider2.cs" />

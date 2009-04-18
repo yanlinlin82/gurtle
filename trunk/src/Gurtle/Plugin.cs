@@ -160,7 +160,8 @@ namespace Gurtle
             string commonRoot, string[] pathList, 
             string logMessage, int revision)
         {
-            return OnCommitFinished(WindowHandleWrapper.TryCreate(hParentWnd), commonRoot, pathList, logMessage, revision);
+            //return OnCommitFinished(WindowHandleWrapper.TryCreate(hParentWnd), commonRoot, pathList, logMessage, revision);
+            return null;
         }
 
         public string OnCommitFinished(IWin32Window parentWindow,
