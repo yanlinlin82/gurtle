@@ -23,15 +23,16 @@ REM THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 REM (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
 REM OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+pushd "%~dp0"
 for %%i in (Debug Release) do (
-    "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i "%~dp0src\Gurtle.sln"
+    "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i src\Gurtle.sln
 )
 
 :: build the installer
-cd src\setup
+pushd src\setup
 ..\..\tools\WiX\candle -nologo -out ..\..\bin\ Setup.wxs 
 ..\..\tools\WiX\light -nologo -out ..\..\bin\Gurtle.msi ..\..\bin\Setup.wixobj -ext WixUIExtension -cultures:en-us
-cd ..\..
+popd
 del bin\*.wixobj
 del bin\*.wixpdb
-
+popd
