@@ -24,11 +24,17 @@ REM (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 REM OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 pushd "%~dp0"
+
 for %%i in (Debug Release) do (
     "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i src\Gurtle.sln
 )
 
 :: build the installer
-call buildins
+pushd src\setup
+..\..\tools\WiX\candle -nologo -out ..\..\bin\ Setup.wxs 
+..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle.msi ..\..\bin\Setup.wixobj -ext WixUIExtension -cultures:en-us
+popd
+del bin\*.wixobj
+del bin\*.wixpdb
 
 popd
