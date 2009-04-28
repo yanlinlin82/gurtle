@@ -24,23 +24,15 @@ REM (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 REM OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 pushd "%~dp0"
-call tools\amadmin > nul
-if ERRORLEVEL 1 (
-    echo Setup build requires administrative privileges.
-    echo For more information, see issue #31:
-    echo http://code.google.com/p/gurtle/issues/detail?id=31
+if not exist bin (
+    echo Did you forget to build the solution?
+    echo Start with the build.cmd script instead.
     exit /b 1
-) else (
-    if not exist bin (
-        echo Did you forget to build the solution?
-        echo Start with the build.cmd script instead.
-        exit /b 1
-    )
-    pushd src\setup
-    ..\..\tools\WiX\candle -nologo -out ..\..\bin\ Setup.wxs 
-    ..\..\tools\WiX\light -nologo -out ..\..\bin\Gurtle.msi ..\..\bin\Setup.wixobj -ext WixUIExtension -cultures:en-us
-    popd
-    del bin\*.wixobj
-    del bin\*.wixpdb
 )
+pushd src\setup
+..\..\tools\WiX\candle -nologo -out ..\..\bin\ Setup.wxs 
+..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle.msi ..\..\bin\Setup.wixobj -ext WixUIExtension -cultures:en-us
+popd
+del bin\*.wixobj
+del bin\*.wixpdb
 popd
