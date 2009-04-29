@@ -1,6 +1,17 @@
 #summary What's new and fixed with each version
 #labels Featured
 
+= Version 0.4 =
+
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.4.msi.zip Download this version]
+
+  * Issue #13: Restore last dialog size
+  * Issue #24: Add binary build and installer
+  * Issue #27: Wrong encoding in Issues list (like ěščřžýá)
+  * Issue #28: Extend install.html file with information on `bugtraq:provider*` properties
+  * Issue #30: Icon/Logo for Gurtle
+  * Issue #31: MSI build fails with ICE errors under non-admin
+
 = Version 0.3 =
 
 [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.3.zip Download this version]
