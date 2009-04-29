@@ -32,11 +32,11 @@
 						  Source='../../bin/release/Gurtle.dll' Vital='yes'>
 						</File>
 						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\Gurtle.Plugin" Action="createAndRemoveOnUninstall" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\Gurtle.Plugin" Value="Gurtle (Google Code)" Type="string" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\Gurtle.Plugin" Value="Gurtle 0.4 (Google Code)" Type="string" />
 						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\Gurtle.Plugin\CLSID" Value="{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Type="string" />
 
 
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Value="Gurtle (Google Code)" Type="string" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Value="Gurtle 0.4 (Google Code)" Type="string" />
 						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Action="createAndRemoveOnUninstall" />
 						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Value="mscoree.dll" Type="string" />
 						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
