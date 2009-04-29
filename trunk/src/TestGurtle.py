@@ -33,7 +33,7 @@ from System.Windows.Forms import MessageBox
 def main(args):
     params = args and args.pop(0) or 'project=support'
     msg = args and args.pop(0) or 'This is a commit log message.'
-    MessageBox.Show(Plugin.GetCommitMessage(None, Parameters.Parse(params), msg), 'Log Message')
+    MessageBox.Show(Plugin().GetCommitMessage(None, Parameters.Parse(params), msg), 'Log Message')
 
 if __name__ == '__main__':
     main(sys.argv[1:])
