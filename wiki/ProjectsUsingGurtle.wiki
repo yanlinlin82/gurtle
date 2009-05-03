@@ -10,4 +10,8 @@ Of course, this list is by no means complete but only contains those projects we
   * [http://code.google.com/p/trafficwatcher/ trafficWatcher]
   * [http://code.google.com/p/svnprotocolhandler/ svnProtocolHandler]
   * [http://code.google.com/p/mailnoter/ mailNoter]
-  * 
+  * [http://code.google.com/p/elmah/ ELMAH]
+  * [http://code.google.com/p/elmah/ Fizzler]
+  * [http://code.google.com/p/jayrock/ Jayrock]
+  * [http://code.google.com/p/lits3/ LitS3]
+  * Your project?
