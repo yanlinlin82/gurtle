@@ -1,0 +1,13 @@
+This is a list of projects on Google code which are using Gurtle.
+
+Of course, this list is by no means complete but only contains those projects we know about. If you know of other projects that are not listed here, please tell us!
+
+
+  * [http://code.google.com/p/gurtle/ Gurtle] (obvious, isn't it?)
+  * [http://code.google.com/p/commitmonitor/ CommitMonitor]
+  * [http://code.google.com/p/stexbar/ StExBar]
+  * [http://code.google.com/p/grepwin/ grepWin]
+  * [http://code.google.com/p/trafficwatcher/ trafficWatcher]
+  * [http://code.google.com/p/svnprotocolhandler/ svnProtocolHandler]
+  * [http://code.google.com/p/mailnoter/ mailNoter]
+  * 
