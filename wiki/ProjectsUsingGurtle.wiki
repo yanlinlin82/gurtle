@@ -1,4 +1,6 @@
-This is a list of projects on Google code which are using Gurtle.
+#summary List of projects using Gurtle
+
+This is a list of projects on Google Code which are using Gurtle.
 
 Of course, this list is by no means complete but only contains those projects we know about. If you know of other projects that are not listed here, please tell us!
 
