@@ -9,13 +9,17 @@
 
     #endregion
 
-    public partial class IssueUpdateDialog : Form
+    public sealed partial class IssueUpdateDialog : Form
     {
         private GoogleCodeProject _project;
+        private readonly string _titleFormat;
+        private int _revision;
 
         public IssueUpdateDialog()
         {
             InitializeComponent();
+
+            _titleFormat = Text;
         }
 
         public string ProjectName
@@ -27,11 +31,21 @@
         internal GoogleCodeProject Project
         {
             get { return _project; }
-            set { _project = value; /* TODO UpdateTitle(); */ }
+            set { _project = value; UpdateTitle(); }
         }
-    
+
+        private void UpdateTitle()
+        {
+            Text = string.Format(_titleFormat, Revision, ProjectName);
+        }
+
         internal IList<Issue> Issues { get; set; }
-        public int Revision { get; set; }
+
+        public int Revision
+        {
+            get { return _revision; }
+            set { _revision = value; UpdateTitle(); }
+        }
 
         protected override void OnLoad(EventArgs e)
         {
