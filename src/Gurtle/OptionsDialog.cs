@@ -53,13 +53,12 @@
         private void ProjectNameBox_TextChanged(object sender, EventArgs e)
         {
             var projectName = _projectNameBox.Text;
-            var isValid = GoogleCodeProject.IsValidProjectName(projectName);
+            var project = GoogleCodeProject.IsValidProjectName(projectName) 
+                        ? new GoogleCodeProject(projectName) 
+                        : null;
             
-            _okButton.Enabled = _testButton.Enabled = isValid;
-            
-            _linkLabel.Text = (isValid 
-                            ? GoogleCodeProject.Url(projectName)
-                            : GoogleCodeProject.HostingUrl).ToString();
+            _okButton.Enabled = _testButton.Enabled = project != null;            
+            _linkLabel.Text = (project != null ? project.Url : GoogleCodeProject.HostingUrl).ToString();
         }
 
         private void LinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -72,7 +71,7 @@
             try
             {
                 var projectName = _projectNameBox.Text;
-                var url = GoogleCodeProject.DnsUrl(projectName);
+                var url = new GoogleCodeProject(projectName).DnsUrl();
                 new WebClient().DownloadData(url);
                 var message = string.Format("The Google Code project '{0}' appears valid and reachable at {1}.", projectName, url);
                 MessageBox.Show(message, "Test Passed", MessageBoxButtons.OK, MessageBoxIcon.Information);

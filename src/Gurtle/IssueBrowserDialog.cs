@@ -48,7 +48,7 @@ namespace Gurtle
 
     public sealed partial class IssueBrowserDialog : Form
     {
-        private string _project;
+        private GoogleCodeProject _project;
         private readonly string _titleFormat;
         private readonly string _foundFormat;
         private Action _aborter;
@@ -125,8 +125,8 @@ namespace Gurtle
 
         public string Project
         {
-            get { return _project ?? string.Empty; }
-            set { _project = value; UpdateTitle(); }
+            get { return _project.Name; }
+            set { _project = new GoogleCodeProject(value); UpdateTitle(); }
         }
 
         public string UserNamePattern
@@ -241,7 +241,7 @@ namespace Gurtle
             var href = headers.Find("href").MaskNull();
 
             if (href.Length == 0 || !Uri.IsWellFormedUriString(href, UriKind.Absolute))
-                href = GoogleCodeProject.Url("gurtle", "downloads/list").ToString();
+                href = new GoogleCodeProject("gurtle").DownloadsListUrl().ToString();
 
             var thisVersion = typeof(Plugin).Assembly.GetName().Version;
             if (version <= thisVersion)
@@ -317,7 +317,7 @@ namespace Gurtle
                 }
             };
 
-            client.DownloadStringAsync(GoogleCodeProject.Url(Project, "feeds/issueOptions"));
+            client.DownloadStringAsync(_project.IssueOptionsFeedUrl());
             _issueOptionsClient = client;
         }
 
@@ -406,7 +406,7 @@ namespace Gurtle
         private void ShowIssueDetails(Issue issue)
         {
             Debug.Assert(issue != null);
-            Process.Start(GoogleCodeProject.FormatUrl(Project, "issues/detail?id={0}", issue.Id).ToString());
+            Process.Start(_project.IssueDetailUrl(issue.Id).ToString());
         }
 
         private void IssueListView_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -625,10 +625,7 @@ namespace Gurtle
             var client = new WebClient();
 
             Action<int> pager = next => client.DownloadStringAsync(
-                GoogleCodeProject.FormatUrl(project, "issues/csv?start={0}&colspec={1}{2}",
-                    next.ToString(CultureInfo.InvariantCulture),
-                    string.Join("%20", Enum.GetNames(typeof(IssueField))),
-                    includeClosedIssues ? "&can=1" : string.Empty));
+                new GoogleCodeProject(project).IssuesCsvUrl(next, includeClosedIssues));
 
             client.DownloadStringCompleted += (sender, args) =>
             {

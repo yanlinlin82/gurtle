@@ -30,38 +30,79 @@ namespace Gurtle
     #region Imports
 
     using System;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
     #endregion
 
-    internal static class GoogleCodeProject
+    internal class GoogleCodeProject
     {
         public static readonly Uri HostingUrl = new Uri("http://code.google.com/hosting/");
 
-        public static Uri Url(string projectName)
+        public GoogleCodeProject(string name)
         {
-            return Url(projectName, null);
+            if (name == null) throw new ArgumentNullException("name");
+            if (!IsValidProjectName(name)) throw new ArgumentException(null, "name");
+
+            Debug.Assert(name != null);
+            Debug.Assert(IsValidProjectName(name));
+
+            Name = name;
+            Url = FormatUrl(null);
         }
 
-        public static Uri Url(string projectName, string relativeUrl)
+        public string Name { get; private set; }
+
+        public Uri Url { get; private set; }
+
+        public Uri DnsUrl()
         {
-            if (projectName == null) throw new ArgumentNullException("projectName");
-            if (!IsValidProjectName(projectName)) throw new ArgumentException(null, "projectName");
-            var baseUrl = new Uri("http://code.google.com/p/" + projectName + "/");
+            return new Uri("http://" + Name + ".googlecode.com/");
+        }
+
+        public Uri IssueDetailUrl(int id)
+        {
+            return FormatUrl("issues/detail?id={0}", id);
+        }
+
+        public Uri RevisionDetailUrl(int revision)
+        {
+            return FormatUrl("source/detail?r={0}", revision);
+        }
+
+        public Uri DownloadsListUrl()
+        {
+            return FormatUrl("downloads/list");
+        }
+
+        public Uri IssueOptionsFeedUrl()
+        {
+            return FormatUrl("feeds/issueOptions");
+        }        
+
+        public Uri IssuesCsvUrl(int start)
+        {
+            return IssuesCsvUrl(start, false);
+        }
+
+        public Uri IssuesCsvUrl(int start, bool includeClosed)
+        {
+            return FormatUrl("issues/csv?start={0}&colspec={1}{2}",
+                       start.ToString(CultureInfo.InvariantCulture),
+                       string.Join("%20", Enum.GetNames(typeof(IssueField))),
+                       includeClosed ? "&can=1" : string.Empty);
+        }
+
+        private Uri FormatUrl(string relativeUrl)
+        {
+            var baseUrl = new Uri("http://code.google.com/p/" + Name + "/");
             return string.IsNullOrEmpty(relativeUrl) ? baseUrl : new Uri(baseUrl, relativeUrl);
         }
 
-        public static Uri FormatUrl(string projectName, string relativeUrl, params object[] args)
+        private Uri FormatUrl(string relativeUrl, params object[] args)
         {
-            return Url(projectName, string.Format(CultureInfo.InvariantCulture, relativeUrl, args));
-        }
-        
-        public static Uri DnsUrl(string projectName)
-        {
-            if (projectName == null) throw new ArgumentNullException("projectName");
-            if (!IsValidProjectName(projectName)) throw new ArgumentException(null, "projectName");
-            return new Uri("http://" + projectName + ".googlecode.com/");
+            return FormatUrl(string.Format(CultureInfo.InvariantCulture, relativeUrl, args));
         }
 
         public static bool IsValidProjectName(string name)
