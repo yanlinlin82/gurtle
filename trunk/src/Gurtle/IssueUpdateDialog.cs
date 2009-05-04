@@ -2,6 +2,7 @@
 {
     #region Imports
 
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Windows.Forms;
@@ -17,17 +18,26 @@
             InitializeComponent();
         }
 
-        public string Project
+        public string ProjectName
         {
-            get { return _project.Name; }
-            set { _project = new GoogleCodeProject(value); }
+            get { return Project != null ? Project.Name : string.Empty; }
+            set { Project = new GoogleCodeProject(value); }
+        }
+
+        internal GoogleCodeProject Project
+        {
+            get { return _project; }
+            set { _project = value; /* TODO UpdateTitle(); */ }
         }
     
         internal IList<Issue> Issues { get; set; }
         public int Revision { get; set; }
 
-        protected override void OnLoad(System.EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
+            if (Project == null)
+                throw new InvalidOperationException();
+
             var issues = Issues;
 
             if (issues != null && issues.Count > 0)
@@ -43,7 +53,29 @@
                 }
             }
 
+            if (!Project.IsLoaded)
+            {
+                Project.Loaded += OnProjectLoaded;
+                Project.Load();
+            }
+            else
+            {
+                OnProjectLoadedImpl();
+            }
+
             base.OnLoad(e);
+        }
+
+        private void OnProjectLoaded(object sender, EventArgs e)
+        {
+            Project.Loaded -= OnProjectLoaded;
+            OnProjectLoadedImpl();
+        }
+
+        private void OnProjectLoadedImpl()
+        {
+            foreach (TabPage tab in tabs.TabPages)
+                ((IssueUpdatePage) tab.Controls[0]).LoadStatusOptions(Project.ClosedStatuses);
         }
 
         private Control CreateIssuePage(Issue issue) 

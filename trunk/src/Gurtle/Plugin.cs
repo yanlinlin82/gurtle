@@ -45,7 +45,6 @@ namespace Gurtle
     public sealed class Plugin : IBugTraqProvider2
     {
         private IList<Issue> _issues;
-        private Parameters _parameters;
         private GoogleCodeProject _project;
 
         public string GetCommitMessage(
@@ -91,7 +90,6 @@ namespace Gurtle
                         return originalMessage;
 
                     _issues = issues;
-                    _parameters = parameters;
                     _project = dialog.Project;
                 }
 
@@ -169,7 +167,7 @@ namespace Gurtle
             string commonRoot, string[] pathList,
             string logMessage, int revision)
         {
-            if (_parameters == null)
+            if (_project == null)
                 throw new InvalidOperationException();
 
             if (_issues == null || _issues.Count == 0)
@@ -177,7 +175,7 @@ namespace Gurtle
 
             using (var dialog = new IssueUpdateDialog
             {
-                Project = _parameters.Project,
+                Project = _project,
                 Issues = _issues,
                 Revision = revision
             })
