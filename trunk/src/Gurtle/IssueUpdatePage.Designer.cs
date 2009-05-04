@@ -28,12 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Label label1;
+            System.Windows.Forms.ToolTip toolTip;
             this.statusBox = new System.Windows.Forms.ComboBox();
             this.commentBox = new System.Windows.Forms.TextBox();
             this.summaryLabel = new System.Windows.Forms.LinkLabel();
             this.revisionsLabel = new System.Windows.Forms.LinkLabel();
             label1 = new System.Windows.Forms.Label();
+            toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -52,6 +55,7 @@
             this.statusBox.Name = "statusBox";
             this.statusBox.Size = new System.Drawing.Size(151, 24);
             this.statusBox.TabIndex = 0;
+            toolTip.SetToolTip(this.statusBox, "Issue resolution status");
             // 
             // commentBox
             // 
@@ -65,6 +69,7 @@
             this.commentBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.commentBox.Size = new System.Drawing.Size(589, 203);
             this.commentBox.TabIndex = 1;
+            toolTip.SetToolTip(this.commentBox, "Closing comment for issue");
             this.commentBox.TextChanged += new System.EventHandler(this.CommentBox_TextChanged);
             // 
             // summaryLabel
@@ -92,6 +97,7 @@
             this.revisionsLabel.Size = new System.Drawing.Size(356, 23);
             this.revisionsLabel.TabIndex = 4;
             this.revisionsLabel.Text = "Revisions: {0}";
+            toolTip.SetToolTip(this.revisionsLabel, "Revision numbers mentioned in comment text");
             this.revisionsLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.RevisionsLabel_LinkClicked);
             // 
             // IssueUpdatePage
