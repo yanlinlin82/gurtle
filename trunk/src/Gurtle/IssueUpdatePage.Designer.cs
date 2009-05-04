@@ -56,6 +56,7 @@
             this.statusBox.Size = new System.Drawing.Size(151, 24);
             this.statusBox.TabIndex = 0;
             toolTip.SetToolTip(this.statusBox, "Issue resolution status");
+            this.statusBox.TextChanged += new System.EventHandler(this.StatusBox_TextChanged);
             // 
             // commentBox
             // 

@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -77,6 +78,23 @@
             links.Clear();
             foreach (Match match in re.Matches(label.Text))
                 links.Add(match.Index, match.Length, int.Parse(match.Groups[1].Value, NumberStyles.None, CultureInfo.InvariantCulture));
+        }
+
+        private void StatusBox_TextChanged(object sender, EventArgs e)
+        {
+            var status = statusBox.Text.Trim();
+            if (status.Length == 0)
+                return;
+
+            var items = statusBox.Items;
+            if (items.Count == 0)
+                return;
+
+            var found = items.Cast<string>().Any(s => s.Equals(status, StringComparison.OrdinalIgnoreCase));
+
+            statusBox.ForeColor = found 
+                                ? SystemColors.WindowText 
+                                : Color.FromKnownColor(KnownColor.Red);
         }
     }    
 }
