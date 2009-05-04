@@ -44,7 +44,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("944193f5-15b9-4468-9a54-572f68b9ce5a")]
 
 [assembly: AssemblyVersion("0.4.0.0")]
-[assembly: AssemblyFileVersion("0.4.11129.1711")]
+[assembly: AssemblyFileVersion("0.4.11204.2155")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("DEBUG")]
