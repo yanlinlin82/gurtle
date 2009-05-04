@@ -10,8 +10,7 @@
 
     public partial class IssueUpdateDialog : Form
     {
-        private string _project;
-
+        private GoogleCodeProject _project;
 
         public IssueUpdateDialog()
         {
@@ -20,8 +19,8 @@
 
         public string Project
         {
-            get { return _project ?? string.Empty; }
-            set { _project = value; }
+            get { return _project.Name; }
+            set { _project = new GoogleCodeProject(value); }
         }
     
         internal IList<Issue> Issues { get; set; }
@@ -56,10 +55,10 @@
                 Dock = DockStyle.Fill,
                 Summary = issue.Summary,
                 Comment = string.Format("Fixed in r{0}.", Revision),
-                Url = GoogleCodeProject.FormatUrl(Project, "issues/detail?id={0}", issue.Id)
+                Url = _project.IssueDetailUrl(issue.Id)
             };
 
-            page.RevisionClicked += (sender, args) => Process.Start(GoogleCodeProject.FormatUrl(Project, "source/detail?r={0}", args.Revision).ToString());
+            page.RevisionClicked += (sender, args) => Process.Start(_project.RevisionDetailUrl(args.Revision).ToString());
             
             return page;
         }
