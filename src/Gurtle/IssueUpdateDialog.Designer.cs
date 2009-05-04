@@ -83,7 +83,7 @@
             this.MinimizeBox = false;
             this.Name = "IssueUpdateDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Update Issues";
+            this.Text = "Update Issues for Revision {0} of {1}";
             this.ResumeLayout(false);
 
         }
