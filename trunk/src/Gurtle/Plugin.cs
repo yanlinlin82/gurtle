@@ -46,6 +46,7 @@ namespace Gurtle
     {
         private IList<Issue> _issues;
         private Parameters _parameters;
+        private GoogleCodeProject _project;
 
         public string GetCommitMessage(
             IntPtr hParentWnd, 
@@ -64,7 +65,7 @@ namespace Gurtle
             
             try
             {
-                string project = parameters.Project;
+                var project = parameters.Project;
                 if (project.Length == 0)
                     throw new ApplicationException("Missing Google Code project specification.");
 
@@ -72,7 +73,7 @@ namespace Gurtle
 
                 using (var dialog = new IssueBrowserDialog
                 {
-                    Project = project,
+                    ProjectName = project,
                     UserNamePattern = parameters.User,
                     StatusPattern = parameters.Status,
                     UpdateCheckEnabled = true,
@@ -91,6 +92,7 @@ namespace Gurtle
 
                     _issues = issues;
                     _parameters = parameters;
+                    _project = dialog.Project;
                 }
 
                 var message = new StringBuilder(originalMessage);
@@ -160,8 +162,7 @@ namespace Gurtle
             string commonRoot, string[] pathList, 
             string logMessage, int revision)
         {
-            //return OnCommitFinished(WindowHandleWrapper.TryCreate(hParentWnd), commonRoot, pathList, logMessage, revision);
-            return null;
+            return OnCommitFinished(WindowHandleWrapper.TryCreate(hParentWnd), commonRoot, pathList, logMessage, revision);
         }
 
         public string OnCommitFinished(IWin32Window parentWindow,

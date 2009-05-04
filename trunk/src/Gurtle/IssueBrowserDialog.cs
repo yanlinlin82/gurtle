@@ -63,9 +63,7 @@ namespace Gurtle
         private Func<IWin32Window, DialogResult> _upgrade;
         private readonly ObservableCollection<IssueListViewItem> _issues;
         private readonly ListViewSorter<IssueListViewItem, Issue> _sorter;
-        private WebClient _issueOptionsClient;
         private readonly Font _deadFont;
-        private ICollection<string> _closedStatuses;
 
         public IssueBrowserDialog()
         {
@@ -83,7 +81,6 @@ namespace Gurtle
             _selectedIssueObjects = new List<Issue>();
 
             _deadFont = new Font(issueListView.Font, FontStyle.Strikeout);
-            _closedStatuses = new string[0];
 
             _sorter = new ListViewSorter<IssueListViewItem, Issue>(issueListView, 
                           item => item.Tag, 
@@ -123,10 +120,16 @@ namespace Gurtle
             UpdateControlStates();
         }
 
-        public string Project
+        public string ProjectName
         {
-            get { return _project.Name; }
-            set { _project = new GoogleCodeProject(value); UpdateTitle(); }
+            get { return Project != null ? Project.Name : string.Empty; }
+            set { Project = new GoogleCodeProject(value); }
+        }
+
+        internal GoogleCodeProject Project
+        {
+            get { return _project; }
+            set { _project = value; UpdateTitle(); }
         }
 
         public string UserNamePattern
@@ -165,12 +168,12 @@ namespace Gurtle
             }
         }
 
-        protected override void OnShown(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            if (Project.Length > 0)
+            if (ProjectName.Length > 0)
             {
                 DownloadIssues();
-                DownloadIssueOptions();
+                Project.Load();
             }
 
             if (UpdateCheckEnabled)
@@ -197,7 +200,7 @@ namespace Gurtle
                 _updateClient = updateClient;
             }
 
-            base.OnShown(e);
+            base.OnLoad(e);
         }
 
         private static Func<IWin32Window, DialogResult> OnVersionDataDownloaded(string data)
@@ -282,45 +285,6 @@ namespace Gurtle
                 Close();
         }
 
-        private void DownloadIssueOptions()
-        {
-            var client = new WebClient();
-
-            client.DownloadStringCompleted += (sender, args) =>
-            {
-                _issueOptionsClient = null;
-
-                if (_closed || args.Cancelled || args.Error != null)
-                    return;
-
-                var contentType = client.ResponseHeaders[HttpResponseHeader.ContentType]
-                                        .MaskNull().Split(new[] { ';' }, 2)[0];
-
-                var jsonContentTypes = new[] {
-                    "application/json", 
-                    "application/x-javascript", 
-                    "text/javascript",
-                };
-
-                if (!jsonContentTypes.Any(s => s.Equals(contentType, StringComparison.OrdinalIgnoreCase)))
-                    return;
-
-                using (var sc = new ScriptControl { Language = "JavaScript" })
-                {
-                    var data = sc.Eval("(" + args.Result + ")"); // TODO: JSON sanitization
-
-                    _closedStatuses = new OleDispatchDriver(data)
-                       .Get<IEnumerable>("closed")
-                       .Cast<object>()
-                       .Select(o => new OleDispatchDriver(o).Get<string>("name"))
-                       .ToArray();
-                }
-            };
-
-            client.DownloadStringAsync(_project.IssueOptionsFeedUrl());
-            _issueOptionsClient = client;
-        }
-
         private void DownloadIssues()
         {
             Debug.Assert(_aborter == null);
@@ -329,7 +293,7 @@ namespace Gurtle
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
 
-            _aborter = DownloadIssues(Project, 0, includeClosedCheckBox.Checked,
+            _aborter = DownloadIssues(ProjectName, 0, includeClosedCheckBox.Checked,
                                       OnIssuesDownloaded, 
                                       OnUpdateProgress, 
                                       OnDownloadComplete);
@@ -376,7 +340,7 @@ namespace Gurtle
 
         private void UpdateTitle()
         {
-            Text = string.Format(_titleFormat, Project, _issues.Count.ToString("N0"));
+            Text = string.Format(_titleFormat, ProjectName, _issues.Count.ToString("N0"));
         }
 
         private IEnumerable<Issue> GetSelectedIssuesFromListView()
@@ -406,7 +370,7 @@ namespace Gurtle
         private void ShowIssueDetails(Issue issue)
         {
             Debug.Assert(issue != null);
-            Process.Start(_project.IssueDetailUrl(issue.Id).ToString());
+            Process.Start(Project.IssueDetailUrl(issue.Id).ToString());
         }
 
         private void IssueListView_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -459,7 +423,9 @@ namespace Gurtle
 
             Release(ref _aborter, a => a());
             Release(ref _updateClient, wc => wc.CancelAsync());
-            Release(ref _issueOptionsClient, wc => wc.CancelAsync());
+            
+            if (Project != null)
+                Project.CancelLoad();
 
             _closed = true;
 
@@ -494,7 +460,7 @@ namespace Gurtle
             //
 
             var warnIssues = selectedIssues.Where(issue => !issue.HasOwner 
-                                                           || _closedStatuses.Any(s => issue.Status.Equals(s, StringComparison.InvariantCultureIgnoreCase)));
+                                                        || Project.IsClosedStatus(issue.Status));
             if (warnIssues.Any())
             {
                 var message = string.Format(
@@ -550,8 +516,7 @@ namespace Gurtle
                         UseItemStyleForSubItems = true
                     };
 
-                    Debug.Assert(_closedStatuses != null);
-                    if (_closedStatuses.Any(s => issue.Status.Equals(s, StringComparison.InvariantCultureIgnoreCase)))
+                    if (Project.IsClosedStatus(issue.Status))
                     {
                         item.ForeColor = SystemColors.GrayText;
                         item.Font = _deadFont;
