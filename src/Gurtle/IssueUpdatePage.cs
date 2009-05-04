@@ -3,6 +3,7 @@
     #region Imports
 
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
@@ -36,6 +37,13 @@
         {
             get { return commentBox.Text; }
             set { commentBox.Text = value; }
+        }
+
+        public void LoadStatusOptions(IEnumerable<string> options)
+        {
+            var items = statusBox.Items;
+            items.Clear();
+            items.AddRange(options.ToArray());
         }
 
         private void Summary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
