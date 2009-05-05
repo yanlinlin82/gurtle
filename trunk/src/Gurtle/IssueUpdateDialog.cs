@@ -4,7 +4,13 @@
 
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Text;
     using System.Windows.Forms;
 
     #endregion
@@ -60,7 +66,8 @@
                 {
                     var tab = new TabPage("Issue #" + issue.Id)
                     {
-                        ToolTipText = issue.Summary
+                        ToolTipText = issue.Summary,
+                        Tag = issue
                     };
                     tab.Controls.Add(CreateIssuePage(issue));
                     tabs.TabPages.Add(tab);
@@ -88,8 +95,14 @@
 
         private void OnProjectLoadedImpl()
         {
+            foreach (var page in GetPages())
+                page.LoadStatusOptions(Project.ClosedStatuses);
+        }
+
+        private IEnumerable<IssueUpdatePage> GetPages()
+        {
             foreach (TabPage tab in tabs.TabPages)
-                ((IssueUpdatePage) tab.Controls[0]).LoadStatusOptions(Project.ClosedStatuses);
+                yield return (IssueUpdatePage) tab.Controls[0];
         }
 
         private Control CreateIssuePage(Issue issue) 
@@ -109,13 +122,90 @@
             return page;
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (DialogResult == DialogResult.OK)
-            {
-                new CredentialsDialog { Realm = "Google Code" }.ShowDialog(this);
-            }
+                e.Cancel = !OnOK();
+
             base.OnClosing(e);
+        }
+
+        private bool OnOK()
+        {
+            var credential = CredentialPrompt.Prompt(this, "Google Code", "ggcred.txt");
+            if (credential == null)
+                return false;
+
+            var updates = GetPages().Select((p, i) => new
+            {
+                Issue = Issues[i], 
+                p.Comment, 
+                p.Status
+            });
+
+            foreach (var update in updates)
+                UpdateIssue(update.Issue, update.Comment, update.Status, credential, this);
+
+            return true;
+        }
+
+        private bool UpdateIssue(Issue issue, string comment, string status, NetworkCredential credential, ISynchronizeInvoke sync)
+        {
+            string commentPath = null;
+            
+            if (comment.IndexOfAny(new[] { '\r', '\n', '\f' }) >= 0)
+            {
+                commentPath = Path.GetTempFileName();
+                File.WriteAllText(commentPath, comment, Encoding.UTF8);
+                comment = "@" + commentPath;
+            }
+            else
+            {
+                comment = "\"" + comment.Replace("\"", "\"\"") + "\"";
+            }
+
+            var args = new[]
+            {
+                credential.UserName, 
+                credential.Password, 
+                issue.Id.ToString(CultureInfo.InvariantCulture), 
+                status, 
+                comment
+            };
+
+            var script = Process.Start(new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                FileName = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_SCRIPT"),
+                Arguments = string.Join(" ", args),
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+            });
+
+            var stdout = new StringWriter();
+            var stderr = new StringWriter();
+            script.SynchronizingObject = sync;
+            script.OutputDataReceived += (sender, e) => stdout.WriteLine(e.Data);
+            script.ErrorDataReceived += (sender, e) => stderr.WriteLine(e.Data);
+            script.BeginOutputReadLine();
+            script.BeginErrorReadLine();
+
+            script.WaitForExit();
+
+            Trace.TraceInformation(stdout.ToString());
+
+            var success = 0 == script.ExitCode;
+
+            if (success)
+                Trace.TraceWarning(stderr.ToString());
+            else
+                Trace.TraceError(stderr.ToString());
+
+            if (!string.IsNullOrEmpty(commentPath) && File.Exists(commentPath))
+                File.Delete(commentPath);
+
+            return success;
         }
     }
 }
