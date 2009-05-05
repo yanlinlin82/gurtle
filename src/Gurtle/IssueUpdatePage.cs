@@ -40,6 +40,13 @@
             set { commentBox.Text = value; }
         }
 
+        [DefaultValue("")]
+        public string Status
+        {
+            get { return statusBox.Text; }
+            set { statusBox.Text = value; }
+        }
+
         public void LoadStatusOptions(IEnumerable<string> options)
         {
             var items = statusBox.Items;
