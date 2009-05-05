@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Windows.Forms;
 
@@ -101,8 +102,9 @@
 
         private IEnumerable<IssueUpdatePage> GetPages()
         {
-            foreach (TabPage tab in tabs.TabPages)
-                yield return (IssueUpdatePage) tab.Controls[0];
+            return from TabPage tab in tabs.TabPages
+                   where tab.Visible && tab.Enabled
+                   select (IssueUpdatePage) tab.Controls[0];
         }
 
         private Control CreateIssuePage(Issue issue) 
@@ -136,20 +138,25 @@
             if (credential == null)
                 return false;
 
-            var updates = GetPages().Select((p, i) => new
+            var updates = GetPages().Select((page, i) => new
             {
                 Issue = Issues[i], 
-                p.Comment, 
-                p.Status
+                page.Comment, 
+                page.Status,
+                Page = page
             });
 
             foreach (var update in updates)
-                UpdateIssue(update.Issue, update.Comment, update.Status, credential, this);
+            {
+                if (!UpdateIssue(update.Issue, update.Comment, update.Status, credential, this)) 
+                    return false;
+                update.Page.Visible = false;
+            }
 
             return true;
         }
 
-        private bool UpdateIssue(Issue issue, string comment, string status, NetworkCredential credential, ISynchronizeInvoke sync)
+        private static bool UpdateIssue(Issue issue, string comment, string status, NetworkCredential credential, ISynchronizeInvoke sync)
         {
             string commentPath = null;
             
@@ -164,21 +171,26 @@
                 comment = "\"" + comment.Replace("\"", "\"\"") + "\"";
             }
 
-            var args = new[]
+            var commandLine = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD") ?? string.Empty;
+            commandLine = commandLine.Trim().FormatWith(CultureInfo.InvariantCulture, new
             {
                 credential.UserName, 
                 credential.Password, 
-                issue.Id.ToString(CultureInfo.InvariantCulture), 
-                status, 
-                comment
-            };
+                issue.Id, 
+                Status = status, 
+                Comment = comment,
+            });
+
+            var pair = commandLine.SplitPair(' ');
+            var command = pair.Key;
+            var args = pair.Value.TrimStart();
 
             var script = Process.Start(new ProcessStartInfo
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                FileName = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_SCRIPT"),
-                Arguments = string.Join(" ", args),
+                FileName = command,
+                Arguments = args,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
             });
@@ -207,5 +219,35 @@
 
             return success;
         }
+        /*
+        [DllImport("shell32.dll", SetLastError = true)]
+        static extern IntPtr CommandLineToArgvW(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpCmdLine, out int pNumArgs);
+
+        public static string[] CommandLineToArgs(string commandLine)
+        {
+            int argc;
+            var argv = CommandLineToArgvW(commandLine, out argc);
+            
+            if (argv == IntPtr.Zero)
+                throw new Win32Exception();
+            
+            try
+            {
+                var args = new string[argc];
+                for (var i = 0; i < args.Length; i++)
+                {
+                    var p = Marshal.ReadIntPtr(argv, i * IntPtr.Size);
+                    args[i] = Marshal.PtrToStringUni(p);
+                }
+
+                return args;
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(argv);
+            }
+        }
+        */
     }
 }

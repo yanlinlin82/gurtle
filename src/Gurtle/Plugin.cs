@@ -168,7 +168,7 @@ namespace Gurtle
             string commonRoot, string[] pathList,
             string logMessage, int revision)
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_SCRIPT")))
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD")))
                 return null;
 
             if (_project == null)
