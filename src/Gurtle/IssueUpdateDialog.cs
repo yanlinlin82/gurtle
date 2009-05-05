@@ -132,6 +132,13 @@
             base.OnClosing(e);
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            if (Project != null)
+                Project.CancelLoad();
+            base.OnClosed(e);
+        }
+
         private bool OnOK()
         {
             var credential = CredentialPrompt.Prompt(this, "Google Code", "ggcred.txt");
