@@ -103,7 +103,6 @@
         private IEnumerable<IssueUpdatePage> GetPages()
         {
             return from TabPage tab in tabs.TabPages
-                   where tab.Visible && tab.Enabled
                    select (IssueUpdatePage) tab.Controls[0];
         }
 
@@ -157,7 +156,6 @@
             {
                 if (!UpdateIssue(update.Issue, update.Comment, update.Status, credential, this)) 
                     return false;
-                update.Page.Visible = false;
             }
 
             return true;
@@ -204,7 +202,7 @@
 
             var stdout = new StringWriter();
             var stderr = new StringWriter();
-            script.SynchronizingObject = sync;
+            // TODO script.SynchronizingObject = sync;
             script.OutputDataReceived += (sender, e) => stdout.WriteLine(e.Data);
             script.ErrorDataReceived += (sender, e) => stderr.WriteLine(e.Data);
             script.BeginOutputReadLine();
