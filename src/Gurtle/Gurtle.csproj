@@ -38,6 +38,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -56,6 +57,7 @@
     <Compile Include="CredentialsDialog.Designer.cs">
       <DependentUpon>CredentialsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="CredentialPrompt.cs" />
     <Compile Include="CustomFormatter.cs" />
     <Compile Include="DelegatingComparer.cs" />
     <Compile Include="DictionaryExtensions.cs" />
