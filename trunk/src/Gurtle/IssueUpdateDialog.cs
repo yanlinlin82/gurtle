@@ -154,14 +154,14 @@
 
             foreach (var update in updates)
             {
-                if (!UpdateIssue(update.Issue, update.Comment, update.Status, credential, this)) 
+                if (!UpdateIssue(_project.Name, update.Issue, update.Comment, update.Status, credential, this)) 
                     return false;
             }
 
             return true;
         }
 
-        private static bool UpdateIssue(Issue issue, string comment, string status, NetworkCredential credential, ISynchronizeInvoke sync)
+        private static bool UpdateIssue(string project, Issue issue, string comment, string status, NetworkCredential credential, ISynchronizeInvoke sync)
         {
             string commentPath = null;
             
@@ -181,7 +181,8 @@
             {
                 credential.UserName, 
                 credential.Password, 
-                issue.Id, 
+                Project = project,
+                Issue = issue, 
                 Status = status, 
                 Comment = comment,
             });
