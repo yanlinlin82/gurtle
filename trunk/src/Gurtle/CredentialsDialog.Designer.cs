@@ -120,8 +120,10 @@
             // 
             // CredentialsDialog
             // 
+            this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = cancelButton;
             this.ClientSize = new System.Drawing.Size(347, 186);
             this.Controls.Add(this.okButton);
             this.Controls.Add(cancelButton);
