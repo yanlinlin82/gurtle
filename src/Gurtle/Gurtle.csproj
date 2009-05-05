@@ -39,6 +39,7 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -59,6 +60,7 @@
     </Compile>
     <Compile Include="CredentialPrompt.cs" />
     <Compile Include="CustomFormatter.cs" />
+    <Compile Include="DataBindingExtensions.cs" />
     <Compile Include="DelegatingComparer.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="DownloadStringCompletedEventArgs.cs" />
