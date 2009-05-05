@@ -18,20 +18,17 @@
     {
         public static NetworkCredential Prompt(IWin32Window owner, string realm, string fileName)
         {
-            var path = Path.Combine(Application.LocalUserAppDataPath, fileName);
-            
+            var path = Path.Combine(Application.LocalUserAppDataPath, fileName);            
             var credential = TryLoadFromFile(path);
-            if (credential == null)
-                return null;
+            using (var dialog = new CredentialsDialog { Realm = realm })
+            {
+                if (credential != null)
+                {
+                    dialog.UserName = credential.UserName;
+                    dialog.Password = credential.Password;
+                    dialog.SavePassword = credential.Password.Length > 0;
+                }
 
-            using (var dialog = new CredentialsDialog
-            {
-                Realm = realm,
-                UserName = credential.UserName,
-                Password = credential.Password,
-                SavePassword = credential.Password.Length > 0,
-            })
-            {
                 if (dialog.ShowDialog(owner) != DialogResult.OK)
                     return null;
 
