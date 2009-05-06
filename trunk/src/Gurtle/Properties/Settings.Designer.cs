@@ -56,5 +56,39 @@ namespace Gurtle.Properties {
                 this["IssueBrowserDialogWindowState"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Point IssueUpdateDialogLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["IssueUpdateDialogLocation"]));
+            }
+            set {
+                this["IssueUpdateDialogLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Drawing.Size IssueUpdateDialogSize {
+            get {
+                return ((global::System.Drawing.Size)(this["IssueUpdateDialogSize"]));
+            }
+            set {
+                this["IssueUpdateDialogSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Normal")]
+        public global::System.Windows.Forms.FormWindowState IssueUpdateDialogWindowState {
+            get {
+                return ((global::System.Windows.Forms.FormWindowState)(this["IssueUpdateDialogWindowState"]));
+            }
+            set {
+                this["IssueUpdateDialogWindowState"] = value;
+            }
+        }
     }
 }
