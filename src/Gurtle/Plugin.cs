@@ -184,7 +184,10 @@ namespace Gurtle
                 Revision = revision
             })
             {
+                var settings = Properties.Settings.Default;
+                new WindowSettings(settings, dialog);
                 dialog.ShowDialog(parentWindow);
+                settings.Save();
             }
             
             return null;
