@@ -168,28 +168,41 @@ namespace Gurtle
             string commonRoot, string[] pathList,
             string logMessage, int revision)
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD")))
-                return null;
-
             if (_project == null)
                 throw new InvalidOperationException();
 
             if (_issues == null || _issues.Count == 0)
                 return null;
 
-            using (var dialog = new IssueUpdateDialog
+            var settings = Properties.Settings.Default;
+
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD")))
             {
-                Project = _project,
-                Issues = _issues,
-                Revision = revision
-            })
-            {
-                var settings = Properties.Settings.Default;
-                new WindowSettings(settings, dialog);
-                dialog.ShowDialog(parentWindow);
-                settings.Save();
+                if (!settings.HideIssueUpdateTip)
+                {
+                    using (var dialog = new IssueUpdateInfoDialog())
+                    {
+                        if (parentWindow == null)
+                            dialog.StartPosition = FormStartPosition.CenterScreen;
+                        dialog.ShowDialog(parentWindow);
+                    }
+                }
             }
-            
+            else
+            {
+                using (var dialog = new IssueUpdateDialog
+                {
+                    Project = _project,
+                    Issues = _issues,
+                    Revision = revision
+                })
+                {
+                    new WindowSettings(settings, dialog);
+                    dialog.ShowDialog(parentWindow);
+                }
+            }
+
+            settings.Save();
             return null;
         }
 
