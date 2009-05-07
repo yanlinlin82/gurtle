@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Label label1;
             System.Windows.Forms.ToolTip _toolTip;
+            System.Windows.Forms.Button _resetButton;
             this._projectNameBox = new System.Windows.Forms.TextBox();
             this._linkLabel = new System.Windows.Forms.LinkLabel();
             this._testButton = new System.Windows.Forms.Button();
@@ -38,12 +39,13 @@
             this._cancelButton = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             _toolTip = new System.Windows.Forms.ToolTip(this.components);
+            _resetButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(12, 10);
+            label1.Location = new System.Drawing.Point(12, 11);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(178, 17);
             label1.TabIndex = 0;
@@ -53,9 +55,9 @@
             // 
             this._projectNameBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this._projectNameBox.Location = new System.Drawing.Point(15, 31);
+            this._projectNameBox.Location = new System.Drawing.Point(12, 31);
             this._projectNameBox.Name = "_projectNameBox";
-            this._projectNameBox.Size = new System.Drawing.Size(345, 24);
+            this._projectNameBox.Size = new System.Drawing.Size(416, 24);
             this._projectNameBox.TabIndex = 1;
             _toolTip.SetToolTip(this._projectNameBox, "Enter Google Code hosted project name");
             this._projectNameBox.TextChanged += new System.EventHandler(this.ProjectNameBox_TextChanged);
@@ -65,9 +67,9 @@
             this._linkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this._linkLabel.AutoEllipsis = true;
-            this._linkLabel.Location = new System.Drawing.Point(15, 62);
+            this._linkLabel.Location = new System.Drawing.Point(12, 62);
             this._linkLabel.Name = "_linkLabel";
-            this._linkLabel.Size = new System.Drawing.Size(345, 17);
+            this._linkLabel.Size = new System.Drawing.Size(416, 17);
             this._linkLabel.TabIndex = 2;
             this._linkLabel.TabStop = true;
             this._linkLabel.Text = "http://code.google.com/hosting/";
@@ -77,9 +79,8 @@
             // 
             // _testButton
             // 
-            this._testButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this._testButton.Enabled = false;
-            this._testButton.Location = new System.Drawing.Point(18, 103);
+            this._testButton.Location = new System.Drawing.Point(12, 91);
             this._testButton.Name = "_testButton";
             this._testButton.Size = new System.Drawing.Size(75, 30);
             this._testButton.TabIndex = 5;
@@ -93,7 +94,7 @@
             this._okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this._okButton.Enabled = false;
-            this._okButton.Location = new System.Drawing.Point(204, 103);
+            this._okButton.Location = new System.Drawing.Point(272, 175);
             this._okButton.Name = "_okButton";
             this._okButton.Size = new System.Drawing.Size(75, 30);
             this._okButton.TabIndex = 3;
@@ -104,12 +105,24 @@
             // 
             this._cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._cancelButton.Location = new System.Drawing.Point(285, 103);
+            this._cancelButton.Location = new System.Drawing.Point(353, 175);
             this._cancelButton.Name = "_cancelButton";
             this._cancelButton.Size = new System.Drawing.Size(75, 30);
             this._cancelButton.TabIndex = 4;
             this._cancelButton.Text = "Cancel";
             this._cancelButton.UseVisualStyleBackColor = true;
+            // 
+            // _resetButton
+            // 
+            _resetButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            _resetButton.Location = new System.Drawing.Point(12, 175);
+            _resetButton.Name = "_resetButton";
+            _resetButton.Size = new System.Drawing.Size(128, 30);
+            _resetButton.TabIndex = 6;
+            _resetButton.Text = "Reset Settings";
+            _toolTip.SetToolTip(_resetButton, "Test if the supplied Google Code project is reachable online or not");
+            _resetButton.UseVisualStyleBackColor = true;
+            _resetButton.Click += new System.EventHandler(this.ResetSettings_Click);
             // 
             // OptionsDialog
             // 
@@ -117,7 +130,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._cancelButton;
-            this.ClientSize = new System.Drawing.Size(372, 145);
+            this.ClientSize = new System.Drawing.Size(440, 217);
+            this.Controls.Add(_resetButton);
             this.Controls.Add(this._testButton);
             this.Controls.Add(this._linkLabel);
             this.Controls.Add(this._cancelButton);
