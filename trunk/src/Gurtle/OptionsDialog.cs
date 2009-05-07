@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.Net;
     using System.Windows.Forms;
+    using Properties;
 
     #endregion
 
@@ -80,6 +81,18 @@
             {
                 MessageBox.Show(we.Message, "Test Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void ResetSettings_Click(object sender, EventArgs e)
+        {
+            var reply = MessageBox.Show(this, 
+                            "Reset all settings to their defaults?", "Reset Settings", 
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (DialogResult.Yes != reply)
+                return;
+
+            Settings.Default.Reset();
         }
     }
 }
