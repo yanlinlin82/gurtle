@@ -24,6 +24,30 @@ REM (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 REM OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 pushd "%~dp0"
+SetLocal EnableDelayedExpansion
+
+
+:: get the revision of the working copy
+SubWCRev . src\version.in src\version.txt
+:: load the version numbers into variables
+for /F "delims=, tokens=1,2,3,4" %%i in (src\version.txt) do (
+	set majorversion=%%i
+	set minorversion=%%j
+	set microversion=%%k
+	set wcversion=%%l
+)
+:: write the AssemblyInfoVersion.cs file with the version info
+echo using System.Reflection; > src\Gurtle\Properties\AssemblyInfoVersion.cs
+echo [assembly: AssemblyVersion("%majorversion%.%minorversion%.%microversion%.%wcversion%")] >> src\Gurtle\Properties\AssemblyInfoVersion.cs
+echo [assembly: AssemblyFileVersion("%majorversion%.%minorversion%.%microversion%.%wcversion%")] >> src\Gurtle\Properties\AssemblyInfoVersion.cs
+:: write the VersionNumberInclude.wxi file
+echo ^<?xml version="1.0" encoding="utf-8"?^> > src\setup\VersionNumberInclude.wxi
+echo ^<Include Id="VersionNumberInclude"^> >> src\setup\VersionNumberInclude.wxi
+echo 	^<?define MajorVersion="%majorversion%" ?^> >> src\setup\VersionNumberInclude.wxi
+echo 	^<?define MinorVersion="%minorversion%" ?^> >> src\setup\VersionNumberInclude.wxi
+echo 	^<?define MicroVersion="%microversion%" ?^> >> src\setup\VersionNumberInclude.wxi
+echo 	^<?define BuildVersion="%wcversion%" ?^> >> src\setup\VersionNumberInclude.wxi
+echo ^</Include^> >> src\setup\VersionNumberInclude.wxi
 
 for %%i in (Debug Release) do (
     "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i src\Gurtle.sln
@@ -32,9 +56,11 @@ for %%i in (Debug Release) do (
 :: build the installer
 pushd src\setup
 ..\..\tools\WiX\candle -nologo -out ..\..\bin\ Setup.wxs 
-..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle.msi ..\..\bin\Setup.wixobj -ext WixUIExtension -cultures:en-us
+..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle-%majorversion%.%minorversion%.%microversion%.%wcversion%.msi ..\..\bin\Setup.wixobj -ext WixUIExtension -cultures:en-us
 popd
 del bin\*.wixobj
 del bin\*.wixpdb
+
+:end
 
 popd
