@@ -32,10 +32,10 @@
             System.Windows.Forms.Label label1;
             System.Windows.Forms.ToolTip _toolTip;
             this._projectNameBox = new System.Windows.Forms.TextBox();
-            this._okButton = new System.Windows.Forms.Button();
-            this._cancelButton = new System.Windows.Forms.Button();
             this._linkLabel = new System.Windows.Forms.LinkLabel();
             this._testButton = new System.Windows.Forms.Button();
+            this._okButton = new System.Windows.Forms.Button();
+            this._cancelButton = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             _toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
@@ -60,6 +60,34 @@
             _toolTip.SetToolTip(this._projectNameBox, "Enter Google Code hosted project name");
             this._projectNameBox.TextChanged += new System.EventHandler(this.ProjectNameBox_TextChanged);
             // 
+            // _linkLabel
+            // 
+            this._linkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._linkLabel.AutoEllipsis = true;
+            this._linkLabel.Location = new System.Drawing.Point(15, 62);
+            this._linkLabel.Name = "_linkLabel";
+            this._linkLabel.Size = new System.Drawing.Size(345, 17);
+            this._linkLabel.TabIndex = 2;
+            this._linkLabel.TabStop = true;
+            this._linkLabel.Text = "http://code.google.com/hosting/";
+            _toolTip.SetToolTip(this._linkLabel, "Open URL in the default Web browser");
+            this._linkLabel.UseMnemonic = false;
+            this._linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
+            // 
+            // _testButton
+            // 
+            this._testButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this._testButton.Enabled = false;
+            this._testButton.Location = new System.Drawing.Point(18, 103);
+            this._testButton.Name = "_testButton";
+            this._testButton.Size = new System.Drawing.Size(75, 30);
+            this._testButton.TabIndex = 5;
+            this._testButton.Text = "&Test";
+            _toolTip.SetToolTip(this._testButton, "Test if the supplied Google Code project is reachable online or not");
+            this._testButton.UseVisualStyleBackColor = true;
+            this._testButton.Click += new System.EventHandler(this.TestButton_Click);
+            // 
             // _okButton
             // 
             this._okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -82,33 +110,6 @@
             this._cancelButton.TabIndex = 4;
             this._cancelButton.Text = "Cancel";
             this._cancelButton.UseVisualStyleBackColor = true;
-            // 
-            // _linkLabel
-            // 
-            this._linkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this._linkLabel.AutoEllipsis = true;
-            this._linkLabel.Location = new System.Drawing.Point(15, 62);
-            this._linkLabel.Name = "_linkLabel";
-            this._linkLabel.Size = new System.Drawing.Size(345, 17);
-            this._linkLabel.TabIndex = 2;
-            this._linkLabel.TabStop = true;
-            this._linkLabel.Text = "http://code.google.com/hosting/";
-            _toolTip.SetToolTip(this._linkLabel, "Open URL in the default Web browser");
-            this._linkLabel.UseMnemonic = false;
-            this._linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel_LinkClicked);
-            // 
-            // _testButton
-            // 
-            this._testButton.Enabled = false;
-            this._testButton.Location = new System.Drawing.Point(18, 103);
-            this._testButton.Name = "_testButton";
-            this._testButton.Size = new System.Drawing.Size(75, 30);
-            this._testButton.TabIndex = 5;
-            this._testButton.Text = "&Test";
-            _toolTip.SetToolTip(this._testButton, "Test if the supplied Google Code project is reachable online or not");
-            this._testButton.UseVisualStyleBackColor = true;
-            this._testButton.Click += new System.EventHandler(this.TestButton_Click);
             // 
             // OptionsDialog
             // 
