@@ -37,6 +37,7 @@ namespace Gurtle
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Windows.Forms;
 
@@ -170,6 +171,9 @@ namespace Gurtle
             if (credential == null)
                 return false;
 
+            credential = new NetworkCredential(credential.UserName, 
+                Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.Password)));
+
             var updates = GetPages().Select((page, i) => new
             {
                 Issue = Issues[i], 
@@ -190,39 +194,47 @@ namespace Gurtle
         private static bool UpdateIssue(string project, Issue issue, string comment, string status, NetworkCredential credential, ISynchronizeInvoke sync)
         {
             string commentPath = null;
-            
-            if (comment.IndexOfAny(new[] { '\r', '\n', '\f' }) >= 0)
+
+            if (comment.Length > 0)
             {
-                commentPath = Path.GetTempFileName();
-                File.WriteAllText(commentPath, comment, Encoding.UTF8);
-                comment = "@" + commentPath;
-            }
-            else
-            {
-                comment = "\"" + comment.Replace("\"", "\"\"") + "\"";
+                if (comment.IndexOfAny(new[] {'\r', '\n', '\f'}) >= 0)
+                {
+                    commentPath = Path.GetTempFileName();
+                    File.WriteAllText(commentPath, comment, Encoding.UTF8);
+                    comment = "@" + commentPath;
+                }
+                else if (comment[0] == '@')
+                {
+                    comment = "@" + comment;
+                }
             }
 
-            var commandLine = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD") ?? string.Empty;
-            commandLine = commandLine.Trim().FormatWith(CultureInfo.InvariantCulture, new
-            {
-                credential.UserName, 
-                credential.Password, 
-                Project = project,
-                Issue = issue, 
-                Status = status, 
-                Comment = comment,
-            });
+            var commandLine = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD") 
+                              ?? string.Empty;
 
-            var pair = commandLine.SplitPair(' ');
-            var command = pair.Key;
-            var args = pair.Value.TrimStart();
+            var args = CommandLineToArgs(commandLine);
+            var command = args.First();
+
+            args = args.Skip(1)
+                       .Select(arg => arg.FormatWith(CultureInfo.InvariantCulture, new
+                       {
+                           credential.UserName,
+                           credential.Password,
+                           Project = project,
+                           Issue = issue,
+                           Status = status,
+                           Comment = comment,
+                       }))
+                       .Select(arg => EncodeCommandLineArg(arg))
+                       .ToArray();
 
             var script = Process.Start(new ProcessStartInfo
             {
+                
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 FileName = command,
-                Arguments = args,
+                Arguments = string.Join(" ", args),
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
             });
@@ -251,7 +263,16 @@ namespace Gurtle
 
             return success;
         }
-        /*
+
+        private static string EncodeCommandLineArg(string str)
+        {
+            return string.IsNullOrEmpty(str)
+                 ? "\"\""
+                 : str.IndexOfAny(new[] {' ', '\"'}) >= 0 
+                 ? "\"" + (str).Replace("\"", "\\\"") + "\"" 
+                 : str;
+        }
+
         [DllImport("shell32.dll", SetLastError = true)]
         static extern IntPtr CommandLineToArgvW(
             [MarshalAs(UnmanagedType.LPWStr)] string lpCmdLine, out int pNumArgs);
@@ -280,6 +301,5 @@ namespace Gurtle
                 Marshal.FreeHGlobal(argv);
             }
         }
-        */
     }
 }
