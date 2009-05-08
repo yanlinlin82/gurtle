@@ -75,6 +75,7 @@
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="IssueField.cs" />
+    <Compile Include="IssueUpdate.cs" />
     <Compile Include="IssueUpdateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
