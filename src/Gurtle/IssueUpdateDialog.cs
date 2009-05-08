@@ -73,7 +73,7 @@ namespace Gurtle
             Text = string.Format(_titleFormat, Revision, ProjectName);
         }
 
-        internal IList<Issue> Issues { get; set; }
+        internal IList<IssueUpdate> Issues { get; set; }
 
         public int Revision
         {
@@ -92,9 +92,9 @@ namespace Gurtle
             {
                 foreach (var issue in issues)
                 {
-                    var tab = new TabPage("Issue #" + issue.Id)
+                    var tab = new TabPage("Issue #" + issue.Issue.Id)
                     {
-                        ToolTipText = issue.Summary,
+                        ToolTipText = issue.Issue.Summary,
                         Tag = issue
                     };
                     tab.Controls.Add(CreateIssuePage(issue));
@@ -133,16 +133,16 @@ namespace Gurtle
                    select (IssueUpdatePage) tab.Controls[0];
         }
 
-        private Control CreateIssuePage(Issue issue) 
+        private Control CreateIssuePage(IssueUpdate issue) 
         {
             Debug.Assert(issue != null);
 
             var page = new IssueUpdatePage
             {
                 Dock = DockStyle.Fill,
-                Summary = issue.Summary,
-                Comment = string.Format("Fixed in r{0}.", Revision),
-                Url = _project.IssueDetailUrl(issue.Id)
+                Summary = issue.Issue.Summary,
+                Comment = issue.Comment,
+                Url = _project.IssueDetailUrl(issue.Issue.Id)
             };
 
             page.RevisionClicked += (sender, args) => Process.Start(_project.RevisionDetailUrl(args.Revision).ToString());
@@ -150,155 +150,26 @@ namespace Gurtle
             return page;
         }
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (DialogResult == DialogResult.OK)
-                e.Cancel = !OnOK();
-
-            base.OnClosing(e);
-        }
-
         protected override void OnClosed(EventArgs e)
         {
             if (Project != null)
                 Project.CancelLoad();
+
+            if (DialogResult == DialogResult.OK)
+                OnOK();
+
             base.OnClosed(e);
         }
 
-        private bool OnOK()
+        private void OnOK()
         {
-            var credential = CredentialPrompt.Prompt(this, "Google Code", "ggcred.txt");
-            if (credential == null)
-                return false;
-
-            credential = new NetworkCredential(credential.UserName, 
-                Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.Password)));
-
-            var updates = GetPages().Select((page, i) => new
+            var pages = GetPages().ToArray();
+            for (var i = 0; i < pages.Length; i++)
             {
-                Issue = Issues[i], 
-                page.Comment, 
-                page.Status,
-                Page = page
-            });
-
-            foreach (var update in updates)
-            {
-                if (!UpdateIssue(_project.Name, update.Issue, update.Comment, update.Status, credential, this)) 
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool UpdateIssue(string project, Issue issue, string comment, string status, NetworkCredential credential, ISynchronizeInvoke sync)
-        {
-            string commentPath = null;
-
-            if (comment.Length > 0)
-            {
-                if (comment.IndexOfAny(new[] {'\r', '\n', '\f'}) >= 0)
-                {
-                    commentPath = Path.GetTempFileName();
-                    File.WriteAllText(commentPath, comment, Encoding.UTF8);
-                    comment = "@" + commentPath;
-                }
-                else if (comment[0] == '@')
-                {
-                    comment = "@" + comment;
-                }
-            }
-
-            var commandLine = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD") 
-                              ?? string.Empty;
-
-            var args = CommandLineToArgs(commandLine);
-            var command = args.First();
-
-            args = args.Skip(1)
-                       .Select(arg => arg.FormatWith(CultureInfo.InvariantCulture, new
-                       {
-                           credential.UserName,
-                           credential.Password,
-                           Project = project,
-                           Issue = issue,
-                           Status = status,
-                           Comment = comment,
-                       }))
-                       .Select(arg => EncodeCommandLineArg(arg))
-                       .ToArray();
-
-            var script = Process.Start(new ProcessStartInfo
-            {
-                
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                FileName = command,
-                Arguments = string.Join(" ", args),
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-            });
-
-            var stdout = new StringWriter();
-            var stderr = new StringWriter();
-            // TODO script.SynchronizingObject = sync;
-            script.OutputDataReceived += (sender, e) => stdout.WriteLine(e.Data);
-            script.ErrorDataReceived += (sender, e) => stderr.WriteLine(e.Data);
-            script.BeginOutputReadLine();
-            script.BeginErrorReadLine();
-
-            script.WaitForExit();
-
-            Trace.TraceInformation(stdout.ToString());
-
-            var success = 0 == script.ExitCode;
-
-            if (success)
-                Trace.TraceWarning(stderr.ToString());
-            else
-                Trace.TraceError(stderr.ToString());
-
-            if (!string.IsNullOrEmpty(commentPath) && File.Exists(commentPath))
-                File.Delete(commentPath);
-
-            return success;
-        }
-
-        private static string EncodeCommandLineArg(string str)
-        {
-            return string.IsNullOrEmpty(str)
-                 ? "\"\""
-                 : str.IndexOfAny(new[] {' ', '\"'}) >= 0 
-                 ? "\"" + (str).Replace("\"", "\\\"") + "\"" 
-                 : str;
-        }
-
-        [DllImport("shell32.dll", SetLastError = true)]
-        static extern IntPtr CommandLineToArgvW(
-            [MarshalAs(UnmanagedType.LPWStr)] string lpCmdLine, out int pNumArgs);
-
-        public static string[] CommandLineToArgs(string commandLine)
-        {
-            int argc;
-            var argv = CommandLineToArgvW(commandLine, out argc);
-            
-            if (argv == IntPtr.Zero)
-                throw new Win32Exception();
-            
-            try
-            {
-                var args = new string[argc];
-                for (var i = 0; i < args.Length; i++)
-                {
-                    var p = Marshal.ReadIntPtr(argv, i * IntPtr.Size);
-                    args[i] = Marshal.PtrToStringUni(p);
-                }
-
-                return args;
-            }
-            finally
-            {
-                Marshal.FreeHGlobal(argv);
+                var page = pages[i];
+                var issue = Issues[i];
+                issue.Status = page.Status;
+                issue.Comment = page.Comment;
             }
         }
     }
