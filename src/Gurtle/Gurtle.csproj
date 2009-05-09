@@ -167,5 +167,6 @@
   -->
   <PropertyGroup>
     <PostBuildEvent />
+    <PreBuildEvent>if not exist  $(SolutionDir)gurtle\Properties\AssemblyInfoVersion.cs copy $(SolutionDir)gurtle\Properties\AssemblyInfoVersion.0.cs $(SolutionDir)gurtle\Properties\AssemblyInfoVersion.cs</PreBuildEvent>
   </PropertyGroup>
 </Project>
