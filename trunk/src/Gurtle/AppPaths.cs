@@ -54,9 +54,7 @@ namespace Gurtle
             var assemblyName = Assembly.GetExecutingAssembly().GetName();
             var appVersionedPath = string.Format(@"{0}\{1}", assemblyName.Name, assemblyName.Version.ToString(2));
             var path = Path.Combine(localAppDataPath, appVersionedPath);
-            if (!string.IsNullOrEmpty(tailPath))
-                Path.Combine(path, tailPath);
-            return path;
+            return !string.IsNullOrEmpty(tailPath) ? Path.Combine(path, tailPath) : path;
         }
     }
 }
