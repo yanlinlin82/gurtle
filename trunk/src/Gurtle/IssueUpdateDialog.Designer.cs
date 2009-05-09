@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.Button okButton;
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IssueUpdateDialog));
             this.tabs = new System.Windows.Forms.TabControl();
             this.cancelButton = new System.Windows.Forms.Button();
             okButton = new System.Windows.Forms.Button();
@@ -79,6 +80,7 @@
             this.Controls.Add(okButton);
             this.Controls.Add(this.tabs);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "IssueUpdateDialog";
