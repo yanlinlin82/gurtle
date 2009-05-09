@@ -48,6 +48,7 @@
       <Link>backlinq-1.0.cs</Link>
     </Compile>
     <Compile Include="Actions.cs" />
+    <Compile Include="AppPaths.cs" />
     <Compile Include="ByteSizeFormatter.cs" />
     <Compile Include="CollectionItemBatchEventArgs.cs" />
     <Compile Include="CollectionItemEventArgs.cs" />
