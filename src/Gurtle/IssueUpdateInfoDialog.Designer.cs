@@ -47,7 +47,7 @@
             linkLabel.Size = new System.Drawing.Size(199, 17);
             linkLabel.TabIndex = 2;
             linkLabel.TabStop = true;
-            linkLabel.Tag = "";
+            linkLabel.Tag = "http://code.google.com/p/gurtle/wiki/IssueUpdateSetup";
             linkLabel.Text = "How do I enable issue updates?";
             linkLabel.UseMnemonic = false;
             linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Link_Clicked);
