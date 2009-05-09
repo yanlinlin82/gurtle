@@ -43,9 +43,13 @@ namespace Gurtle
 
     internal static class CredentialPrompt
     {
-        public static NetworkCredential Prompt(IWin32Window owner, string realm, string fileName)
+        public static NetworkCredential Prompt(IWin32Window owner, string realm, string path)
         {
-            var path = AppPaths.GetLocal(fileName);            
+            return PromptImpl(owner, realm, Path.IsPathRooted(path) ? path : AppPaths.GetLocal(path));
+        }
+
+        private static NetworkCredential PromptImpl(IWin32Window owner, string realm, string path)
+        {
             var credential = TryLoadFromFile(path);
             
             using (var dialog = new CredentialsDialog { Realm = realm })
