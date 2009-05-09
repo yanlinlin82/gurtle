@@ -224,7 +224,7 @@ namespace Gurtle
                             return;
                     }
 
-                    var credential = CredentialPrompt.Prompt(parentWindow, "Google Code", "ggcred");
+                    var credential = CredentialPrompt.Prompt(parentWindow, "Google Code", project.Name + ".gccred");
                     if (credential == null)
                         continue;
 
