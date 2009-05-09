@@ -173,11 +173,19 @@ namespace Gurtle
             string commonRoot, string[] pathList,
             string logMessage, int revision)
         {
-            if (_project == null)
+            var project = _project;
+            var issues = _issues;
+            OnCommitFinished(parentWindow, revision, project, issues);
+            return null;
+        }
+
+        private static void OnCommitFinished(IWin32Window parentWindow, int revision, GoogleCodeProject project, ICollection<Issue> issues)
+        {
+            if (project == null)
                 throw new InvalidOperationException();
 
-            if (_issues == null || _issues.Count == 0)
-                return null;
+            if (issues == null || issues.Count == 0)
+                return;
 
             var settings = Properties.Settings.Default;
 
@@ -195,55 +203,82 @@ namespace Gurtle
             }
             else
             {
-                var issues = _issues.Select(e => new IssueUpdate(e) 
+                var updates = issues.Select(e => new IssueUpdate(e) 
                 {
-                    Comment = string.Format("Fixed in r{0}.", revision)
+                    Status = project.ClosedStatuses.FirstOrDefault(),
+                    Comment = string.Format("{0} in r{1}.", GetIssueTypeAddress(e.Type), revision)
                 })
                 .ToList();
-
-                while (issues.Count > 0)
+                
+                while (updates.Count > 0)
                 {
                     using (var dialog = new IssueUpdateDialog
                     {
-                        Project = _project,
-                        Issues = issues,
+                        Project = project,
+                        Issues = updates,
                         Revision = revision
                     })
                     {
                         new WindowSettings(settings, dialog);
                         if (DialogResult.OK != dialog.ShowDialog(parentWindow))
-                            return null;
+                            return;
                     }
 
-                    var credential = CredentialPrompt.Prompt(parentWindow, "Google Code", "ggcred.txt");
+                    var credential = CredentialPrompt.Prompt(parentWindow, "Google Code", "ggcred");
                     if (credential == null)
                         continue;
 
                     credential = new NetworkCredential(credential.UserName,
                         Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.Password)));
 
-                    while (issues.Count > 0)
+                    using (var form = new WorkProgressForm
                     {
-                        var issue = issues[0];
-
-                        try
+                        Text = "Updating Issues",
+                        StartWorkOnShow = true,
+                    })
+                    {
+                        var worker = form.Worker;
+                        worker.DoWork += (sender, args) =>
                         {
-                            if (!UpdateIssue(_project.Name, issue, credential))
-                                return null;
+                            var startCount = updates.Count;
+                            while (updates.Count > 0)
+                            {
+                                if (worker.CancellationPending)
+                                {
+                                    args.Cancel = true;
+                                    break;
+                                }
 
-                            issues.RemoveAt(0);
-                        }
-                        catch (ApplicationException e)
+                                var issue = updates[0];
+
+                                form.ReportProgress(string.Format(
+                                    @"Updating issue #{0}: {1}", 
+                                    issue.Issue.Id, 
+                                    issue.Issue.Summary));
+
+                                UpdateIssue(project.Name, issue, credential, form.ReportDetailLine);
+                                updates.RemoveAt(0);
+                        
+                                form.ReportProgress((int) ((startCount - updates.Count) * 100.0 / startCount));
+                            }
+                        };
+                        
+                        form.WorkFailed += delegate
                         {
-                            ShowErrorBox(parentWindow, e);
-                            break;
-                        }
+                            var error = form.Error;
+                            foreach (var line in new StringReader(error.ToString()).ReadLines())
+                                form.ReportDetailLine(line);
+                            ShowErrorBox(form, error);
+                        };
+                        
+                        if (parentWindow == null)
+                            form.StartPosition = FormStartPosition.CenterScreen;
+                        form.ShowDialog(parentWindow);
                     }
                 }
             }
 
             settings.Save();
-            return null;
         }
 
         public bool HasOptions()
@@ -298,11 +333,18 @@ namespace Gurtle
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private static bool UpdateIssue(string project, IssueUpdate issue, NetworkCredential credential)
+        private static void UpdateIssue(string project, IssueUpdate issue, NetworkCredential credential, 
+            Action<string> stdout)
+        {
+            UpdateIssue(project, issue, credential, stdout, stdout);
+        }
+
+        private static void UpdateIssue(string project, IssueUpdate update, NetworkCredential credential, 
+            Action<string> stdout, Action<string> stderr)
         {
             string commentPath = null;
 
-            var comment = issue.Comment;
+            var comment = update.Comment;
             if (comment.Length > 0)
             {
                 if (comment.IndexOfAny(new[] { '\r', '\n', '\f' }) >= 0)
@@ -317,74 +359,70 @@ namespace Gurtle
                 }
             }
 
-            var commandLine = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD")
-                              ?? string.Empty;
-
-            var args = CommandLineToArgs(commandLine);
-            var command = args.First();
-
             try
             {
+                var commandLine = Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD")
+                                  ?? string.Empty;
+
+                stderr("GURTLE_ISSUE_UPDATE_CMD: " + commandLine);
+
+                var args = CommandLineToArgs(commandLine);
+                var command = args.First();
+
+                for (var i = 0; i < args.Length; i++)
+                    stderr(string.Format("[{0}]: {1}", i, args[i]));
+
                 args = args.Skip(1)
                            .Select(arg => arg.FormatWith(CultureInfo.InvariantCulture, new
                            {
                                credential.UserName,
                                credential.Password,
                                Project = project,
-                               Issue = issue,//.Issue,
-                               Status = issue.Status,
+                               Issue = update.Issue,
+                               Status = update.Status,
                                Comment = comment,
                            }))
                            .Select(arg => EncodeCommandLineArg(arg))
                            .ToArray();
-            }
-            catch (FormatException e)
-            {
-                throw new ApplicationException(e.Message, e);
-            }
 
-            Process process;
-            try
-            {
-                process = Process.Start(new ProcessStartInfo
+                var formattedCommandLineArgs = string.Join(" ", args);
+                stderr(formattedCommandLineArgs.Replace(credential.Password, "**********"));
+
+                using (var process = Process.Start(new ProcessStartInfo
                 {
-
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     FileName = command,
-                    Arguments = string.Join(" ", args),
+                    Arguments = formattedCommandLineArgs,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
-                });
+                }))
+                {
+                    Debug.Assert(process != null);
+
+                    stderr("PID: " + process.Id);
+
+                    process.OutputDataReceived += (sender, e) => stdout(e.Data);
+                    process.ErrorDataReceived += (sender, e) => stderr(e.Data);
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
+                    {
+                        throw new Exception(
+                            string.Format("Issue update command failed with an exit code of {0}.",
+                            process.ExitCode));
+                    }
+                }
+
             }
-            catch (Win32Exception e)
+            finally 
             {
-                throw new ApplicationException(e.Message, e);
+                if (!string.IsNullOrEmpty(commentPath) && File.Exists(commentPath))
+                    File.Delete(commentPath);
             }
-
-            var stdout = new StringWriter();
-            var stderr = new StringWriter();
-            // TODO script.SynchronizingObject = sync;
-            process.OutputDataReceived += (sender, e) => stdout.WriteLine(e.Data);
-            process.ErrorDataReceived += (sender, e) => stderr.WriteLine(e.Data);
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            process.WaitForExit();
-
-            Trace.TraceInformation(stdout.ToString());
-
-            var success = 0 == process.ExitCode;
-
-            if (success)
-                Trace.TraceWarning(stderr.ToString());
-            else
-                Trace.TraceError(stderr.ToString());
-
-            if (!string.IsNullOrEmpty(commentPath) && File.Exists(commentPath))
-                File.Delete(commentPath);
-
-            return success;
         }
 
         private static string EncodeCommandLineArg(string str)

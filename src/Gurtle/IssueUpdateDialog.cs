@@ -142,6 +142,7 @@ namespace Gurtle
                 Dock = DockStyle.Fill,
                 Summary = issue.Issue.Summary,
                 Comment = issue.Comment,
+                Status = issue.Status,
                 Url = _project.IssueDetailUrl(issue.Issue.Id)
             };
 
