@@ -131,6 +131,9 @@
     <EmbeddedResource Include="OptionsDialog.resx">
       <DependentUpon>OptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WebProxyDialog.resx">
+      <DependentUpon>WebProxyDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WorkProgressForm.resx">
       <DependentUpon>WorkProgressForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -149,6 +152,12 @@
     <Compile Include="TextReaderExtensions.cs" />
     <Compile Include="WebClient.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WebProxyDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WebProxyDialog.Designer.cs">
+      <DependentUpon>WebProxyDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="WindowHandleWrapper.cs" />
     <Compile Include="WindowSettings.cs" />
