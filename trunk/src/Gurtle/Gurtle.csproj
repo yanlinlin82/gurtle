@@ -60,6 +60,7 @@
       <DependentUpon>CredentialsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="CredentialPrompt.cs" />
+    <Compile Include="CurrentCursorScope.cs" />
     <Compile Include="CustomFormatter.cs" />
     <Compile Include="DataBindingExtensions.cs" />
     <Compile Include="DelegatingComparer.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="GoogleCodeProject.cs" />
     <Compile Include="IBugTraqProvider.cs" />
     <Compile Include="IBugTraqProvider2.cs" />
+    <Compile Include="ISingletonScopeHelper.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="IssueBrowserDialog.cs">
       <SubType>Form</SubType>
@@ -142,6 +144,7 @@
     <Compile Include="RevisionEventArgs.cs" />
     <Compile Include="ScriptControl.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SingletonScope.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="TextReaderExtensions.cs" />
     <Compile Include="WebClient.cs">

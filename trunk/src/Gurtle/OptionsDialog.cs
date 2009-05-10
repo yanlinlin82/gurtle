@@ -95,7 +95,8 @@ namespace Gurtle
             {
                 var projectName = _projectNameBox.Text;
                 var url = new GoogleCodeProject(projectName).DnsUrl();
-                new WebClient().DownloadData(url);
+                using (CurrentCursorScope.EnterWait())
+                    new WebClient().DownloadData(url);
                 var message = string.Format("The Google Code project '{0}' appears valid and reachable at {1}.", projectName, url);
                 MessageBox.Show(message, "Test Passed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
