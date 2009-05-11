@@ -39,7 +39,7 @@ namespace Gurtle
 
         private void Link_Clicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start((e.Link.Tag ?? "http://code.google.com/p/gurtle/w/list").ToString());
+            Process.Start((linkLabel.Tag ?? "http://code.google.com/p/gurtle/w/list").ToString());
         }
     }
 }
