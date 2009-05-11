@@ -39,7 +39,7 @@ def update_issue(username, password, project, issue, status, comment, dry_run = 
 
     # Login
 
-    print >> stderr, wc.DownloadString('https://www.google.com/accounts/ServiceLoginAuth?service=mail&Email=%s&Passwd=%s' % (username, password))
+    print >> stderr, wc.DownloadString('https://www.google.com/accounts/LoginAuth?Email=%s&Passwd=%s' % (username, password))
     cookies = wc.CookieContainer.GetCookies(Uri('http://code.google.com/'))
     print >> stderr, '\n'.join(['%s=%s' % (cookie.Name, cookie.Value) for cookie in cookies])
     sid = cookies['SID']
