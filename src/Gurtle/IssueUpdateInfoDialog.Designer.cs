@@ -28,29 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.LinkLabel linkLabel;
             System.Windows.Forms.Label label1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IssueUpdateInfoDialog));
             System.Windows.Forms.CheckBox checkBox1;
+            this.linkLabel = new System.Windows.Forms.LinkLabel();
             this.okButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            linkLabel = new System.Windows.Forms.LinkLabel();
             label1 = new System.Windows.Forms.Label();
             checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // linkLabel
             // 
-            linkLabel.AutoSize = true;
-            linkLabel.Location = new System.Drawing.Point(10, 130);
-            linkLabel.Name = "linkLabel";
-            linkLabel.Size = new System.Drawing.Size(199, 17);
-            linkLabel.TabIndex = 2;
-            linkLabel.TabStop = true;
-            linkLabel.Tag = "http://code.google.com/p/gurtle/wiki/IssueUpdateSetup";
-            linkLabel.Text = "How do I enable issue updates?";
-            linkLabel.UseMnemonic = false;
-            linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Link_Clicked);
+            this.linkLabel.AutoSize = true;
+            this.linkLabel.Location = new System.Drawing.Point(10, 130);
+            this.linkLabel.Name = "linkLabel";
+            this.linkLabel.Size = new System.Drawing.Size(199, 17);
+            this.linkLabel.TabIndex = 2;
+            this.linkLabel.TabStop = true;
+            this.linkLabel.Tag = "http://code.google.com/p/gurtle/wiki/IssueUpdateSetup";
+            this.linkLabel.Text = "How do I enable issue updates?";
+            this.linkLabel.UseMnemonic = false;
+            this.linkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Link_Clicked);
             // 
             // label1
             // 
@@ -107,7 +106,7 @@
             this.ClientSize = new System.Drawing.Size(492, 215);
             this.Controls.Add(this.label2);
             this.Controls.Add(label1);
-            this.Controls.Add(linkLabel);
+            this.Controls.Add(this.linkLabel);
             this.Controls.Add(checkBox1);
             this.Controls.Add(this.okButton);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
@@ -128,5 +127,6 @@
 
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.LinkLabel linkLabel;
     }
 }
