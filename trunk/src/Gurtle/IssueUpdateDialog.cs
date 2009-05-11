@@ -28,6 +28,7 @@ namespace Gurtle
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
 
@@ -87,7 +88,9 @@ namespace Gurtle
                         ToolTipText = issue.Issue.Summary,
                         Tag = issue
                     };
-                    tab.Controls.Add(CreateIssuePage(issue));
+                    var page = CreateIssuePage(issue);
+                    page.SkipChanged += delegate { tab.ImageIndex = page.Skip ? 0 : -1; };
+                    tab.Controls.Add(page);
                     tabs.TabPages.Add(tab);
                 }
             }
@@ -123,7 +126,7 @@ namespace Gurtle
                    select (IssueUpdatePage) tab.Controls[0];
         }
 
-        private Control CreateIssuePage(IssueUpdate issue) 
+        private IssueUpdatePage CreateIssuePage(IssueUpdate issue) 
         {
             Debug.Assert(issue != null);
 
@@ -161,6 +164,11 @@ namespace Gurtle
                 var issue = Issues[i];
                 issue.Status = page.Status;
                 issue.Comment = page.Comment;
+            }
+            for (var i = pages.Length - 1; i >= 0; i--)
+            {
+                if (pages[i].Skip)
+                    Issues.RemoveAt(i);
             }
         }
     }

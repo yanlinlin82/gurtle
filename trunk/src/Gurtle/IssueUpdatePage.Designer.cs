@@ -35,6 +35,7 @@
             this.commentBox = new System.Windows.Forms.TextBox();
             this.revisionsLabel = new System.Windows.Forms.LinkLabel();
             this.summaryLabel = new System.Windows.Forms.LinkLabel();
+            this.skipBox = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
@@ -64,12 +65,12 @@
             this.commentBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.commentBox.Location = new System.Drawing.Point(3, 67);
+            this.commentBox.Location = new System.Drawing.Point(10, 67);
             this.commentBox.Multiline = true;
             this.commentBox.Name = "commentBox";
             this.commentBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.commentBox.Size = new System.Drawing.Size(589, 203);
-            this.commentBox.TabIndex = 3;
+            this.commentBox.Size = new System.Drawing.Size(575, 172);
+            this.commentBox.TabIndex = 4;
             toolTip.SetToolTip(this.commentBox, "Closing comment for issue");
             this.commentBox.TextChanged += new System.EventHandler(this.CommentBox_TextChanged);
             // 
@@ -81,8 +82,8 @@
             this.revisionsLabel.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
             this.revisionsLabel.Location = new System.Drawing.Point(236, 37);
             this.revisionsLabel.Name = "revisionsLabel";
-            this.revisionsLabel.Size = new System.Drawing.Size(356, 23);
-            this.revisionsLabel.TabIndex = 4;
+            this.revisionsLabel.Size = new System.Drawing.Size(349, 23);
+            this.revisionsLabel.TabIndex = 3;
             this.revisionsLabel.Text = "Revisions: {0}";
             toolTip.SetToolTip(this.revisionsLabel, "Revision numbers mentioned in comment text");
             this.revisionsLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.RevisionsLabel_LinkClicked);
@@ -94,17 +95,30 @@
             this.summaryLabel.AutoEllipsis = true;
             this.summaryLabel.Location = new System.Drawing.Point(3, 8);
             this.summaryLabel.Name = "summaryLabel";
-            this.summaryLabel.Size = new System.Drawing.Size(589, 17);
+            this.summaryLabel.Size = new System.Drawing.Size(582, 17);
             this.summaryLabel.TabIndex = 0;
             this.summaryLabel.TabStop = true;
             this.summaryLabel.Text = "Summary";
             this.summaryLabel.UseMnemonic = false;
             this.summaryLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Summary_LinkClicked);
             // 
+            // skipBox
+            // 
+            this.skipBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.skipBox.AutoSize = true;
+            this.skipBox.Location = new System.Drawing.Point(10, 245);
+            this.skipBox.Name = "skipBox";
+            this.skipBox.Size = new System.Drawing.Size(179, 21);
+            this.skipBox.TabIndex = 5;
+            this.skipBox.Text = "S&kip updating this issue";
+            this.skipBox.UseVisualStyleBackColor = true;
+            this.skipBox.CheckedChanged += new System.EventHandler(this.SkipBox_CheckedChanged);
+            // 
             // IssueUpdatePage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.skipBox);
             this.Controls.Add(this.revisionsLabel);
             this.Controls.Add(label1);
             this.Controls.Add(this.summaryLabel);
@@ -123,6 +137,7 @@
         private System.Windows.Forms.TextBox commentBox;
         private System.Windows.Forms.LinkLabel summaryLabel;
         private System.Windows.Forms.LinkLabel revisionsLabel;
+        private System.Windows.Forms.CheckBox skipBox;
 
 
     }

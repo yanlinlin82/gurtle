@@ -40,6 +40,7 @@ namespace Gurtle
     internal sealed partial class IssueUpdatePage : UserControl
     {
         public event EventHandler<RevisionEventArgs> RevisionClicked;
+        public event EventHandler SkipChanged;
 
         public IssueUpdatePage()
         {
@@ -68,6 +69,20 @@ namespace Gurtle
         {
             get { return statusBox.Text; }
             set { statusBox.Text = value; }
+        }
+
+        [DefaultValue(false)]
+        public bool Skip
+        {
+            get { return skipBox.Checked; }
+            set { skipBox.Checked = value; }
+        }
+
+        private void OnSkipChanged(EventArgs args)
+        {
+            Debug.Assert(args != null);
+            var handler = SkipChanged;
+            if (handler != null) handler(this, args);
         }
 
         public void LoadStatusOptions(IEnumerable<string> options)
@@ -125,6 +140,12 @@ namespace Gurtle
             statusBox.ForeColor = found 
                                 ? SystemColors.WindowText 
                                 : Color.FromKnownColor(KnownColor.Red);
+        }
+
+        private void SkipBox_CheckedChanged(object sender, EventArgs e)
+        {
+            statusBox.Enabled = commentBox.Enabled = revisionsLabel.Enabled = !skipBox.Checked;
+            OnSkipChanged(EventArgs.Empty);
         }
     }    
 }

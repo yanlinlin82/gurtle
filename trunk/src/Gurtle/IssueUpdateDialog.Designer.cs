@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Button okButton;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IssueUpdateDialog));
             this.tabs = new System.Windows.Forms.TabControl();
             this.cancelButton = new System.Windows.Forms.Button();
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             okButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -51,6 +53,7 @@
             this.tabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabs.ImageList = this.imageList;
             this.tabs.Location = new System.Drawing.Point(12, 13);
             this.tabs.Name = "tabs";
             this.tabs.SelectedIndex = 0;
@@ -68,6 +71,12 @@
             this.cancelButton.TabIndex = 2;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
+            // 
+            // imageList
+            // 
+            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+            this.imageList.TransparentColor = System.Drawing.Color.Magenta;
+            this.imageList.Images.SetKeyName(0, "Skip");
             // 
             // IssueUpdateDialog
             // 
@@ -94,5 +103,6 @@
 
         private System.Windows.Forms.TabControl tabs;
         private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.ImageList imageList;
     }
 }
