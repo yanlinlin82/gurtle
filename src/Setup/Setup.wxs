@@ -53,11 +53,11 @@
 						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
 						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="CodeBase" Value="[INSTALLDIR]Gurtle.dll" Type="string" />
 
-						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InprocServer32\1.0.0.0" Action="createAndRemoveOnUninstall" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\1.0.0.0" Name="Class" Value="Gurtle.Plugin" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\1.0.0.0" Name="Assembly" Value="Gurtle, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\1.0.0.0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\1.0.0.0" Name="CodeBase" Value="[INSTALLDIR]Gurtle.dll" Type="string" />
+						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InprocServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Action="createAndRemoveOnUninstall" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="Class" Value="Gurtle.Plugin" Type="string" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="Assembly" Value="Gurtle, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="CodeBase" Value="[INSTALLDIR]Gurtle.dll" Type="string" />
 
 						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\ProgId" Value="Gurtle.Plugin" Type="string" />
 
