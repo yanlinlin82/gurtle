@@ -5,8 +5,14 @@ from System.IO import File
 from System.Collections.Specialized import NameValueCollection
 from System.Net import WebClient as SysWebClient, CookieContainer
 from System.Globalization import NumberFormatInfo
-from System.Text.RegularExpressions import Regex
+from System.Text.RegularExpressions import Regex, RegexOptions
 from System.Text import Encoding
+
+class NullFile(object):
+    def write(self, d): 
+        pass
+        
+dbgdev = NullFile() # debug device
 
 class WebClient(SysWebClient):
     def __init__(self):
@@ -39,20 +45,33 @@ def update_issue(username, password, project, issue, status, comment, dry_run = 
 
     # Login
 
-    print >> stderr, wc.DownloadString('https://www.google.com/accounts/LoginAuth?Email=%s&Passwd=%s' % (username, password))
+    print >> dbgdev, 'Logging in %s...' % username
+    html = wc.DownloadString('https://www.google.com/accounts/LoginAuth?Email=%s&Passwd=%s' % (username, password))
     cookies = wc.CookieContainer.GetCookies(Uri('http://code.google.com/'))
-    print >> stderr, '\n'.join(['%s=%s' % (cookie.Name, cookie.Value) for cookie in cookies])
     sid = cookies['SID']
     if not sid or not sid.Value:
+        print >> dbgdev, '\n'.join(['%s=%s' % (cookie.Name, cookie.Value) for cookie in cookies])
+        print >> dbgdev, html
         raise Exception('Authentication failed.')
-        
+    print >> dbgdev, 'Logged in.'
+    print >> dbgdev, 'SID = %s' % sid
+    
     # Get editing token
 
+    print >> dbgdev, 'Loading edit form...'
     html = wc.DownloadString('http://code.google.com/p/%s/issues/bulkedit?ids=%d' % (project, issue))
-    token = Regex.Match(html, """name=(?:"|')?token(?:"|')?\s+value=(?:"|')?([0-9a-fA-F]+)(?:"|')?""").Groups[1].Value
-
+    token = Regex.Match(html, r"""
+                \b  name  = (?:"|')? token          (?:"|')?
+                \s+ value = (?:"|')? ([0-9a-fA-F]+) (?:"|')?""", 
+                RegexOptions.IgnorePatternWhitespace).Groups[1]
+    if not token.Success or not token.Value:
+        print >> dbgdev, html
+        raise Exception('Missing editing token.')
+    token = token.Value
+    print >> dbgdev, 'Token =', token
+    
     # Set up form/update to post with mandatory data
-
+    
     form = NameValueCollection()
     form['can'] = '1'
     form['start'] = '0'
@@ -62,7 +81,7 @@ def update_issue(username, password, project, issue, status, comment, dry_run = 
     form['colspec'] = ''
     form['issue_ids'] = str(issue)
     form['token'] = token
-    form['comment'] = comment or 'This is a test comment bulk-posted by a script. ' + DateTime.UtcNow.ToString('r')
+    form['comment'] = comment % { 'now' : DateTime.UtcNow.ToString('r') }
     
     # optional...
 
@@ -78,11 +97,13 @@ def update_issue(username, password, project, issue, status, comment, dry_run = 
 
     boundary = DateTime.Now.Ticks.ToString(NumberFormatInfo.InvariantInfo).PadLeft(38, '-')
     form_data = format_form_data(form, boundary)
-    print >> stderr, form_data
+    print >> dbgdev, form_data
     wc.Headers['Content-Type'] = 'multipart/form-data; boundary=' + boundary
     form_data_bytes = Encoding.UTF8.GetBytes(form_data)
     if not dry_run:
+        print 'Submitting form...'
         wc.UploadData('http://code.google.com/p/%s/issues/bulkedit.do' % project, form_data_bytes)
+    print 'Project %s, issue #%d updated.' % (project, issue)
     
 def parse_options(args, names, flags = None, lax = False):
     args = list(args) # copy for r/w
@@ -115,6 +136,9 @@ def parse_options(args, names, flags = None, lax = False):
         if not name in options:
             raise Exception('Missing required argument: %s' % name)
     return options, anon
+
+def is_file_comment(comment):
+    return comment and len(comment) > 1 and comment[0] == '@' and comment[1] != '@'
     
 def decode_comment(comment):
     # A comment can be in-line or file-based. A file-based comment
@@ -124,24 +148,27 @@ def decode_comment(comment):
     # comment really starts from the second character. All other 
     # cases are in-line comments.
 
-    if comment and len(comment) > 1 and comment[0] == '@':
-        if comment[1] != '@':
-            return File.ReadAllText(comment[1:], Encoding.UTF8)
-        else:
-            return comment[1:]
+    if is_file_comment(comment):
+        return File.ReadAllText(comment[1:], Encoding.UTF8)
+    if comment[:2] == '@@':
+        return comment[1:]
     return comment
 
 def main(args):
 
     options, tails = parse_options(args, 
         ('username!', 'password!', 'project!', 'issue!', 'status', 'comment!'),
-        ('dry-run', ))
+        ('dry-run', 'debug'))
     
+    if (options.get('debug', False)):
+        global dbgdev
+        dbgdev = stderr
+
     comment = decode_comment(options.get('comment', None))
     password = Encoding.UTF8.GetString(Convert.FromBase64String(options['password']))
     
-    print '\n'.join(['%s: %s' % (k, k == 'password' and ('*' * 10) or v) for k, v in options.items()])
-    
+    print >> dbgdev, '\n'.join(['%s: %s' % (k, k == 'password' and ('*' * 10) or v) for k, v in options.items()])
+
     update_issue(options['username'], password, options['project'], 
         int(options['issue']), options.get('status', None), comment, 
         options.get('dry-run', False))
