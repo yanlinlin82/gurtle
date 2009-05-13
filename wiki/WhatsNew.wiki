@@ -1,6 +1,17 @@
 #summary What's new and fixed with each version
 #labels Featured
 
+= Version 0.5 =
+
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5.msi.zip Download this version]
+
+  * Issue #16: Close the issue with a reference to the committed changeset
+  * Issue #29: Add revision number to assembly version resource
+  * Issue #33: AssemblyInfoVersion.cs missing on checkout/export
+  * Issue #34: Issue update fails under TSVN
+  * Issue #35: User credential not getting saved
+  * Issue #36: User credential cache should be per project
+
 = Version 0.4 =
 
 [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.4.msi.zip Download this version]
