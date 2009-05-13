@@ -3,7 +3,7 @@
 
 = Version 0.5 =
 
-[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5.msi.zip Download this version]
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5-msi.zip Download this version]
 
   * Issue #16: Close the issue with a reference to the committed changeset
   * Issue #29: Add revision number to assembly version resource
