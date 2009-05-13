@@ -10,7 +10,7 @@ Next, define an environment variable named `GURTLE_ISSUE_UPDATE_CMD` and set its
 updissue.cmd --username {username} --password {password} --project {project} --issue {issue.id} --status {status} --comment {comment} --debug
 }}}
 
-Prepend `updissue.cmd` with the path where you exported the scripts earler.
+Prepend `updissue.cmd` with the path where you exported the scripts earlier.
 
 That's it! Next time you make a commit via TortoiseSVN and use Gurtle to select one or more issues, you will see a dialog box like the following show up _after_ the commit and using which you will be able to set the comment and status for each issue.
 
