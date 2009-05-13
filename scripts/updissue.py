@@ -49,7 +49,7 @@ def update_issue(username, password, project, issue, status, comment, dry_run = 
     # Get editing token
 
     html = wc.DownloadString('http://code.google.com/p/%s/issues/bulkedit?ids=%d' % (project, issue))
-    token = Regex.Match(html, 'name="token" value="([0-9a-f]+)"').Groups[1].Value
+    token = Regex.Match(html, """name=(?:"|')?token(?:"|')?\s+value=(?:"|')?([0-9a-fA-F]+)(?:"|')?""").Groups[1].Value
 
     # Set up form/update to post with mandatory data
 
@@ -139,6 +139,8 @@ def main(args):
     
     comment = decode_comment(options.get('comment', None))
     password = Encoding.UTF8.GetString(Convert.FromBase64String(options['password']))
+    
+    print '\n'.join(['%s: %s' % (k, k == 'password' and ('*' * 10) or v) for k, v in options.items()])
     
     update_issue(options['username'], password, options['project'], 
         int(options['issue']), options.get('status', None), comment, 
