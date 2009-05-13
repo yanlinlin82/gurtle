@@ -107,7 +107,7 @@ def update_issue(username, password, project, issue, status, comment, labels, dr
     if status:
         form['status'] = status
 
-    for label in labels:
+    for label in [l for l in labels if l]:
         form.Add('label', label)
 
     #form['owner'] = ''
