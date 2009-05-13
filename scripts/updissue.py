@@ -57,7 +57,7 @@ def format_form_data(form, boundary):
     fd.append('--' + boundary + '--')
     return '\r\n'.join(fd)
     
-def update_issue(username, password, project, issue, status, comment, dry_run = False):
+def update_issue(username, password, project, issue, status, comment, labels, dry_run = False):
 
     wc = WebClient()
     wc.CookieContainer = CookieContainer()
@@ -107,9 +107,12 @@ def update_issue(username, password, project, issue, status, comment, dry_run = 
     if status:
         form['status'] = status
 
+    for label in labels:
+        form.Add('label', label)
+
     #form['owner'] = ''
     #form['cc'] = ''
-    #form.Add('label', '')
+        
     #form['btn'] = 'Update 1 Issue'
     
     # Bombs away!
@@ -183,7 +186,7 @@ No warranty expressed or implied. Use at your own risk.
 def main(args):
 
     options, tails = parse_options(args, 
-        ('username!', 'password!', 'project!', 'issue!', 'status', 'comment!'),
+        ('username!', 'password!', 'project!', 'issue!', 'status', 'comment!', 'labels'),
         ('dry-run', 'debug', 'no-logo'))
         
     if not options.get('no-logo', False):
@@ -200,6 +203,7 @@ def main(args):
 
     update_issue(options['username'], password, options['project'], 
         int(options['issue']), options.get('status', None), comment, 
+        options.get('labels', '').Split(" ,;".ToCharArray()),
         options.get('dry-run', False))
 
 if __name__ == '__main__':
