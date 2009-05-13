@@ -32,7 +32,7 @@
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
 				<Directory Id='INSTALLDIR' Name='Gurtle' >
 
-					<Component Id='MainDll' Guid='39414E3C-C9FF-40eb-B59F-095D85082234'>
+					<Component Id='CoreComponent' Guid='39414E3C-C9FF-40eb-B59F-095D85082234'>
 						<File Id='Gurtle.DLL' Name='Gurtle.dll' DiskId='1'
 						  Source='../../bin/release/Gurtle.dll' Vital='yes'>
 						</File>
@@ -82,8 +82,8 @@
 
 		<Feature Id='Complete' Title='Gurtle' Description='The complete package.'
 		  Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
-			<Feature Id='MainDll' Title='Program' Description='The main executable.' Level='1'>
-				<ComponentRef Id='MainDll' />
+			<Feature Id='CoreComponent' Title='Binaries' Description='The core binaries.' Level='1'>
+				<ComponentRef Id='CoreComponent' />
 			</Feature>
 		</Feature>
 
