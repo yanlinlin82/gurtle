@@ -123,7 +123,7 @@ def update_issue(username, password, project, issue, status, comment, labels, dr
     wc.Headers['Content-Type'] = 'multipart/form-data; boundary=' + boundary
     form_data_bytes = Encoding.UTF8.GetBytes(form_data)
     if not dry_run:
-        print 'Submitting form...'
+        print >> dbgdev, 'Submitting form...'
         wc.UploadData('http://code.google.com/p/%s/issues/bulkedit.do' % project, form_data_bytes)
     print 'Project %s, issue #%d updated.' % (project, issue)
     
