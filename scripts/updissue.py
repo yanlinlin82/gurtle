@@ -177,11 +177,11 @@ def decode_comment(comment):
     return comment
     
 def logo():
-    print """Google Code Project Issue Update Script (%s)
+    print """Google Code Project Issue Update Script, r%s
 Copyright (c) 2008, 2009 Atif Aziz. All rights reserved.
 Licensed under the Apache License, Version 2.0
 No warranty expressed or implied. Use at your own risk.
-""" % '$Revision$'.Trim('$')
+""" % Regex.Match('$Revision$', '[0-9]+').Value
 
 def main(args):
 
