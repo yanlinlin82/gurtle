@@ -7,14 +7,14 @@ To enable the issue update UI in Gurtle, start by downloading the latest version
 Next, define an environment variable named `GURTLE_ISSUE_UPDATE_CMD` and set its value to :
 
 {{{
-updissue.cmd --username {username} --password {password} --project {project} --issue {issue.id} --status {status} --comment {comment}
+updissue.cmd --username {username} --password {password} --project {project} --issue {issue.id} --status {status} --comment {comment} --debug
 }}}
 
 Prepend `updissue.cmd` with the path where you exported the scripts earler.
 
 That's it! Next time you make a commit via TortoiseSVN and use Gurtle to select one or more issues, you will see a dialog box like the following show up _after_ the commit and using which you will be able to set the comment and status for each issue.
 
-If you start finding that you are getting errors during issue updates, make sure to check back and see if there is a new version of the script available.
+If you start finding that you are getting errors during issue updates, make sure to check back and see if there is a new version of the script available. You are also encouraged to leave the `--debug` flag that could aid in identifying and [http://code.google.com/p/gurtle/issues/entry reporting issues].
 
 http://gurtle.googlecode.com/svn/wiki/IssueUpdateDialog.png
 
