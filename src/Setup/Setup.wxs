@@ -42,9 +42,9 @@
 						<File Id='COPYING.TXT' Name='COPYING.txt' DiskId='1'
 						  Source='../../COPYING.txt' Vital='yes'>
 						</File>
-						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\Gurtle.Plugin" Action="createAndRemoveOnUninstall" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\Gurtle.Plugin" Value="Gurtle $(var.MajorVersion).$(var.MinorVersion) (Google Code)" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\Gurtle.Plugin\CLSID" Value="{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Type="string" />
+						<RegistryKey Root="HKLM" Key="Software\Classes\Gurtle.Plugin" Action="createAndRemoveOnUninstall" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\Gurtle.Plugin" Value="Gurtle $(var.MajorVersion).$(var.MinorVersion) (Google Code)" Type="string" />
+						<RegistryValue Root="HKLM" Key="Software\Classes\Gurtle.Plugin\CLSID" Value="{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Type="string" />
 
 
 						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Value="Gurtle $(var.MajorVersion).$(var.MinorVersion) (Google Code)" Type="string" />
