@@ -1,9 +1,16 @@
 #summary What's new and fixed with each version
 #labels Featured
 
+= Version 0.5 (217) =
+
+Download this version: [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5.0.217-x86.zip 32-bit (x86)] or [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5.0.217-x64.zip 64-bit (x64)]
+
+  * Issue #40: ProgID registered to the wrong location
+  * Issue #41: Add an MSI package for 64-bit platforms
+
 = Version 0.5 =
 
-Download this version [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5.0.217-x86.zip x86] or [http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5.0.217-x64.zip x64] platforms 
+[http://code.google.com/p/gurtle/downloads/detail?name=gurtle-0.5-msi.zip Download this version]
 
   * Issue #16: Close the issue with a reference to the committed changeset
   * Issue #29: Add revision number to assembly version resource
