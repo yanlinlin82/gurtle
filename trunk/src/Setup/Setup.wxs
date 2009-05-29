@@ -5,9 +5,18 @@
 	     msi ignores the fourth number when detecting updates/upgrades. That way,
 		 we always have a working upgrade even if we don't change the version
 		 string manually but only due to increases svn revisions -->
+
+    <?if $(env.Platform)=x64 ?>
+        <?define Win64YesNo="yes" ?>
+        <?define UpgradeCode = "E573F04A-CFBF-45b4-9026-3CF8221E158B" ?>
+    <?else ?>
+        <?define Win64YesNo="no" ?>
+        <?define UpgradeCode = "FE804E0B-B1F7-4cad-8C2A-DCE004D46C71" ?>
+    <?endif ?>
+
 	<Product
-	UpgradeCode="{FE804E0B-B1F7-4cad-8C2A-DCE004D46C71}"
-	Name='Gurtle $(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)'
+	UpgradeCode="$(var.UpgradeCode)"
+	Name='Gurtle $(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion) ($(env.Platform))'
 	Id='*'
 	Language='1033'
 	Codepage='1252'
@@ -17,9 +26,10 @@
 		<Package Id='*' Keywords='Installer'
 		  Description="IBugTraqProvider for Google Code Hosting"
 		  Comments='http://code.google.com/p/gurtle/' Manufacturer='Gurtle'
-		  InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+		  InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252' 
+		  Platform='$(env.Platform)' />
 
-		<Upgrade Id="{FE804E0B-B1F7-4cad-8C2A-DCE004D46C71}" >
+		<Upgrade Id="$(var.UpgradeCode)" >
 			<!-- flag is set if the install will trigger an upgrade of an existing install -->
 			<UpgradeVersion Property="PREVIOUSVERSIONSINSTALLED" Maximum="$(var.MajorVersion).$(var.MinorVersion).$(var.BuildVersion)" IncludeMaximum="no" />
 		</Upgrade>
@@ -27,52 +37,57 @@
 		<Media Id='1' Cabinet='Gurtle.cab' EmbedCab='yes' />
 		<Property Id="ALLUSERS">1</Property>
 		<Condition Message='This application only runs on Windows XP and later.'>VersionNT &gt;= 501</Condition>
-
+        
 		<Directory Id='TARGETDIR' Name='SourceDir'>
-			<Directory Id='ProgramFilesFolder' Name='PFiles'>
-				<Directory Id='INSTALLDIR' Name='Gurtle' >
-
-					<Component Id='CoreComponent' Guid='39414E3C-C9FF-40eb-B59F-095D85082234'>
-						<File Id='Gurtle.DLL' Name='Gurtle.dll' DiskId='1'
-						  Source='../../bin/release/Gurtle.dll' Vital='yes'>
-						</File>
-						<File Id='Gurtle.PDB' Name='Gurtle.pdb' DiskId='1'
-						  Source='../../bin/release/Gurtle.pdb' Vital='no'>
-						</File>
-						<File Id='COPYING.TXT' Name='COPYING.txt' DiskId='1'
-						  Source='../../COPYING.txt' Vital='yes'>
-						</File>
-						<RegistryKey Root="HKLM" Key="Software\Classes\Gurtle.Plugin" Action="createAndRemoveOnUninstall" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\Gurtle.Plugin" Value="Gurtle $(var.MajorVersion).$(var.MinorVersion) (Google Code)" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\Gurtle.Plugin\CLSID" Value="{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Type="string" />
-
-
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Value="Gurtle $(var.MajorVersion).$(var.MinorVersion) (Google Code)" Type="string" />
-						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Action="createAndRemoveOnUninstall" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Value="mscoree.dll" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="Class" Value="Gurtle.Plugin" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="Assembly" Value="Gurtle, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="CodeBase" Value="[INSTALLDIR]Gurtle.dll" Type="string" />
-
-						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InprocServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Action="createAndRemoveOnUninstall" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="Class" Value="Gurtle.Plugin" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="Assembly" Value="Gurtle, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="CodeBase" Value="[INSTALLDIR]Gurtle.dll" Type="string" />
-
-						<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\ProgId" Value="Gurtle.Plugin" Type="string" />
-
-						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}" Action="createAndRemoveOnUninstall" />
-						<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\Implemented Categories\{3494FA92-B139-4730-9591-01135D5E7831}" Action="createAndRemoveOnUninstall" />
-
-					</Component>
-
-				</Directory>
-			</Directory>
-
+			<?if $(env.Platform)=x64 ?>
+                <Directory Id='ProgramFiles64Folder' Name='Program Files'>
+                    <Directory Id='INSTALLDIR' Name='Gurtle' />
+                </Directory>
+			<?else ?>
+                <Directory Id='ProgramFilesFolder' Name='Program Files'>
+                    <Directory Id='INSTALLDIR' Name='Gurtle' />
+                </Directory>
+			<?endif ?>
 		</Directory>
+		
+		<DirectoryRef Id='INSTALLDIR'>
+            <Component Id='CoreComponent' Guid='39414E3C-C9FF-40eb-B59F-095D85082234' Win64='$(var.Win64YesNo)'>
+                <File Id='Gurtle.DLL' Name='Gurtle.dll' DiskId='1'
+                  Source='../../bin/release/Gurtle.dll' Vital='yes'>
+                </File>
+                <File Id='Gurtle.PDB' Name='Gurtle.pdb' DiskId='1'
+                  Source='../../bin/release/Gurtle.pdb' Vital='no'>
+                </File>
+                <File Id='COPYING.TXT' Name='COPYING.txt' DiskId='1'
+                  Source='../../COPYING.txt' Vital='yes'>
+                </File>
+                <RegistryKey Root="HKLM" Key="Software\Classes\Gurtle.Plugin" Action="createAndRemoveOnUninstall" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\Gurtle.Plugin" Value="Gurtle $(var.MajorVersion).$(var.MinorVersion) (Google Code)" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\Gurtle.Plugin\CLSID" Value="{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Type="string" />
+
+
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Value="Gurtle $(var.MajorVersion).$(var.MinorVersion) (Google Code)" Type="string" />
+                <RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}" Action="createAndRemoveOnUninstall" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Value="mscoree.dll" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="Class" Value="Gurtle.Plugin" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="Assembly" Value="Gurtle, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32" Name="CodeBase" Value="[INSTALLDIR]Gurtle.dll" Type="string" />
+
+                <RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InprocServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Action="createAndRemoveOnUninstall" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="Class" Value="Gurtle.Plugin" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="Assembly" Value="Gurtle, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion), Culture=neutral, PublicKeyToken=null" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).$(var.BuildVersion)" Name="CodeBase" Value="[INSTALLDIR]Gurtle.dll" Type="string" />
+
+                <RegistryValue Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\ProgId" Value="Gurtle.Plugin" Type="string" />
+
+                <RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}" Action="createAndRemoveOnUninstall" />
+                <RegistryKey Root="HKLM" Key="Software\Classes\CLSID\{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}\Implemented Categories\{3494FA92-B139-4730-9591-01135D5E7831}" Action="createAndRemoveOnUninstall" />
+
+            </Component>
+        </DirectoryRef>
 
 		<WixVariable Id="WixUILicenseRtf" Value="eula.rtf" />
 		<WixVariable Id="WixUIBannerBmp" Value="Banner.jpg" />
