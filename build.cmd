@@ -55,8 +55,12 @@ for %%i in (Debug Release) do (
 
 :: build the installer
 pushd src\setup
-..\..\tools\WiX\candle -nologo -out ..\..\bin\ Setup.wxs 
-..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle-%majorversion%.%minorversion%.%microversion%.%wcversion%.msi ..\..\bin\Setup.wixobj -ext WixUIExtension -cultures:en-us
+for %%a in (x86 x64) do (
+    echo Building setup for %%a platform
+    set Platform=%%a
+    ..\..\tools\WiX\candle -nologo -out ..\..\bin\Setup-%%a.wixobj Setup.wxs 
+    ..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle-%majorversion%.%minorversion%.%microversion%.%wcversion%-%%a.msi ..\..\bin\Setup-%%a.wixobj -ext WixUIExtension -cultures:en-us
+)
 popd
 del bin\*.wixobj
 del bin\*.wixpdb
