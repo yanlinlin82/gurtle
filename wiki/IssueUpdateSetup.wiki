@@ -17,7 +17,3 @@ That's it! Next time you make a commit via TortoiseSVN and use Gurtle to select 
 If you start finding that you are getting errors during issue updates, make sure to check back and see if there is a new version of the script available. You are also encouraged to leave the `--debug` flag that could aid in identifying and [http://code.google.com/p/gurtle/issues/entry reporting issues].
 
 http://gurtle.googlecode.com/svn/wiki/IssueUpdateDialog.png
-
-== Limitations ==
-
-At present, the [http://gurtle.googlecode.com/svn/scripts/updissue.py issue update script] can handle authentication of Gmail accounts only.
