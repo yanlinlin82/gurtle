@@ -60,6 +60,8 @@ for %%a in (x86 x64) do (
     set Platform=%%a
     ..\..\tools\WiX\candle -nologo -out ..\..\bin\Setup-%%a.wixobj Setup.wxs 
     ..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle-%majorversion%.%minorversion%.%microversion%.%wcversion%-%%a.msi ..\..\bin\Setup-%%a.wixobj -ext WixUIExtension -cultures:en-us
+    ..\..\tools\WiX\candle -nologo -out ..\..\bin\MergeModule-%%a.wixobj MergeModule.wxs 
+    ..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\Gurtle-%majorversion%.%minorversion%.%microversion%.%wcversion%-%%a.msm ..\..\bin\MergeModule-%%a.wixobj
 )
 popd
 del bin\*.wixobj
