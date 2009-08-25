@@ -102,8 +102,9 @@ namespace Gurtle
                 foreach (var issue in issues)
                 {
                     message
+                        .Append("(")
                         .Append(GetIssueTypeAddress(issue.Type)).Append(" issue #")
-                        .Append(issue.Id).Append(": ")
+                        .Append(issue.Id).Append(") : ")
                         .AppendLine(issue.Summary);
                 }
 
@@ -317,11 +318,11 @@ namespace Gurtle
 
             switch (issueType.ToLowerInvariant())
             {
-                case "defect"     : return "Fixed";
-                case "enhancement": return "Implemented";
-                case "task"       : return "Finished";
-                case "review"     : return "Reviewed";
-                default           : return "Addressed";
+                case "defect"     : return "Fixes";
+                case "enhancement": return "Closes";
+                case "task"       : return "Closes";
+                case "review"     : return "Closes";
+                default           : return "Resolves";
             }
         }
 
