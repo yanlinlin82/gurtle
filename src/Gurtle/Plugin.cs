@@ -195,6 +195,8 @@ namespace Gurtle
                         if (parentWindow == null)
                             dialog.StartPosition = FormStartPosition.CenterScreen;
                         dialog.ShowDialog(parentWindow);
+                        if (settings.HideIssueUpdateTip)
+                            settings.Save();
                     }
                 }
             }
