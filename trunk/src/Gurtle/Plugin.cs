@@ -179,7 +179,7 @@ namespace Gurtle
         private static void OnCommitFinished(IWin32Window parentWindow, int revision, GoogleCodeProject project, ICollection<Issue> issues)
         {
             if (project == null)
-                throw new InvalidOperationException();
+                return;
 
             if (issues == null || issues.Count == 0)
                 return;
