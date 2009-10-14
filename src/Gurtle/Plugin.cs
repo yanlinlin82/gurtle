@@ -40,29 +40,29 @@ namespace Gurtle
 
     #endregion
 
-    [ ComVisible(true) ]
-    [ Guid("91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E") ]
-    [ ClassInterface(ClassInterfaceType.None) ]
+    [ComVisible(true)]
+    [Guid("91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E")]
+    [ClassInterface(ClassInterfaceType.None)]
     public sealed class Plugin : IBugTraqProvider2
     {
         private IList<Issue> _issues;
         private GoogleCodeProject _project;
 
         public string GetCommitMessage(
-            IntPtr hParentWnd, 
+            IntPtr hParentWnd,
             string parameters, string commonRoot, string[] pathList,
             string originalMessage)
         {
             return GetCommitMessage(WindowHandleWrapper.TryCreate(hParentWnd), Parameters.Parse(parameters), originalMessage);
         }
 
-        [ ComVisible(false) ]
+        [ComVisible(false)]
         public string GetCommitMessage(
-            IWin32Window parentWindow, 
+            IWin32Window parentWindow,
             Parameters parameters, string originalMessage)
         {
             if (parameters == null) throw new ArgumentNullException("parameters");
-            
+
             try
             {
                 var project = parameters.Project;
@@ -122,7 +122,7 @@ namespace Gurtle
             return ValidateParameters(WindowHandleWrapper.TryCreate(hParentWnd), parameters);
         }
 
-        [ ComVisible(false) ]
+        [ComVisible(false)]
         public bool ValidateParameters(IWin32Window parentWindow, string parameters)
         {
             return true; // TODO validation
@@ -133,10 +133,10 @@ namespace Gurtle
             return "Select Issue";
         }
 
-        public string GetCommitMessage2(IntPtr hParentWnd, 
-            string parameters, 
-            string commonURL, string commonRoot, string[] pathList, 
-            string originalMessage, string bugID, out string bugIDOut, 
+        public string GetCommitMessage2(IntPtr hParentWnd,
+            string parameters,
+            string commonURL, string commonRoot, string[] pathList,
+            string originalMessage, string bugID, out string bugIDOut,
             out string[] revPropNames, out string[] revPropValues)
         {
             bugIDOut = bugID;
@@ -150,22 +150,22 @@ namespace Gurtle
             return GetCommitMessage(WindowHandleWrapper.TryCreate(hParentWnd), Parameters.Parse(parameters), originalMessage);
         }
 
-        public string CheckCommit(IntPtr hParentWnd, 
-            string parameters, 
-            string commonURL, string commonRoot, string[] pathList, 
+        public string CheckCommit(IntPtr hParentWnd,
+            string parameters,
+            string commonURL, string commonRoot, string[] pathList,
             string commitMessage)
         {
             return null;
         }
 
-        public string OnCommitFinished(IntPtr hParentWnd, 
-            string commonRoot, string[] pathList, 
+        public string OnCommitFinished(IntPtr hParentWnd,
+            string commonRoot, string[] pathList,
             string logMessage, int revision)
         {
             return OnCommitFinished(WindowHandleWrapper.TryCreate(hParentWnd), commonRoot, pathList, logMessage, revision);
         }
 
-        [ ComVisible(false) ]
+        [ComVisible(false)]
         public string OnCommitFinished(IWin32Window parentWindow,
             string commonRoot, string[] pathList,
             string logMessage, int revision)
@@ -186,97 +186,80 @@ namespace Gurtle
 
             var settings = Properties.Settings.Default;
 
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD")))
+            var updates = issues.Select(e => new IssueUpdate(e)
             {
-                if (!settings.HideIssueUpdateTip)
-                {
-                    using (var dialog = new IssueUpdateInfoDialog())
-                    {
-                        if (parentWindow == null)
-                            dialog.StartPosition = FormStartPosition.CenterScreen;
-                        dialog.ShowDialog(parentWindow);
-                        if (settings.HideIssueUpdateTip)
-                            settings.Save();
-                    }
-                }
-            }
-            else
+                Status = project.ClosedStatuses.FirstOrDefault(),
+                Comment = string.Format("{0} in r{1}.", GetIssueTypeAddress(e.Type), revision)
+            })
+            .ToList();
+
+            while (updates.Count > 0)
             {
-                var updates = issues.Select(e => new IssueUpdate(e) 
+                using (var dialog = new IssueUpdateDialog
                 {
-                    Status = project.ClosedStatuses.FirstOrDefault(),
-                    Comment = string.Format("{0} in r{1}.", GetIssueTypeAddress(e.Type), revision)
+                    Project = project,
+                    Issues = updates,
+                    Revision = revision
                 })
-                .ToList();
-                
-                while (updates.Count > 0)
                 {
-                    using (var dialog = new IssueUpdateDialog
-                    {
-                        Project = project,
-                        Issues = updates,
-                        Revision = revision
-                    })
-                    {
-                        new WindowSettings(settings, dialog);
-                        if (DialogResult.OK != dialog.ShowDialog(parentWindow))
-                            return;
-                    }
+                    new WindowSettings(settings, dialog);
+                    if (DialogResult.OK != dialog.ShowDialog(parentWindow))
+                        return;
+                }
 
-                    if (updates.Count == 0)
-                        break;
+                if (updates.Count == 0)
+                    break;
 
-                    var credential = CredentialPrompt.Prompt(parentWindow, "Google Code", project.Name + ".gccred");
-                    if (credential == null)
-                        continue;
+                var credential = CredentialPrompt.Prompt(parentWindow, "Google Code", project.Name + ".gccred");
+                if (credential == null)
+                    continue;
 
-                    credential = new NetworkCredential(credential.UserName,
-                        Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.Password)));
+                credential = new NetworkCredential(credential.UserName,
+                    Convert.ToBase64String(Encoding.UTF8.GetBytes(credential.Password)));
 
-                    using (var form = new WorkProgressForm
+                using (var form = new WorkProgressForm
+                {
+                    Text = "Updating Issues",
+                    StartWorkOnShow = true,
+                })
+                {
+                    var worker = form.Worker;
+                    worker.DoWork += (sender, args) =>
                     {
-                        Text = "Updating Issues",
-                        StartWorkOnShow = true,
-                    })
-                    {
-                        var worker = form.Worker;
-                        worker.DoWork += (sender, args) =>
+                        var startCount = updates.Count;
+                        while (updates.Count > 0)
                         {
-                            var startCount = updates.Count;
-                            while (updates.Count > 0)
+                            if (worker.CancellationPending)
                             {
-                                if (worker.CancellationPending)
-                                {
-                                    args.Cancel = true;
-                                    break;
-                                }
-
-                                var issue = updates[0];
-
-                                form.ReportProgress(string.Format(
-                                    @"Updating issue #{0}: {1}", 
-                                    issue.Issue.Id, 
-                                    issue.Issue.Summary));
-
-                                UpdateIssue(project.Name, issue, credential, form.ReportDetailLine);
-                                updates.RemoveAt(0);
-                        
-                                form.ReportProgress((int) ((startCount - updates.Count) * 100.0 / startCount));
+                                args.Cancel = true;
+                                break;
                             }
-                        };
-                        
-                        form.WorkFailed += delegate
-                        {
-                            var error = form.Error;
-                            foreach (var line in new StringReader(error.ToString()).ReadLines())
-                                form.ReportDetailLine(line);
-                            ShowErrorBox(form, error);
-                        };
-                        
-                        if (parentWindow == null)
-                            form.StartPosition = FormStartPosition.CenterScreen;
-                        form.ShowDialog(parentWindow);
-                    }
+
+                            var issue = updates[0];
+
+                            form.ReportProgress(string.Format(
+                                @"Updating issue #{0}: {1}",
+                                issue.Issue.Id,
+                                issue.Issue.Summary));
+
+                            UpdateIssue(project.Name, issue, credential, form.ReportDetailLine);
+                            updates.RemoveAt(0);
+
+                            form.ReportProgress((int)((startCount - updates.Count) * 100.0 / startCount));
+                        }
+                    };
+
+                    form.WorkFailed += delegate
+                    {
+                        var error = form.Error;
+                        foreach (var line in new StringReader(error.ToString()).ReadLines())
+                            form.ReportDetailLine(line);
+                        ShowErrorBox(form, error);
+                    };
+
+                    if (parentWindow == null)
+                        form.StartPosition = FormStartPosition.CenterScreen;
+                    form.ShowDialog(parentWindow);
                 }
             }
 
@@ -293,11 +276,11 @@ namespace Gurtle
             return ShowOptionsDialog(WindowHandleWrapper.TryCreate(hParentWnd), parameters);
         }
 
-        [ ComVisible(false) ]
+        [ComVisible(false)]
         public static string ShowOptionsDialog(IWin32Window parentWindow, string parameterString)
         {
             Parameters parameters;
-            
+
             try
             {
                 parameters = Parameters.Parse(parameterString);
@@ -308,9 +291,9 @@ namespace Gurtle
                 return parameterString;
             }
 
-            var dialog = new OptionsDialog { Parameters = parameters };           
-            return dialog.ShowDialog(parentWindow) == DialogResult.OK 
-                 ? dialog.Parameters.ToString() 
+            var dialog = new OptionsDialog { Parameters = parameters };
+            return dialog.ShowDialog(parentWindow) == DialogResult.OK
+                 ? dialog.Parameters.ToString()
                  : parameterString;
         }
 
@@ -320,28 +303,28 @@ namespace Gurtle
 
             switch (issueType.ToLowerInvariant())
             {
-                case "defect"     : return "Fixes";
+                case "defect": return "Fixes";
                 case "enhancement": return "Closes";
-                case "task"       : return "Closes";
-                case "review"     : return "Closes";
-                default           : return "Resolves";
+                case "task": return "Closes";
+                case "review": return "Closes";
+                default: return "Resolves";
             }
         }
 
         private static void ShowErrorBox(IWin32Window parent, Exception e)
         {
-            MessageBox.Show(parent, e.Message, 
-                e.Source + ": " + e.GetType().Name, 
+            MessageBox.Show(parent, e.Message,
+                e.Source + ": " + e.GetType().Name,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private static void UpdateIssue(string project, IssueUpdate issue, NetworkCredential credential, 
+        private static void UpdateIssue(string project, IssueUpdate issue, NetworkCredential credential,
             Action<string> stdout)
         {
             UpdateIssue(project, issue, credential, stdout, stdout);
         }
 
-        private static void UpdateIssue(string project, IssueUpdate update, NetworkCredential credential, 
+        private static void UpdateIssue(string project, IssueUpdate update, NetworkCredential credential,
             Action<string> stdout, Action<string> stderr)
         {
             string commentPath = null;
@@ -420,7 +403,7 @@ namespace Gurtle
                 }
 
             }
-            finally 
+            finally
             {
                 if (!string.IsNullOrEmpty(commentPath) && File.Exists(commentPath))
                     File.Delete(commentPath);
