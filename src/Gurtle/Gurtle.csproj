@@ -44,8 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\lib\backlinq-1.0.cs">
-      <Link>backlinq-1.0.cs</Link>
+    <Compile Include="..\..\lib\LinqBridge-1.1.cs">
+      <Link>LinqBridge-1.1.cs</Link>
     </Compile>
     <Compile Include="Actions.cs" />
     <Compile Include="AppPaths.cs" />
