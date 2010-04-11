@@ -199,6 +199,11 @@ namespace Gurtle
             if (issues == null || issues.Count == 0)
                 return;
 
+            // don't bother users with the issue update dialog if the
+            // env variable is not set.
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GURTLE_ISSUE_UPDATE_CMD")))
+                return;
+
             var settings = Properties.Settings.Default;
 
             var updates = issues.Select(e => new IssueUpdate(e)
