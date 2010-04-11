@@ -120,7 +120,7 @@
             _resetButton.Size = new System.Drawing.Size(128, 30);
             _resetButton.TabIndex = 6;
             _resetButton.Text = "Reset Settings";
-            _toolTip.SetToolTip(_resetButton, "Test if the supplied Google Code project is reachable online or not");
+            _toolTip.SetToolTip(_resetButton, "Resets all settings to the defaults");
             _resetButton.UseVisualStyleBackColor = true;
             _resetButton.Click += new System.EventHandler(this.ResetSettings_Click);
             // 
