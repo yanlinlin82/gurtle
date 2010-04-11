@@ -24,5 +24,5 @@ REM (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 REM OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 pushd "%~dp0..\bin\x64\Debug"
-..\..\..\tools\IronPython\ipy ..\..\..\src\%~n0.py %*
+..\..\..\tools\IronPython\ipyw ..\..\..\src\%~n0.py %*
 popd
