@@ -23,6 +23,6 @@ REM THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 REM (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
 REM OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-pushd "%~dp0..\bin\x86\Debug"
-..\..\..\tools\IronPython\ipyw ..\..\..\src\%~n0.py %*
+pushd "%~dp0..\bin\x64\Debug"
+..\..\..\tools\IronPython\ipy ..\..\..\src\%~n0.py %*
 popd
