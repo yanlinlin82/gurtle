@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\COPYING.txt = ..\COPYING.txt
 		Setup\MergeModule.wxs = Setup\MergeModule.wxs
 		Setup\Setup.wxs = Setup\Setup.wxs
-		TestGurtle.cmd = TestGurtle.cmd
 		TestGurtle.py = TestGurtle.py
 	EndProjectSection
 EndProject
