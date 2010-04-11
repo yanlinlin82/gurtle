@@ -41,7 +41,11 @@ namespace Gurtle
     #endregion
 
     [ComVisible(true)]
+#if WIN64
+    [Guid("A0557FA7-7C95-485b-8F40-31303F762C57")]
+#else
     [Guid("91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E")]
+#endif
     [ClassInterface(ClassInterfaceType.None)]
     public sealed class Plugin : IBugTraqProvider2
     {

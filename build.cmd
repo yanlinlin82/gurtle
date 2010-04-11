@@ -50,7 +50,8 @@ echo 	^<?define BuildVersion="%wcversion%" ?^> >> src\setup\VersionNumberInclude
 echo ^</Include^> >> src\setup\VersionNumberInclude.wxi
 
 for %%i in (Debug Release) do (
-    "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i src\Gurtle.sln
+    "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i /p:Platform=x86 src\Gurtle.sln
+    "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i /p:Platform=x64 src\Gurtle.sln
 )
 
 :: build the installer
