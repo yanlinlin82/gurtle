@@ -145,6 +145,17 @@ namespace Gurtle
         {
             bugIDOut = bugID;
 
+            Parameters p = Parameters.Parse(parameters);
+            if (p.Project.Length == 0)
+            {
+                // we can extract the project name from the url, e.g.:
+                // https://gurtle.googlecode.com/svn/trunk
+                // the project name is the first part of the domain
+                Uri url = new Uri(commonURL);
+                string projectName = url.Host.Substring(0, url.Host.IndexOf('.'));
+                parameters += " project=" + projectName;
+            }
+
             // If no revision properties are to be set, 
             // the plug-in MUST return empty arrays. 
 
