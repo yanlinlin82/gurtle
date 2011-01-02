@@ -33,14 +33,17 @@ http://gurtle.googlecode.com/svn/wiki/OptionsDialog.png
 
 This section applies to TSVN 1.6 or later.
 
-TSVN 1.6 or later can pick up the parameters automatically from a working copy of a project by looking up the `bugtraq:provideruuid` and `bugtraq:provideruuid` properties. This enables  all users on a project to be synchronized on the same issue tracker plug-in and settings.
+TSVN 1.6 or later can pick up the parameters automatically from a working copy of a project by looking up the `bugtraq:provideruuid`, `bugtraq:provideruuid64` and `bugtraq:providerparams` properties. This enables  all users on a project to be synchronized on the same issue tracker plug-in and settings.
 
-For Gurtle, `bugtraq:provideruuid` must always be set to `{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}` and the `bugtraq:providerparams` should be set to Gurtle-specific parameters described above, e.g. `project=gurtle`.
+For Gurtle, `bugtraq:provideruuid` and `bugtraq:provideruuid64` must always be set to `{91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E}` (32 bit installations) and `{A0557FA7-7C95-485b-8F40-31303F762C57}` (64-bit installations), respectively. The `bugtraq:providerparams` property should be set to Gurtle-specific parameters described above, e.g. `project=gurtle`.
 
-Below is an example of how you can set these properties (where `ZZZ` should be replaced with the Google Code project name _in lowercase_):
+Below is an example of how you can set these properties from the command-line (where `ZZZ` should be replaced with the Google Code project name _in lowercase_):
 
 {{{
 $ svn propset bugtraq:provideruuid {91974081-2DC7-4FB1-B3BE-0DE1C8D6CE4E} .
+property 'bugtraq:provideruuid' set on '.'
+
+$ svn propset bugtraq:provideruuid64 {A0557FA7-7C95-485b-8F40-31303F762C57} .
 property 'bugtraq:provideruuid' set on '.'
 
 $ svn propset bugtraq:providerparams project=ZZZ .
