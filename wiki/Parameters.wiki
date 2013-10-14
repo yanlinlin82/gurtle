@@ -3,6 +3,8 @@
 
 = Parameters =
 
+(These instructions mainly apply to ToroiseSVN. For TortoiseGit, see [http://tortoisegit.org/docs/tortoisegit/tsvn-dug-bugtracker.html  3.34. Integration with Bug Tracking Systems / Issue Trackers])
+
 Once you have Gurtle installed on your system, there are two ways to enable it in TortoiseSVN (TSVN) for a given Google Code project. If you are using TSVN 1.5 then the parameters have to be configured manually in TSVN Settings for each working copy  and this has to be done by each member of the project on his or her workstation(s). If you are using TSVN version 1.6 or later then you can set the Gurtle and TSVN configuration in properties in the project's Subversion repository once. Each project member will then simply inherit the settings by checking out or updating their working copy and Gurtle will be automatically enabled for the project in TSVN.
 
 The parameters for Gurtle is a semi-colon delimited list of name and value pairs where the name and value within each pair is separated by an equal (=) sign. The syntax can be summarized as follows:
@@ -51,3 +53,4 @@ property 'bugtraq:providerparams' set on '.'
 
 $ svn commit -m "Added TSVN/Gurtle IBugTraqProvider properties."
 }}}
+
